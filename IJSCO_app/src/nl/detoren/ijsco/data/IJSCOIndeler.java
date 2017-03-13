@@ -66,9 +66,9 @@ public class IJSCOIndeler {
 
 		ArrayList<MogelijkeIndeling> opties = testSchemas(deelnemers.size());
 		System.out.format("Aantal mogelijke variaties           : %3d%n", opties.size());
-		for (MogelijkeIndeling i : opties) {
-			System.out.println(i);
-		}
+//		for (MogelijkeIndeling i : opties) {
+//			System.out.println(i);
+//		}
 		int keuze = 26;
 		System.out.format("TO DO: Implementeer keuze, nu        : %3d%n", keuze);
 		System.out.format("Gekozen indelingsptroon              : %s%n", opties.get(keuze));
