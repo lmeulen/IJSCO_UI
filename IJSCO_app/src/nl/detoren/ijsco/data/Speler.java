@@ -8,6 +8,7 @@ public class Speler {
 	private int ratingIJSCO;
 	private int ratingKNSB;
 	private int ratingHandmatig;
+	private boolean aanwezig;
 
 	public Speler() {
 		knsbnummer = 0;
@@ -16,6 +17,7 @@ public class Speler {
 		ratingIJSCO = -1;
 		ratingKNSB = -1;
 		ratingHandmatig = -1;
+		aanwezig = true;
 	}
 
 	public Speler(int knsbnummer, String naamKNSB, int ratingIJSCO, int ratingKNSB) {
@@ -25,6 +27,7 @@ public class Speler {
 		this.ratingIJSCO = ratingIJSCO;
 		this.ratingKNSB = ratingKNSB;
 		this.ratingHandmatig = -1;
+		this.aanwezig = true;
 	}
 
 	/**
@@ -129,5 +132,13 @@ public class Speler {
 		result += getRating() + " [HM:" + getRatingHandmatig() + ", OSBO:" + getRatingIJSCO() + ", KNSB:"
 				+ getRatingKNSB() + "]";
 		return result;
+	}
+
+	public boolean isAanwezig() {
+		return aanwezig;
+	}
+
+	public void setAanwezig(boolean aanwezig) {
+		this.aanwezig = aanwezig;
 	}
 }

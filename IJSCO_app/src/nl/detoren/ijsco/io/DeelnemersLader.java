@@ -1,4 +1,4 @@
-package nl.detoren.ijsco.data;
+package nl.detoren.ijsco.io;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import nl.detoren.ijsco.data.Deelnemers;
+import nl.detoren.ijsco.data.Speler;
 
 public class DeelnemersLader {
 	/**
@@ -22,9 +25,9 @@ public class DeelnemersLader {
 	 *            Naam van het bestand dat ingelezen moet worden
 	 * @return De ingelezen spelers verdeeld over de groepen
 	 */
-	public ArrayList<Speler> importeerSpelers(String bestandsnaam) {
+	public Deelnemers importeerSpelers(String bestandsnaam) {
 
-		ArrayList<Speler> deelnemers = new ArrayList<>();
+		Deelnemers deelnemers = new Deelnemers();
 		// Lees het volledige bestand in naar een String array
 		String[] stringArr = leesBestand(bestandsnaam);
 		for (String regel : stringArr) {

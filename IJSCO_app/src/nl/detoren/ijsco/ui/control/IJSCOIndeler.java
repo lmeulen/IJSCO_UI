@@ -1,10 +1,17 @@
-package nl.detoren.ijsco.data;
+package nl.detoren.ijsco.ui.control;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
+
+import nl.detoren.ijsco.data.Deelnemers;
+import nl.detoren.ijsco.data.Groep;
+import nl.detoren.ijsco.data.Groepen;
+import nl.detoren.ijsco.data.Schema;
+import nl.detoren.ijsco.data.Schemas;
+import nl.detoren.ijsco.data.Speler;
+import nl.detoren.ijsco.data.Status;
+import nl.detoren.ijsco.io.DeelnemersLader;
+import nl.detoren.ijsco.io.OSBOLoader;
 
 public class IJSCOIndeler {
 
@@ -13,26 +20,15 @@ public class IJSCOIndeler {
 	 *
 	 * @return
 	 */
-	private ArrayList<Speler> bepaalDeelnemers() {
+	public Deelnemers bepaalDeelnemers() {
 		// Lees deelnemers bestand in
-		ArrayList<Speler> deelnemers = new DeelnemersLader().importeerSpelers("deelnemers.csv");
+		Deelnemers deelnemers = new DeelnemersLader().importeerSpelers("deelnemers.csv");
 		// Lees OSBO rating lijst in
-		HashMap<Integer, Speler> osbolijst = new OSBOLoader().load();
+		Deelnemers osbolijst = new OSBOLoader().laadBestand("OSBO Jeugd-rating-lijst.htm");
 		// Werk spelers bij obv OSBO lijst. OSBO lijst is leidend
 		deelnemers = controleerSpelers(deelnemers, osbolijst);
 		// Sorteer deelnemers, aflopend. op rating
-		Collections.sort(deelnemers, new Comparator<Speler>() {
-			@Override
-			public int compare(Speler arg0, Speler arg1) {
-				if (arg0.getRating() > arg1.getRating()) {
-					return -1;
-				} else if (arg0.getRating() < arg1.getRating()) {
-					return 1;
-				}
-				return 0;
-			}
-		});
-
+		deelnemers.sort();
 		return deelnemers;
 	}
 
@@ -44,10 +40,10 @@ public class IJSCOIndeler {
 	 * @param osbolijst Osbo lijst
 	 * @return bijgewerkte spelerslijst
 	 */
-	private ArrayList<Speler> controleerSpelers(ArrayList<Speler> deelnemers, HashMap<Integer, Speler> osbolijst) {
-		ArrayList<Speler> update = new ArrayList<>();
+	private Deelnemers controleerSpelers(Deelnemers deelnemers, Deelnemers osbolijst) {
+		Deelnemers update = new Deelnemers();
 		for (Speler s : deelnemers) {
-			Speler osbogegevens = osbolijst.get(s.getKnsbnummer());
+			Speler osbogegevens = osbolijst.getByKNSB(s.getKnsbnummer());
 			if (osbogegevens != null) {
 				s.setNaamKNSB(osbogegevens.getNaam());
 				s.setRatingIJSCO(osbogegevens.getRatingIJSCO());
@@ -61,14 +57,11 @@ public class IJSCOIndeler {
 	 * Lees spelers in en maak de groepsindeling
 	 */
 	public void indelen() {
-		ArrayList<Speler> deelnemers = bepaalDeelnemers();
+		Deelnemers deelnemers = bepaalDeelnemers();
 		System.out.format("Aantal spelers                       : %3d%n", deelnemers.size());
 
-		ArrayList<MogelijkeIndeling> opties = testSchemas(deelnemers.size());
+		Schemas opties = mogelijkeSchemas(deelnemers.size());
 		System.out.format("Aantal mogelijke variaties           : %3d%n", opties.size());
-//		for (MogelijkeIndeling i : opties) {
-//			System.out.println(i);
-//		}
 		int keuze = 26;
 		System.out.format("TO DO: Implementeer keuze, nu        : %3d%n", keuze);
 		System.out.format("Gekozen indelingsptroon              : %s%n", opties.get(keuze));
@@ -129,7 +122,7 @@ public class IJSCOIndeler {
 	 * @param byes aantal byes
 	 * @return lijst met mogelijke groepsindelingen
 	 */
-	private ArrayList<Groepen> mogelijkeGroepen(ArrayList<Speler> spelers, int groepen, int[] grootte, int byes) {
+	private ArrayList<Groepen> mogelijkeGroepen(Deelnemers spelers, int groepen, int[] grootte, int byes) {
 
 		ArrayList<Groepen> result = new ArrayList<>();
 
@@ -151,7 +144,7 @@ public class IJSCOIndeler {
 	 * @param byemask Een bytemask dat aangeeft welke groepen een speler minder hebben
 	 * @return
 	 */
-	private Groepen maakGroepen(ArrayList<Speler> deelnemers, int nGroepen, int[] grootte, int byemask) {
+	private Groepen maakGroepen(Deelnemers deelnemers, int nGroepen, int[] grootte, int byemask) {
 		Groepen groepen = new Groepen(nGroepen, grootte);
 		Iterator<Speler> it = deelnemers.iterator();
 		for (int i = 0; i < nGroepen; i++) {
@@ -175,6 +168,35 @@ public class IJSCOIndeler {
 		return (value >> k) & 1;
 	}
 
+	public Schemas mogelijkeSchemas(Status status) {
+		int nSpelers = status.deelnemers.aantalAanwezig();
+		Schemas mogelijkheden = new Schemas();
+		for (int n_m = status.minSpelers; n_m <= status.maxSpelers; n_m += 2) { // itereer of standaard groepsgrootte
+			for (int d_h = status.minDeltaSpelers; d_h <= status.maxDeltaSpelers; d_h += 2) { // itereer of delta (-) groepsgrootte bovenste groepen
+				for (int d_l = status.minDeltaSpelers; d_l <= status.maxDeltaSpelers; d_l += 2) { // itereer of delta (+) groepsgrootte onderste groepen
+					int n_hoog = n_m - d_h; // aantal spelers in bovenste groepen
+					int n_laag = n_m + d_l; // aantal spelers in onderste groepen
+					for (int i = status.minAfwijkendeGroepen; i <= status.maxAfwijkendeGroepen; i++) { // itereer over aantal (1..2) aan te passen hoogste groepen
+						for (int j = status.minAfwijkendeGroepen; j <= status.maxAfwijkendeGroepen; j++) { // itereer over aantal (1..3) aan te passen onderste groepen
+							int size_midden = nSpelers - (n_hoog * i) - (n_laag * j); // aantal spelers in standaard groepen
+							if (size_midden > 0) {
+								int gr_midden = (size_midden / n_m) + (((size_midden % n_m) == 0) ? 0 : 1);
+								int[] groepen = creeerGroottes(i, n_hoog, gr_midden, n_m, j, n_laag);
+								int byes = bepaalByes(groepen, nSpelers);
+								if ((n_hoog >= status.minSpelers) && (n_laag <= status.maxSpelers)
+										&& (groepen.length >= status.minGroepen) && (groepen.length <= status.maxGroepen)
+										&& (byes >= status.minToegestaneByes) && (byes <= status.maxToegestaneByes)) {
+									mogelijkheden.add(new Schema(groepen.length, byes, groepen));
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return mogelijkheden;
+	}
+
 	/**
 	 * Creeer een overzicht van alle mogelijke speelgroepen
 	 * Regels:
@@ -185,11 +207,11 @@ public class IJSCOIndeler {
 	 * 5. Maximaal 10 spelers in een groep
 	 * 6. Maximaal 16 groepen
 	 * 7. Maximaal 4 byes
-	 * @param size Aantal spelers
+	 * @param nSpelers Aantal spelers
 	 * @return lijst met mogelijke groepen
 	 */
-	private ArrayList<MogelijkeIndeling> testSchemas(int size) {
-		ArrayList<MogelijkeIndeling> mogelijkheden = new ArrayList<>();
+	public Schemas mogelijkeSchemas(int size) {
+		Schemas mogelijkheden = new Schemas();
 		int[] v_midden = { 4, 6, 8, 10 }; // Basis is 4, 6, 8 of 10 spelers in een groep
 		int[] v_hoog = { 2, 4 }; // Hoogste groepen 2 of 4 spelers minder
 		int[] v_laag = { 2, 4 }; // Laagste groepen 2 of 4 spelers meer
@@ -212,7 +234,7 @@ public class IJSCOIndeler {
 									// Rule 4. Maximaal 4 byes
 									// System.out.println(printArray(groepen,
 									// size));
-									mogelijkheden.add(new MogelijkeIndeling(groepen.length, byes, groepen));
+									mogelijkheden.add(new Schema(groepen.length, byes, groepen));
 								}
 							}
 						}
