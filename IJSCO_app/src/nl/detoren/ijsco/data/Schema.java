@@ -21,7 +21,7 @@ public class Schema {
 
 	public String toString() {
 //		String result = String.format("n=%3d, b=%1d : [ ", groepen, byes);
-		String result = String.format("%02d [ ", groepen);
+		String result = String.format("%02d(%1d) [ ", groepen, byes);
 		for (int val : groepsgroottes) {
 			result += String.format("%02d ", val);
 		}

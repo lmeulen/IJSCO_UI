@@ -125,12 +125,18 @@ public class Speler {
 		ratingHandmatig = -1;
 	}
 
-	public String toString() {
+	public String toStringComplete() {
 		String result = "";
 		result += knsbnummer + " - ";
 		result += getNaam() + " [" + getNaamHandmatig() + " / " + getNaamKNSB() + " ] - ";
 		result += getRating() + " [HM:" + getRatingHandmatig() + ", OSBO:" + getRatingIJSCO() + ", KNSB:"
 				+ getRatingKNSB() + "]";
+		return result;
+	}
+
+	public String toString() {
+		String result = "";
+		result += knsbnummer + " - " + getNaam() + " - " + getRating();
 		return result;
 	}
 

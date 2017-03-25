@@ -19,7 +19,7 @@ public class ExtendedConstraints extends GridBagConstraints {
 
 	public ExtendedConstraints(int fill, int x, int y, int width, int height) {
 		this.fill = fill;
-		this.insets = new Insets(0, 0, 0, 0);
+		this.insets = new Insets(5, 5, 5, 5);
 		this.gridx = x;
 		this.gridy = y;
 		this.gridwidth = width;
@@ -28,7 +28,7 @@ public class ExtendedConstraints extends GridBagConstraints {
 
 	public ExtendedConstraints(int x, int y, int width, int height) {
 		this.fill = GridBagConstraints.BOTH;
-		this.insets = new Insets(0, 0, 0, 0);
+		this.insets = new Insets(5, 5, 5, 5);
 		this.gridx = x;
 		this.gridy = y;
 		this.gridwidth = width;
@@ -37,7 +37,7 @@ public class ExtendedConstraints extends GridBagConstraints {
 
 	public ExtendedConstraints(int x, int y) {
 		this.fill = GridBagConstraints.BOTH;
-		this.insets = new Insets(0, 0, 0, 0);
+		this.insets = new Insets(5, 5, 5, 5);
 		this.gridx = x;
 		this.gridy = y;
 		this.gridwidth = 1;

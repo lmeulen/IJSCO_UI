@@ -62,7 +62,7 @@ public class IJSCOIndeler {
 
 		Schemas opties = mogelijkeSchemas(deelnemers.size());
 		System.out.format("Aantal mogelijke variaties           : %3d%n", opties.size());
-		int keuze = 26;
+		int keuze = 12;
 		System.out.format("TO DO: Implementeer keuze, nu        : %3d%n", keuze);
 		System.out.format("Gekozen indelingsptroon              : %s%n", opties.get(keuze));
 
@@ -71,6 +71,13 @@ public class IJSCOIndeler {
 		System.out.format("Aantal mogelijkhede groepsindelingen : %3d%n", mogelijkheden.size());
 		Groepen groep = bepaalOptimaleGroep(mogelijkheden);
 		System.out.println("Beste indeling: " + groep);
+	}
+
+	public Groepen bepaalGroep(Schema schema, Deelnemers deelnemers) {
+		ArrayList<Groepen> mogelijkheden = mogelijkeGroepen(deelnemers, schema.getGroepen(),
+				schema.getGroepsgroottes(), schema.getByes());
+		Groepen groep = bepaalOptimaleGroep(mogelijkheden);
+		return groep;
 	}
 
 	/**

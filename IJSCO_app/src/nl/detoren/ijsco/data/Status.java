@@ -18,6 +18,16 @@ public class Status {
 	 * en aantal byes
 	 */
 	public Schemas schemas;
+
+	/**
+	 * Geselecteerde schema
+	 */
+	public Schema schema;
+
+	/**
+	 * Ingedeelde groepen
+	 */
+	public Groepen groepen;
 	/**
 	 * Mogelijke groepsindelingen. Alle mogelijkheden
 	 * hebben gelijk aantal groepen en aantal spelers per

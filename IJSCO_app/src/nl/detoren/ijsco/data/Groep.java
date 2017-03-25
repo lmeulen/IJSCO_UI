@@ -114,9 +114,17 @@ public class Groep {
 
 	public String toString() {
 		String result = naam + ", ";
-		result += String.format("%02d/%02d ", aantal, grootte);
-		result += String.format("(%4d - %4d - %4d)", getMinRating(), getGemmiddeldeRating(), getMaxRating());
-		result += String.format(", std=%6.2f", getStandDev());
+		result += String.format("%2d/%2d ", aantal, grootte);
+		result += String.format("(%4d-%4d-%4d)", getMinRating(), getGemmiddeldeRating(), getMaxRating());
+		result += String.format(",std=%6.2f", getStandDev());
+		return result;
+	}
+
+	public String getDescription() {
+		String result = toString() + "\n";
+		for (Speler s : spelers) {
+			result += String.format("  %7d - %-20.20s - %04d\n", s.getKnsbnummer(), s.getNaam(), s.getRating());
+		}
 		return result;
 	}
 }

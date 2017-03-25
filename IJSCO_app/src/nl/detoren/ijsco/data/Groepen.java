@@ -42,6 +42,14 @@ public class Groepen {
 		return result;
 	}
 
+	public String getDescription() {
+		String result = toString() + "\n";
+		for (Groep groep : groepen) {
+			result += groep.getDescription() + "\n";
+		}
+		return result;
+	}
+
 	public int getSpreidingTotaal() {
 		int result = 0;
 		for (Groep g : groepen) {

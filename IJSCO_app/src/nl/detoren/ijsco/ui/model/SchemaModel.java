@@ -30,9 +30,15 @@ public class SchemaModel extends AbstractTableModel {
 		this.schemas = schemas;
 	}
 
+	public Schema getSchema(int id) {
+		if (schemas != null && id >= 0 && id < schemas.size()) {
+			return schemas.get(id);
+		}
+		return null;
+	}
+
 	@Override
 	public int getColumnCount() {
-		System.out.println("Get column count = " + columnNames.length);
 		return columnNames.length;
 	}
 
@@ -43,13 +49,11 @@ public class SchemaModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		System.out.println("Get row count = " + (schemas!= null ? schemas.size() : 0));
 		return schemas!= null ? schemas.size() : 0;
 	}
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		System.out.println("Get value at " + row + "," + col);
 		if (row < schemas.size()) {
 			Schema schema = schemas.get(row);
 			switch (col) {
