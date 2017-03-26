@@ -28,6 +28,7 @@ public class SchemaModel extends AbstractTableModel {
 	}
 	public void setSchemas(Schemas schemas) {
 		this.schemas = schemas;
+		fireTableDataChanged();
 	}
 
 	public Schema getSchema(int id) {

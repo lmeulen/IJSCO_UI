@@ -54,10 +54,6 @@ import nl.detoren.ijsco.ui.model.SchemaModel;
 @SuppressWarnings("serial")
 public class Mainscreen extends JFrame {
 
-	private JPanel panel_deelnemers;
-	private JPanel panel_groepen;
-	private JPanel panel_scenarios;
-	private JPanel panel_configuratie;
 
 	private SchemaModel schemaModel;
 	private JTable schemaTabel;
@@ -102,22 +98,228 @@ public class Mainscreen extends JFrame {
 			status.deelnemers = indeler.bepaalDeelnemers();
 		}
 
+		// Frame
 		setBounds(25, 25, 1300, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("IJSCO Groepenindeler");
 		getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
 
+		// Frame - Hoofdpanel
 		JPanel hoofdPanel = new JPanel();
 		getContentPane().add(hoofdPanel);
 		hoofdPanel.setLayout(new GridLayout(1, 4, 0, 0));
 
 		// LINKS: Deelnemers
-		panel_deelnemers = new JPanel(false);
-		panel_deelnemers.setBackground(Color.BLACK);
-		panel_deelnemers.setLayout(new GridLayout(1, 0));
+		hoofdPanel.add(createDeelnemersPanel());
+
+		// LINKSMIDDEN: INSTELLINGEN
+		hoofdPanel.add(createInstellingenPanel());
+
+		// RECHSTMIDDEN: SCENARIOS
+		hoofdPanel.add(createPanelScenarios());
+
+		// RECHTS: GROEPEN
+		hoofdPanel.add(createPanelGroepen());
+
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent event) {
+				bewaarStatus();
+			}
+		});
+	}
+
+	public JPanel createPanelGroepen() {
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.YELLOW);
+		panel.setLayout(new GridLayout(1, 0));
+		groepenText = new JTextArea(40, 40);
+		groepenText.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		groepenText.setFont(new Font("courier new", Font.PLAIN, 12));
+		groepenText.setLineWrap(false);
+		if (status.groepen != null) {
+			groepenText.setText(status.groepen.getDescription());
+			groepenText.setCaretPosition(0);
+		}
+		JScrollPane scrollpane = new JScrollPane(groepenText);
+		scrollpane.setAutoscrolls(true);
+		scrollpane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		panel.add(scrollpane);
+		return panel;
+	}
+
+	public JPanel createPanelScenarios() {
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.RED);
+		panel.setLayout(new GridLayout(1, 0));
+		schemaModel = new SchemaModel(panel, status.schemas);
+		schemaTabel = new JTable(schemaModel) {
+			@Override
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				Component c = super.prepareRenderer(renderer, row, column);
+				// Alternate row color
+				if (!isRowSelected(row)) {
+					c.setBackground(row % 2 == 0 ? Color.WHITE : Color.LIGHT_GRAY);
+				}
+				return c;
+			}
+		};
+		schemaTabel.getModel().addTableModelListener(new TableModelListener() {
+
+			@Override
+			public void tableChanged(TableModelEvent arg0) {
+				panel.getParent().getParent().repaint();
+			}
+
+		});
+		JScrollPane scrollpane = new JScrollPane();
+		scrollpane.setViewportView(schemaTabel);
+		panel.add(scrollpane);
+		return panel;
+	}
+
+	public JPanel createInstellingenPanel() {
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.ORANGE);
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[] { 128, 32, 0 };
+		gbl_panel.rowHeights = new int[] { 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0 };
+		gbl_panel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				0.0, 0.0, 0.0, Double.MIN_VALUE };
+		panel.setLayout(gbl_panel);
+
+		// Aantal groepen
+		JLabel label_4 = new JLabel("Aantal groepen");
+		panel.add(label_4, new ExtendedConstraints(0, 0, 2, 1));
+		panel.add(new JLabel("Minimum:"), new ExtendedConstraints(0, 1));
+		JTextField tfMinGroepen = new JTextField(Integer.toString(status.minGroepen), 10);
+		tfMinGroepen.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				status.minGroepen = newIntegerValue(tfMinGroepen, status.minGroepen);
+			}
+		});
+		panel.add(tfMinGroepen, new ExtendedConstraints(1, 1));
+		panel.add(new JLabel("Maximum:"), new ExtendedConstraints(0, 2));
+		JTextField tfMaxGroepen = new JTextField(Integer.toString(status.maxGroepen), 10);
+		tfMaxGroepen.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				status.maxGroepen = newIntegerValue(tfMaxGroepen, status.maxGroepen);
+			}
+		});
+		panel.add(tfMaxGroepen, new ExtendedConstraints(1, 2));
+
+		// Aantal spelers
+		panel.add(new JLabel("Aantal spelers per groep"), new ExtendedConstraints(0, 3, 2, 1));
+		panel.add(new JLabel("Minimum:"), new ExtendedConstraints(0, 4));
+		JTextField tfMinSpelers = new JTextField(Integer.toString(status.minSpelers), 10);
+		tfMinSpelers.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				status.minSpelers = newIntegerValue(tfMinSpelers, status.minSpelers);
+			}
+		});
+		panel.add(tfMinSpelers, new ExtendedConstraints(1, 4));
+		panel.add(new JLabel("Maximum:"), new ExtendedConstraints(0, 5));
+		JTextField tfMaxSpelers = new JTextField(Integer.toString(status.maxSpelers), 10);
+		tfMaxSpelers.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				status.maxSpelers = newIntegerValue(tfMaxSpelers, status.maxSpelers);
+			}
+		});
+		panel.add(tfMaxSpelers, new ExtendedConstraints(1, 5));
+
+		// Delta aantal spelers
+		panel.add(new JLabel("Delta spelers voor hoogste en laagste groepen"),
+				new ExtendedConstraints(0, 6, 2, 1));
+		panel.add(new JLabel("Minimum:"), new ExtendedConstraints(0, 7));
+		JTextField tfMinDelta = new JTextField(Integer.toString(status.minDeltaSpelers), 10);
+		tfMinDelta.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				status.minDeltaSpelers = newIntegerValue(tfMinDelta, status.minDeltaSpelers);
+			}
+		});
+		panel.add(tfMinDelta, new ExtendedConstraints(1, 7));
+		panel.add(new JLabel("Maximum:"), new ExtendedConstraints(0, 8));
+		JTextField tfMaxDelta = new JTextField(Integer.toString(status.maxDeltaSpelers), 10);
+		tfMaxDelta.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				status.maxDeltaSpelers = newIntegerValue(tfMaxDelta, status.maxDeltaSpelers);
+			}
+		});
+		panel.add(tfMaxDelta, new ExtendedConstraints(1, 8));
+
+		// Delta aantal groepen met afwijkend aantal spelers
+		panel.add(new JLabel("Aantal afwijkende groepen aan boven- en onderzijde"),
+				new ExtendedConstraints(0, 9, 2, 1));
+		panel.add(new JLabel("Minimum:"), new ExtendedConstraints(0, 10));
+		JTextField tfMinDeltaGroepen = new JTextField(Integer.toString(status.minAfwijkendeGroepen), 10);
+		tfMinDeltaGroepen.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				status.minAfwijkendeGroepen = newIntegerValue(tfMinDeltaGroepen, status.minAfwijkendeGroepen);
+			}
+		});
+		panel.add(tfMinDeltaGroepen, new ExtendedConstraints(1, 10));
+		panel.add(new JLabel("Maximum:"), new ExtendedConstraints(0, 11));
+		JTextField tfMaxDeltaGroepen = new JTextField(Integer.toString(status.maxAfwijkendeGroepen), 10);
+		tfMaxDeltaGroepen.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				status.maxAfwijkendeGroepen = newIntegerValue(tfMaxDeltaGroepen, status.maxAfwijkendeGroepen);
+			}
+		});
+		panel.add(tfMaxDeltaGroepen, new ExtendedConstraints(1, 11));
+
+		// Byes
+		panel.add(new JLabel("Aantal toegestane byes"), new ExtendedConstraints(0, 12, 2, 1));
+		panel.add(new JLabel("Minimum:"), new ExtendedConstraints(0, 13));
+		JTextField tfMinByes = new JTextField(Integer.toString(status.minToegestaneByes), 10);
+		tfMinByes.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				status.minToegestaneByes = newIntegerValue(tfMinByes, status.minToegestaneByes);
+			}
+		});
+		panel.add(tfMinByes, new ExtendedConstraints(1, 13));
+		panel.add(new JLabel("Maximum:"), new ExtendedConstraints(0, 14));
+		JTextField tfMaxByes = new JTextField(Integer.toString(status.maxToegestaneByes), 10);
+		tfMaxByes.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				status.maxToegestaneByes = newIntegerValue(tfMaxByes, status.maxToegestaneByes);
+			}
+		});
+		panel.add(tfMaxByes, new ExtendedConstraints(1, 14));
+		JButton bSchemas = new JButton("Bepaal mogelijkheden");
+		bSchemas.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				bepaalSchemas();
+				groepenText.setText("");
+				panel.getParent().repaint();
+			}
+
+		});
+		panel.add(bSchemas, new ExtendedConstraints(0, 16));
+		JButton bGroepen = new JButton("Bepaal groepen");
+		bGroepen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if (schemaTabel != null) {
+					int row = schemaTabel.getSelectedRow();
+					bepaalGroepen(row);
+					maakExcelSchema();
+				}
+				panel.getParent().repaint();
+			}
+		});
+		panel.add(bGroepen, new ExtendedConstraints(1, 16));
+		panel.add(new JLabel(" "), new ExtendedConstraints(0, 17, 2, 1));
+		fixedComponentSize(panel, 300, 400);
+		return panel;
+	}
+
+	public JPanel createDeelnemersPanel() {
+		JPanel panel = new JPanel(false);
+		panel.setBackground(Color.BLACK);
+		panel.setLayout(new GridLayout(1, 0));
 		// panel_deelnemers.add(new JLabel("Deelnemers IJSCO toernooi"));
-		hoofdPanel.add(panel_deelnemers);
-		JTable deelnemersTabel = new JTable(new DeelnemersModel(panel_deelnemers, status.deelnemers)) {
+		JTable deelnemersTabel = new JTable(new DeelnemersModel(panel, status.deelnemers)) {
 			private static final long serialVersionUID = -8293073016982337108L;
 
 			@Override
@@ -141,209 +343,25 @@ public class Mainscreen extends JFrame {
 
 			@Override
 			public void tableChanged(TableModelEvent arg0) {
-				hoofdPanel.repaint();
+				status.groepen = null;
+				status.schemas = null;
+				status.schema = null;
+				groepenText.setText("");
+				schemaModel.setSchemas(null);
+				panel.repaint();
 			}
 
 		});
-		JScrollPane scrollPane = new javax.swing.JScrollPane();
+		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(deelnemersTabel);
-		panel_deelnemers.add(scrollPane);
+		panel.add(scrollPane);
 
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(0), 30);
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(1), 55);
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(2), 150);
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(3), 40);
 		fixedComponentSize(scrollPane, 300, 650);
-
-		// LINKSMIDDEN: INSTELLINGEN
-		panel_configuratie = new JPanel();
-		panel_configuratie.setBackground(Color.ORANGE);
-		hoofdPanel.add(panel_configuratie);
-		GridBagLayout gbl_panel_configuratie = new GridBagLayout();
-		gbl_panel_configuratie.columnWidths = new int[] { 128, 32, 0 };
-		gbl_panel_configuratie.rowHeights = new int[] { 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0 };
-		gbl_panel_configuratie.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panel_configuratie.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, Double.MIN_VALUE };
-		panel_configuratie.setLayout(gbl_panel_configuratie);
-
-		// Aantal groepen
-		JLabel label_4 = new JLabel("Aantal groepen");
-		panel_configuratie.add(label_4, new ExtendedConstraints(0, 0, 2, 1));
-		panel_configuratie.add(new JLabel("Minimum:"), new ExtendedConstraints(0, 1));
-		JTextField tfMinGroepen = new JTextField(Integer.toString(status.minGroepen), 10);
-		tfMinGroepen.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.minGroepen = newIntegerValue(tfMinGroepen, status.minGroepen);
-			}
-		});
-		panel_configuratie.add(tfMinGroepen, new ExtendedConstraints(1, 1));
-		panel_configuratie.add(new JLabel("Maximum:"), new ExtendedConstraints(0, 2));
-		JTextField tfMaxGroepen = new JTextField(Integer.toString(status.maxGroepen), 10);
-		tfMaxGroepen.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.maxGroepen = newIntegerValue(tfMaxGroepen, status.maxGroepen);
-			}
-		});
-		panel_configuratie.add(tfMaxGroepen, new ExtendedConstraints(1, 2));
-
-		// Aantal spelers
-		panel_configuratie.add(new JLabel("Aantal spelers per groep"), new ExtendedConstraints(0, 3, 2, 1));
-		panel_configuratie.add(new JLabel("Minimum:"), new ExtendedConstraints(0, 4));
-		JTextField tfMinSpelers = new JTextField(Integer.toString(status.minSpelers), 10);
-		tfMinSpelers.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.minSpelers = newIntegerValue(tfMinSpelers, status.minSpelers);
-			}
-		});
-		panel_configuratie.add(tfMinSpelers, new ExtendedConstraints(1, 4));
-		panel_configuratie.add(new JLabel("Maximum:"), new ExtendedConstraints(0, 5));
-		JTextField tfMaxSpelers = new JTextField(Integer.toString(status.maxSpelers), 10);
-		tfMaxSpelers.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.maxSpelers = newIntegerValue(tfMaxSpelers, status.maxSpelers);
-			}
-		});
-		panel_configuratie.add(tfMaxSpelers, new ExtendedConstraints(1, 5));
-
-		// Delta aantal spelers
-		panel_configuratie.add(new JLabel("Delta spelers voor hoogste en laagste groepen"),
-				new ExtendedConstraints(0, 6, 2, 1));
-		panel_configuratie.add(new JLabel("Minimum:"), new ExtendedConstraints(0, 7));
-		JTextField tfMinDelta = new JTextField(Integer.toString(status.minDeltaSpelers), 10);
-		tfMinDelta.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.minDeltaSpelers = newIntegerValue(tfMinDelta, status.minDeltaSpelers);
-			}
-		});
-		panel_configuratie.add(tfMinDelta, new ExtendedConstraints(1, 7));
-		panel_configuratie.add(new JLabel("Maximum:"), new ExtendedConstraints(0, 8));
-		JTextField tfMaxDelta = new JTextField(Integer.toString(status.maxDeltaSpelers), 10);
-		tfMaxDelta.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.maxDeltaSpelers = newIntegerValue(tfMaxDelta, status.maxDeltaSpelers);
-			}
-		});
-		panel_configuratie.add(tfMaxDelta, new ExtendedConstraints(1, 8));
-
-		// Delta aantal groepen met afwijkend aantal spelers
-		panel_configuratie.add(new JLabel("Aantal afwijkende groepen aan boven- en onderzijde"),
-				new ExtendedConstraints(0, 9, 2, 1));
-		panel_configuratie.add(new JLabel("Minimum:"), new ExtendedConstraints(0, 10));
-		JTextField tfMinDeltaGroepen = new JTextField(Integer.toString(status.minAfwijkendeGroepen), 10);
-		tfMinDeltaGroepen.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.minAfwijkendeGroepen = newIntegerValue(tfMinDeltaGroepen, status.minAfwijkendeGroepen);
-			}
-		});
-		panel_configuratie.add(tfMinDeltaGroepen, new ExtendedConstraints(1, 10));
-		panel_configuratie.add(new JLabel("Maximum:"), new ExtendedConstraints(0, 11));
-		JTextField tfMaxDeltaGroepen = new JTextField(Integer.toString(status.maxAfwijkendeGroepen), 10);
-		tfMaxDeltaGroepen.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.maxAfwijkendeGroepen = newIntegerValue(tfMaxDeltaGroepen, status.maxAfwijkendeGroepen);
-			}
-		});
-		panel_configuratie.add(tfMaxDeltaGroepen, new ExtendedConstraints(1, 11));
-
-		// Byes
-		panel_configuratie.add(new JLabel("Aantal toegestane byes"), new ExtendedConstraints(0, 12, 2, 1));
-		panel_configuratie.add(new JLabel("Minimum:"), new ExtendedConstraints(0, 13));
-		JTextField tfMinByes = new JTextField(Integer.toString(status.minToegestaneByes), 10);
-		tfMinByes.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.minToegestaneByes = newIntegerValue(tfMinByes, status.minToegestaneByes);
-			}
-		});
-		panel_configuratie.add(tfMinByes, new ExtendedConstraints(1, 13));
-		panel_configuratie.add(new JLabel("Maximum:"), new ExtendedConstraints(0, 14));
-		JTextField tfMaxByes = new JTextField(Integer.toString(status.maxToegestaneByes), 10);
-		tfMaxByes.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.maxToegestaneByes = newIntegerValue(tfMaxByes, status.maxToegestaneByes);
-			}
-		});
-		panel_configuratie.add(tfMaxByes, new ExtendedConstraints(1, 14));
-		JButton bSchemas = new JButton("Bepaal mogelijkheden");
-		bSchemas.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				bepaalSchemas();
-				hoofdPanel.repaint();
-			}
-
-		});
-		panel_configuratie.add(bSchemas, new ExtendedConstraints(0, 16));
-		JButton bGroepen = new JButton("Bepaal groepen");
-		bGroepen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				if (schemaTabel != null) {
-					int row = schemaTabel.getSelectedRow();
-					bepaalGroepen(row);
-					maakExcelSchema();
-				}
-				hoofdPanel.repaint();
-			}
-		});
-		panel_configuratie.add(bGroepen, new ExtendedConstraints(1, 16));
-
-		panel_configuratie.add(new JLabel(" "), new ExtendedConstraints(0, 17, 2, 1));
-
-		fixedComponentSize(panel_configuratie, 300, 400);
-
-		// RECHSTMIDDEN: SCENARIOS
-		panel_scenarios = new JPanel();
-		panel_scenarios.setBackground(Color.RED);
-		panel_scenarios.setLayout(new GridLayout(1, 0));
-		schemaModel = new SchemaModel(panel_scenarios, status.schemas);
-		schemaTabel = new JTable(schemaModel) {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-				Component c = super.prepareRenderer(renderer, row, column);
-				// Alternate row color
-				if (!isRowSelected(row)) {
-					c.setBackground(row % 2 == 0 ? Color.WHITE : Color.LIGHT_GRAY);
-				}
-				return c;
-			}
-		};
-		schemaTabel.getModel().addTableModelListener(new TableModelListener() {
-
-			@Override
-			public void tableChanged(TableModelEvent arg0) {
-				hoofdPanel.repaint();
-			}
-
-		});
-		JScrollPane scrollPane2 = new JScrollPane();
-		scrollPane2.setViewportView(schemaTabel);
-		panel_scenarios.add(scrollPane2);
-		hoofdPanel.add(panel_scenarios);
-
-		// RECHTS: GROEPEN
-		panel_groepen = new JPanel();
-		panel_groepen.setBackground(Color.YELLOW);
-		panel_groepen.setLayout(new GridLayout(1, 0));
-		groepenText = new JTextArea(40, 40);
-		groepenText.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		groepenText.setFont(new Font("courier new", Font.PLAIN, 12));
-		groepenText.setLineWrap(false);
-		if (status.groepen != null) {
-			groepenText.setText(status.groepen.getDescription());
-			groepenText.setCaretPosition(0);
-		}
-		JScrollPane scrollPane3 = new JScrollPane(groepenText);
-		scrollPane3.setAutoscrolls(true);
-		scrollPane3.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		panel_groepen.add(scrollPane3);
-		hoofdPanel.add(panel_groepen);
-
-		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent event) {
-				bewaarStatus();
-			}
-		});
+		return panel;
 	}
 
 	/**
