@@ -60,6 +60,7 @@ public class IJSCOIndeler {
 	 * @return
 	 */
 	public Groepen bepaalGroep(Schema schema, Deelnemers deelnemers) {
+		// TODO Wordt geen rekening gehouden met afwezigheid
 		ArrayList<Groepen> mogelijkheden = mogelijkeGroepen(deelnemers, schema.getGroepen(),
 				schema.getGroepsgroottes(), schema.getByes());
 		Groepen groep = bepaalOptimaleGroep(mogelijkheden);
