@@ -54,25 +54,11 @@ public class IJSCOIndeler {
 	}
 
 	/**
-	 * Lees spelers in en maak de groepsindeling
+	 * Bepaal beste groepsindeling op basis van schema en deelnemers
+	 * @param schema Schema om te vullen
+	 * @param deelnemers Deelnemers aan toernooi
+	 * @return
 	 */
-	public void indelen() {
-		Deelnemers deelnemers = bepaalDeelnemers();
-		System.out.format("Aantal spelers                       : %3d%n", deelnemers.size());
-
-		Schemas opties = mogelijkeSchemas(deelnemers.size());
-		System.out.format("Aantal mogelijke variaties           : %3d%n", opties.size());
-		int keuze = 12;
-		System.out.format("TO DO: Implementeer keuze, nu        : %3d%n", keuze);
-		System.out.format("Gekozen indelingsptroon              : %s%n", opties.get(keuze));
-
-		ArrayList<Groepen> mogelijkheden = mogelijkeGroepen(deelnemers, opties.get(keuze).getGroepen(),
-				opties.get(keuze).getGroepsgroottes(), opties.get(keuze).getByes());
-		System.out.format("Aantal mogelijkhede groepsindelingen : %3d%n", mogelijkheden.size());
-		Groepen groep = bepaalOptimaleGroep(mogelijkheden);
-		System.out.println("Beste indeling: " + groep);
-	}
-
 	public Groepen bepaalGroep(Schema schema, Deelnemers deelnemers) {
 		ArrayList<Groepen> mogelijkheden = mogelijkeGroepen(deelnemers, schema.getGroepen(),
 				schema.getGroepsgroottes(), schema.getByes());
@@ -204,53 +190,6 @@ public class IJSCOIndeler {
 		return mogelijkheden;
 	}
 
-	/**
-	 * Creeer een overzicht van alle mogelijke speelgroepen
-	 * Regels:
-	 * 1. Er spelen 4, 6, 8 of 10 spelers in een groep
-	 * 2. De hoogste groepen(maximaal 3) spelen met 2 of 4 spelers minder
-	 * 3. De laagste groepen(maximaal 3) spelen met 2 of 4 spelers meer
-	 * 4. Minimaal 4 spelers in een groep
-	 * 5. Maximaal 10 spelers in een groep
-	 * 6. Maximaal 16 groepen
-	 * 7. Maximaal 4 byes
-	 * @param nSpelers Aantal spelers
-	 * @return lijst met mogelijke groepen
-	 */
-	public Schemas mogelijkeSchemas(int size) {
-		Schemas mogelijkheden = new Schemas();
-		int[] v_midden = { 4, 6, 8, 10 }; // Basis is 4, 6, 8 of 10 spelers in een groep
-		int[] v_hoog = { 2, 4 }; // Hoogste groepen 2 of 4 spelers minder
-		int[] v_laag = { 2, 4 }; // Laagste groepen 2 of 4 spelers meer
-		for (int n_midden : v_midden) { // itereer of standaard groepsgrootte
-			for (int d_hoog : v_hoog) { // itereer of delta (-) groepsgrootte bovenste groepen
-				for (int d_laag : v_laag) { // itereer of delta (+) groepsgrootte onderste groepen
-					int n_hoog = n_midden - d_hoog; // aantal spelers in bovenste groepen
-					int n_laag = n_midden + d_laag; // aantal spelers in onderste groepen
-					for (int i = 0; i < 3; i++) { // itereer over aantal (1..2) aan te passen hoogste groepen
-						for (int j = 0; j < 3; j++) { // itereer over aantal (1..3) aan te passen onderste groepen
-							int size_midden = size - (n_hoog * i) - (n_laag * j); // aantal spelers in standaard groepen
-							if (size_midden > 0) {
-								int gr_midden = (size_midden / n_midden) + (((size_midden % n_midden) == 0) ? 0 : 1);
-								int[] groepen = creeerGroottes(i, n_hoog, gr_midden, n_midden, j, n_laag);
-								int byes = bepaalByes(groepen, size);
-								if ((n_hoog >= 4) && (n_laag <= 10) && (groepen.length <= 16) && (byes <= 4)) {
-									// Rule 1. Minimaal 4 spelers in een groep
-									// Rule 2. Maximaal 10 spelers in een groep
-									// Rule 3. Maximaal 16 groepen
-									// Rule 4. Maximaal 4 byes
-									// System.out.println(printArray(groepen,
-									// size));
-									mogelijkheden.add(new Schema(groepen.length, byes, groepen));
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return mogelijkheden;
-	}
 
 	/**
 	 * Creeer int array met groepsgroottes
@@ -288,15 +227,4 @@ public class IJSCOIndeler {
 			tot += v;
 		return (tot - n);
 	}
-
-	/**
-	 * Main start
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		IJSCOIndeler indeler = new IJSCOIndeler();
-		indeler.indelen();
-
-	}
-
 }

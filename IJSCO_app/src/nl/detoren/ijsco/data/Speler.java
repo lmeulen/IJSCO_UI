@@ -44,7 +44,7 @@ public class Speler {
 		} else if (ratingKNSB > 0) {
 			return ratingKNSB;
 		} else {
-			return 100;
+			return 0;
 		}
 	}
 

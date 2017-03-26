@@ -1,6 +1,5 @@
 package nl.detoren.ijsco.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -15,13 +14,15 @@ import java.awt.event.FocusEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -37,9 +38,14 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import com.google.gson.Gson;
 
-import nl.detoren.ijsco.data.Schema;
+import nl.detoren.ijsco.data.Groep;
 import nl.detoren.ijsco.data.Status;
 import nl.detoren.ijsco.ui.control.IJSCOIndeler;
 import nl.detoren.ijsco.ui.model.DeelnemersModel;
@@ -147,7 +153,7 @@ public class Mainscreen extends JFrame {
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(1), 55);
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(2), 150);
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(3), 40);
-		fixedComponentSize(scrollPane, 300,	650);
+		fixedComponentSize(scrollPane, 300, 650);
 
 		// LINKSMIDDEN: INSTELLINGEN
 		panel_configuratie = new JPanel();
@@ -262,16 +268,10 @@ public class Mainscreen extends JFrame {
 		bSchemas.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				// TODO Update mogelijkheden model
-				int ndeelnemers = status.deelnemers.aantalAanwezig();
-				logger.log(Level.INFO, "Bepaal mogelijkheden voor n=" + ndeelnemers);
-				status.schemas = indeler.mogelijkeSchemas(status);
-				for (Schema s : status.schemas) {
-					System.out.println(s);
-				}
-				schemaModel.setSchemas(status.schemas);
+				bepaalSchemas();
 				hoofdPanel.repaint();
 			}
+
 		});
 		panel_configuratie.add(bSchemas, new ExtendedConstraints(0, 16));
 		JButton bGroepen = new JButton("Bepaal groepen");
@@ -280,14 +280,8 @@ public class Mainscreen extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 				if (schemaTabel != null) {
 					int row = schemaTabel.getSelectedRow();
-					status.schema = schemaModel.getSchema(row);
-					logger.log(Level.INFO, "Bepaal groepen voor schema " + status.schema);
-					if (status.schema != null) {
-						status.groepen = indeler.bepaalGroep(status.schema, status.deelnemers);
-						System.out.println(status.groepen.getDescription());
-						groepenText.setText(status.groepen.getDescription());
-						groepenText.setCaretPosition(0);
-					}
+					bepaalGroepen(row);
+					maakExcelSchema();
 				}
 				hoofdPanel.repaint();
 			}
@@ -296,8 +290,7 @@ public class Mainscreen extends JFrame {
 
 		panel_configuratie.add(new JLabel(" "), new ExtendedConstraints(0, 17, 2, 1));
 
-		fixedComponentSize(panel_configuratie, 300,	400);
-
+		fixedComponentSize(panel_configuratie, 300, 400);
 
 		// RECHSTMIDDEN: SCENARIOS
 		panel_scenarios = new JPanel();
@@ -332,7 +325,7 @@ public class Mainscreen extends JFrame {
 		panel_groepen = new JPanel();
 		panel_groepen.setBackground(Color.YELLOW);
 		panel_groepen.setLayout(new GridLayout(1, 0));
-		groepenText = new JTextArea(40,40);
+		groepenText = new JTextArea(40, 40);
 		groepenText.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		groepenText.setFont(new Font("courier new", Font.PLAIN, 12));
 		groepenText.setLineWrap(false);
@@ -353,6 +346,14 @@ public class Mainscreen extends JFrame {
 		});
 	}
 
+	/**
+	 * Bepaal de nieuwe integer waarde voor een textfield Als het tekstveld een
+	 * geldig getal bevat, wordt deze waarde geretourneerd anders de oude waarde
+	 *
+	 * @param text
+	 * @param oldValue
+	 * @return
+	 */
 	private int newIntegerValue(JTextField text, int oldValue) {
 		int value;
 		try {
@@ -395,14 +396,120 @@ public class Mainscreen extends JFrame {
 	}
 
 	private void fixedComponentSize(Component c, int width, int height) {
-        c.setMinimumSize(new Dimension(width, height));
-        c.setMaximumSize(new Dimension(width, height));
-        c.setPreferredSize(new Dimension(width, height));
-        c.setSize(new Dimension(width, height));
-    }
+		c.setMinimumSize(new Dimension(width, height));
+		c.setMaximumSize(new Dimension(width, height));
+		c.setPreferredSize(new Dimension(width, height));
+		c.setSize(new Dimension(width, height));
+	}
 
-    private void fixedColumSize(TableColumn c, int width) {
-        c.setMinWidth(width);
-        c.setMaxWidth(width);
-    }
+	private void fixedColumSize(TableColumn c, int width) {
+		c.setMinWidth(width);
+		c.setMaxWidth(width);
+	}
+
+	/**
+	 * Bepaal de mogelijke schemas op basis van het aantals spelers en de
+	 * gemaakte instellingen
+	 */
+	public void bepaalSchemas() {
+		int ndeelnemers = status.deelnemers.aantalAanwezig();
+		logger.log(Level.INFO, "Bepaal mogelijkheden voor n=" + ndeelnemers);
+		status.schemas = indeler.mogelijkeSchemas(status);
+		schemaModel.setSchemas(status.schemas);
+	}
+
+	/**
+	 * Bepaal de groepsindeling op basis van het geselecteerde schema
+	 *
+	 * @param row
+	 *            Gesleecteerde schema
+	 */
+	public void bepaalGroepen(int row) {
+		status.schema = schemaModel.getSchema(row);
+		logger.log(Level.INFO, "Bepaal groepen voor schema " + status.schema);
+		if (status.schema != null) {
+			status.groepen = indeler.bepaalGroep(status.schema, status.deelnemers);
+			System.out.println(status.groepen.getDescription());
+			groepenText.setText(status.groepen.getDescription());
+			groepenText.setCaretPosition(0);
+		}
+	}
+
+	public void maakExcelSchema() {
+		try {
+			int[] sheetindx = new int[] { -1, -1, -1, -1, 3, -1, 2, -1, 1, -1, 0, -1, -1, -1, -1, -1, -1, -1 };
+			FileInputStream file = new FileInputStream("Indeling.xlsm");
+			XSSFWorkbook workbook = new XSSFWorkbook(file);
+			for (Groep groep : status.groepen) {
+				logger.log(Level.INFO, "Exporteer groep : " + groep.getNaam());
+				XSSFSheet sheet = workbook.cloneSheet(sheetindx[groep.getGrootte()]);
+				updateCell(sheet, 0, 6, groep.getNaam());
+				for (int i = 0; i < groep.getGrootte(); i++) {
+					updateCell(sheet, 3+i, 2, groep.getSpeler(i).getNaam());
+					updateCell(sheet, 3+i, 3, groep.getSpeler(i).getKnsbnummer());
+					updateCell(sheet, 3+i, 5, groep.getSpeler(i).getRating());
+				}
+				sheet.setForceFormulaRecalculation(true);
+				workbook.setSheetName(workbook.getSheetIndex(sheet), groep.getNaam());
+			}
+			// Remove template sheets
+			for (int i = 0; i < 4; i++) {
+				workbook.removeSheetAt(0);
+			}
+			// Close input file
+			file.close();
+			// Store Excel to new file
+			String filename = "Indeling resultaat.xlsm";
+			File outputFile = new File(filename);
+			FileOutputStream outFile = new FileOutputStream(outputFile);
+			workbook.write(outFile);
+			// Close output file
+			workbook.close();
+			outFile.close();
+			// And open it in the system editor
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Fout bij maken indeling excel : " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Update a single cell in the Excel Sheet. The cell is specified by its row
+	 * and column. Row and column numbers start with 0, so column A equals 0,
+	 * column B equals 1, etc.
+	 *
+	 * @param sheet
+	 *            The Excel sheet to update
+	 * @param row
+	 *            The row number, starting with 0
+	 * @param col
+	 *            The column number, staring with 0
+	 * @param value
+	 *            THe value to store in the cell
+	 */
+	private void updateCell(XSSFSheet sheet, int row, int col, String value) {
+		Cell cell = getCell(sheet, row, col);
+		cell.setCellValue(value.trim());
+	}
+
+	private void updateCell(XSSFSheet sheet, int row, int col, int value) {
+		Cell cell = getCell(sheet, row, col);
+		cell.setCellValue(value);
+	}
+
+	private Cell getCell(XSSFSheet sheet, int row, int col) {
+		Cell cell = null;
+
+		// Retrieve the row and create when not valid
+		XSSFRow sheetrow = sheet.getRow(row);
+		if (sheetrow == null) {
+			sheetrow = sheet.createRow(row);
+		}
+		// Retrieve the correct cell from the column
+		cell = sheetrow.getCell(col);
+		if (cell == null) {
+			cell = sheetrow.createCell(col);
+		}
+		return cell;
+	}
+
 }

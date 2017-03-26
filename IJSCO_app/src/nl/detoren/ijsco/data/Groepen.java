@@ -1,6 +1,11 @@
 package nl.detoren.ijsco.data;
 
-public class Groepen {
+import java.util.Arrays;
+import java.util.Iterator;
+
+import org.apache.poi.hssf.model.ConvertAnchor;
+
+public class Groepen implements Iterable<Groep> {
 	private Groep[] groepen;
 	private int aantal;
 
@@ -94,5 +99,10 @@ public class Groepen {
 			result = Math.max(g.getAantal(), result);
 		}
 		return result;
+	}
+
+	@Override
+	public Iterator<Groep> iterator() {
+		return Arrays.asList(groepen).iterator();
 	}
 }

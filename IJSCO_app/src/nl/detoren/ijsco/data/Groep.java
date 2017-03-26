@@ -59,7 +59,7 @@ public class Groep {
 	}
 
 	public Speler getSpeler(int i) {
-		return (i < aantal) ? spelers[i] : null;
+		return (i < grootte) ? spelers[i] : null;
 	}
 
 	public int getMinRating() {
