@@ -1,5 +1,4 @@
-# IJSCO_UI
-# Under development, pre beta fase
+# IJSCO_UI (Under development)
 Applicatie voor het maken en bijhouden van wedstrijdschema's voor IJSCO toernooien.
 
 Mogelijkheden:
