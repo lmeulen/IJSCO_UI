@@ -1,7 +1,9 @@
 package nl.detoren.ijsco.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagLayout;
@@ -19,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -32,6 +35,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import com.google.gson.Gson;
 
@@ -92,7 +96,7 @@ public class Mainscreen extends JFrame {
 			status.deelnemers = indeler.bepaalDeelnemers();
 		}
 
-		setBounds(100, 100, 1040, 580);
+		setBounds(25, 25, 1300, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("IJSCO Groepenindeler");
 		getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
@@ -126,6 +130,7 @@ public class Mainscreen extends JFrame {
 				return c;
 			}
 		};
+
 		deelnemersTabel.getModel().addTableModelListener(new TableModelListener() {
 
 			@Override
@@ -137,6 +142,12 @@ public class Mainscreen extends JFrame {
 		JScrollPane scrollPane = new javax.swing.JScrollPane();
 		scrollPane.setViewportView(deelnemersTabel);
 		panel_deelnemers.add(scrollPane);
+
+		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(0), 30);
+		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(1), 55);
+		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(2), 150);
+		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(3), 40);
+		fixedComponentSize(scrollPane, 300,	650);
 
 		// LINKSMIDDEN: INSTELLINGEN
 		panel_configuratie = new JPanel();
@@ -267,7 +278,6 @@ public class Mainscreen extends JFrame {
 		bGroepen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				// TODO Update gekozen scenario
 				if (schemaTabel != null) {
 					int row = schemaTabel.getSelectedRow();
 					status.schema = schemaModel.getSchema(row);
@@ -285,6 +295,9 @@ public class Mainscreen extends JFrame {
 		panel_configuratie.add(bGroepen, new ExtendedConstraints(1, 16));
 
 		panel_configuratie.add(new JLabel(" "), new ExtendedConstraints(0, 17, 2, 1));
+
+		fixedComponentSize(panel_configuratie, 300,	400);
+
 
 		// RECHSTMIDDEN: SCENARIOS
 		panel_scenarios = new JPanel();
@@ -366,7 +379,7 @@ public class Mainscreen extends JFrame {
 		}
 	}
 
-	public void bewaarStatus() {
+	private void bewaarStatus() {
 		try {
 			String bestandsnaam = "status.json";
 			logger.log(Level.INFO, "Sla status op in bestand " + bestandsnaam);
@@ -380,4 +393,16 @@ public class Mainscreen extends JFrame {
 			logger.log(Level.SEVERE, "Error saving status : " + e.getMessage());
 		}
 	}
+
+	private void fixedComponentSize(Component c, int width, int height) {
+        c.setMinimumSize(new Dimension(width, height));
+        c.setMaximumSize(new Dimension(width, height));
+        c.setPreferredSize(new Dimension(width, height));
+        c.setSize(new Dimension(width, height));
+    }
+
+    private void fixedColumSize(TableColumn c, int width) {
+        c.setMinWidth(width);
+        c.setMaxWidth(width);
+    }
 }

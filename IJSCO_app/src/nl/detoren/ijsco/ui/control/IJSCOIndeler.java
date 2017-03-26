@@ -155,7 +155,7 @@ public class IJSCOIndeler {
 		Groepen groepen = new Groepen(nGroepen, grootte);
 		Iterator<Speler> it = deelnemers.iterator();
 		for (int i = 0; i < nGroepen; i++) {
-			Groep groep = new Groep(grootte[i], String.format("Groep %2d", i));
+			Groep groep = new Groep(grootte[i], String.format("Groep %1s", (char)((int)('A') + i)));
 			int n = (getBit(byemask, i) == 1) ? grootte[i] - 1 : grootte[i];
 			for (int j = 0; j < n; j++) {
 				groep.addSpeler(it.next());
