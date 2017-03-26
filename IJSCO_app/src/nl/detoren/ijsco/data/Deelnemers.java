@@ -174,4 +174,13 @@ public class Deelnemers implements Collection<Speler> {
 			}
 		});
 	}
+
+	public Deelnemers getAanwezigen() {
+		Deelnemers result = new Deelnemers();
+		for (Speler s : deelnemers) {
+			if (s.isAanwezig())
+				result.add(s);
+		}
+		return result;
+	}
 }
