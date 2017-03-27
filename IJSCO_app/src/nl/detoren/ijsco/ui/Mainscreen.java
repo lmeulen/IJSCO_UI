@@ -1,3 +1,16 @@
+/**
+ * Copyright (C) 2016 Leo van der Meulen
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation version 3.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * See: http://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * Problemen in deze code:
+ */
 package nl.detoren.ijsco.ui;
 
 import java.awt.Color;
@@ -53,7 +66,6 @@ import nl.detoren.ijsco.ui.model.SchemaModel;
 
 @SuppressWarnings("serial")
 public class Mainscreen extends JFrame {
-
 
 	private SchemaModel schemaModel;
 	private JTable schemaTabel;
@@ -184,8 +196,8 @@ public class Mainscreen extends JFrame {
 		gbl_panel.columnWidths = new int[] { 128, 32, 0 };
 		gbl_panel.rowHeights = new int[] { 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0 };
 		gbl_panel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 
 		// Aantal groepen
@@ -228,8 +240,7 @@ public class Mainscreen extends JFrame {
 		panel.add(tfMaxSpelers, new ExtendedConstraints(1, 5));
 
 		// Delta aantal spelers
-		panel.add(new JLabel("Delta spelers voor hoogste en laagste groepen"),
-				new ExtendedConstraints(0, 6, 2, 1));
+		panel.add(new JLabel("Delta spelers voor hoogste en laagste groepen"), new ExtendedConstraints(0, 6, 2, 1));
 		panel.add(new JLabel("Minimum:"), new ExtendedConstraints(0, 7));
 		JTextField tfMinDelta = new JTextField(Integer.toString(status.minDeltaSpelers), 10);
 		tfMinDelta.addFocusListener(new FocusAdapter() {
@@ -348,6 +359,7 @@ public class Mainscreen extends JFrame {
 				status.schema = null;
 				groepenText.setText("");
 				schemaModel.setSchemas(null);
+				schemaModel.fireTableDataChanged();
 				panel.repaint();
 			}
 
@@ -433,6 +445,7 @@ public class Mainscreen extends JFrame {
 		int ndeelnemers = status.deelnemers.aantalAanwezig();
 		logger.log(Level.INFO, "Bepaal mogelijkheden voor n=" + ndeelnemers);
 		status.schemas = indeler.mogelijkeSchemas(status);
+		status.schema = null;
 		schemaModel.setSchemas(status.schemas);
 	}
 
@@ -463,9 +476,9 @@ public class Mainscreen extends JFrame {
 				XSSFSheet sheet = workbook.cloneSheet(sheetindx[groep.getGrootte()]);
 				updateCell(sheet, 0, 6, groep.getNaam());
 				for (int i = 0; i < groep.getGrootte(); i++) {
-					updateCell(sheet, 3+i, 2, groep.getSpeler(i).getNaam());
-					updateCell(sheet, 3+i, 3, groep.getSpeler(i).getKnsbnummer());
-					updateCell(sheet, 3+i, 5, groep.getSpeler(i).getRating());
+					updateCell(sheet, 3 + i, 2, groep.getSpeler(i).getNaam());
+					updateCell(sheet, 3 + i, 3, groep.getSpeler(i).getKnsbnummer());
+					updateCell(sheet, 3 + i, 5, groep.getSpeler(i).getRating());
 				}
 				sheet.setForceFormulaRecalculation(true);
 				workbook.setSheetName(workbook.getSheetIndex(sheet), groep.getNaam());

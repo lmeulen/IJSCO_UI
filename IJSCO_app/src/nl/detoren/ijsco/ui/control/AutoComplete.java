@@ -1,3 +1,16 @@
+/**
+ * Copyright (C) 2016 Leo van der Meulen
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation version 3.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * See: http://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * Problemen in deze code:
+ */
 package nl.detoren.ijsco.ui.control;
 
 import java.awt.event.ActionEvent;
@@ -17,18 +30,18 @@ public class AutoComplete implements DocumentListener {
 		INSERT, COMPLETION
 	};
 
-	private JTextField textField;
-	private List<String> keywords;
-	private Mode mode = Mode.INSERT;
+	private JTextField tekstveld;
+	private List<String> woorden;
+	private Mode modus = Mode.INSERT;
 
-	public AutoComplete(JTextField textField, List<String> keywords) {
-		this.textField = textField;
-		this.keywords = keywords;
-		Collections.sort(keywords);
+	public AutoComplete(JTextField veld, List<String> woorden) {
+		this.tekstveld = veld;
+		this.woorden = woorden;
+		Collections.sort(woorden);
 	}
 
-	public void setKeywords(List<String> keywords) {
-		this.keywords = keywords;
+	public void setKeywords(List<String> woorden) {
+		this.woorden = woorden;
 	}
 
 	@Override
@@ -47,7 +60,7 @@ public class AutoComplete implements DocumentListener {
 		int pos = ev.getOffset();
 		String content = null;
 		try {
-			content = textField.getText(0, pos + 1);
+			content = tekstveld.getText(0, pos + 1);
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
@@ -65,9 +78,9 @@ public class AutoComplete implements DocumentListener {
 			return;
 
 		String prefix = content.substring(w + 1).toLowerCase();
-		int n = Collections.binarySearch(keywords, prefix);
-		if (n < 0 && -n <= keywords.size()) {
-			String match = keywords.get(-n - 1);
+		int n = Collections.binarySearch(woorden, prefix);
+		if (n < 0 && -n <= woorden.size()) {
+			String match = woorden.get(-n - 1);
 			if (match.startsWith(prefix)) {
 				// A completion is found
 				String completion = match.substring(pos - w);
@@ -77,7 +90,7 @@ public class AutoComplete implements DocumentListener {
 			}
 		} else {
 			// Nothing found
-			mode = Mode.INSERT;
+			modus = Mode.INSERT;
 		}
 	}
 
@@ -89,15 +102,15 @@ public class AutoComplete implements DocumentListener {
 
 		@Override
 		public void actionPerformed(ActionEvent ev) {
-			if (mode == Mode.COMPLETION) {
-				int pos = textField.getSelectionEnd();
-				StringBuffer sb = new StringBuffer(textField.getText());
+			if (modus == Mode.COMPLETION) {
+				int pos = tekstveld.getSelectionEnd();
+				StringBuffer sb = new StringBuffer(tekstveld.getText());
 				sb.insert(pos, " ");
-				textField.setText(sb.toString());
-				textField.setCaretPosition(pos + 1);
-				mode = Mode.INSERT;
+				tekstveld.setText(sb.toString());
+				tekstveld.setCaretPosition(pos + 1);
+				modus = Mode.INSERT;
 			} else {
-				textField.replaceSelection("\t");
+				tekstveld.replaceSelection("\t");
 			}
 		}
 	}
@@ -112,12 +125,12 @@ public class AutoComplete implements DocumentListener {
 		}
 
 		public void run() {
-			StringBuffer sb = new StringBuffer(textField.getText());
+			StringBuffer sb = new StringBuffer(tekstveld.getText());
 			sb.insert(position, completion);
-			textField.setText(sb.toString());
-			textField.setCaretPosition(position + completion.length());
-			textField.moveCaretPosition(position);
-			mode = Mode.COMPLETION;
+			tekstveld.setText(sb.toString());
+			tekstveld.setCaretPosition(position + completion.length());
+			tekstveld.moveCaretPosition(position);
+			modus = Mode.COMPLETION;
 		}
 	}
 
