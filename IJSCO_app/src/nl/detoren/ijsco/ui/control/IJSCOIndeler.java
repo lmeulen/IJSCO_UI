@@ -37,7 +37,8 @@ public class IJSCOIndeler {
 		// Lees deelnemers bestand in
 		Deelnemers deelnemers = new DeelnemersLader().importeerSpelers("deelnemers.csv");
 		// Lees OSBO rating lijst in
-		Deelnemers osbolijst = new OSBOLoader().laadBestand("OSBO Jeugd-rating-lijst.htm");
+		Deelnemers osbolijst = new OSBOLoader().laadWebsite();
+		//Deelnemers osbolijst = new OSBOLoader().laadBestand("OSBO Jeugd-rating-lijst.htm");
 		// Werk spelers bij obv OSBO lijst. OSBO lijst is leidend
 		deelnemers = controleerSpelers(deelnemers, osbolijst);
 		// Sorteer deelnemers, aflopend. op rating

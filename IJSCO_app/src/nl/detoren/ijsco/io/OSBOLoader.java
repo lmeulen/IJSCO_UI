@@ -56,15 +56,48 @@ public class OSBOLoader {
 
 	private Deelnemers load(Document doc) {
 		Deelnemers spelers = new Deelnemers();
+		int knsbnummer = 0;
+		int knsbrating = 0;
+		int osborating = 0;
+		String naam = "";
 		Element table = doc.select("table").first();
 		Elements rows = table.select("tr");
 		for (Element row : rows) {
 			Elements cells = row.select("td");
 			if (cells.size() > 7) {
-				String naam = cells.get(1).text();
-				int knsbnummer = Integer.parseInt(cells.get(8).text());
-				int osborating = Integer.parseInt(cells.get(3).text());
-				int knsbrating = Integer.parseInt(cells.get(4).text());
+				try 
+				{
+					naam = cells.get(1).text();
+				}
+				catch (Exception e)
+				{
+					System.out.println(e);
+				}
+				try 
+				{
+					knsbnummer = Integer.parseInt(cells.get(8).text());
+				}
+				catch (Exception e)
+				{
+					System.out.println(e);
+				}
+				try
+				{
+					osborating = Integer.parseInt(cells.get(3).text());
+				}
+				catch (Exception e)
+				{
+					System.out.println(e);
+				}
+				try
+				{
+				knsbrating = Integer.parseInt(cells.get(4).text());
+				}
+				catch (Exception e)
+				{
+					System.out.println(e);
+				}
+
 				Speler s = new Speler(knsbnummer, naam, osborating, knsbrating);
 				spelers.add(s);
 			}
