@@ -19,6 +19,9 @@ import java.awt.Insets;
 @SuppressWarnings("serial")
 public class ExtendedConstraints extends GridBagConstraints {
 
+	//private static final Insets insets5555 = new Insets(5, 5, 5, 5);
+	private static final Insets insets5500 = new Insets(5, 5, 0, 0);
+
 	@SuppressWarnings("unused")
 	private ExtendedConstraints() {
 	}
@@ -34,7 +37,7 @@ public class ExtendedConstraints extends GridBagConstraints {
 
 	public ExtendedConstraints(int fill, int x, int y, int width, int height) {
 		this.fill = fill;
-		this.insets = new Insets(5, 5, 5, 5);
+		this.insets = insets5500;
 		this.gridx = x;
 		this.gridy = y;
 		this.gridwidth = width;
@@ -43,7 +46,7 @@ public class ExtendedConstraints extends GridBagConstraints {
 
 	public ExtendedConstraints(int x, int y, int width, int height) {
 		this.fill = GridBagConstraints.BOTH;
-		this.insets = new Insets(5, 5, 5, 5);
+		this.insets = insets5500;
 		this.gridx = x;
 		this.gridy = y;
 		this.gridwidth = width;
@@ -52,7 +55,7 @@ public class ExtendedConstraints extends GridBagConstraints {
 
 	public ExtendedConstraints(int x, int y) {
 		this.fill = GridBagConstraints.BOTH;
-		this.insets = new Insets(5, 5, 5, 5);
+		this.insets = insets5500;
 		this.gridx = x;
 		this.gridy = y;
 		this.gridwidth = 1;

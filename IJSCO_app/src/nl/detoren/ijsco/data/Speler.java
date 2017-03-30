@@ -33,6 +33,16 @@ public class Speler {
 		aanwezig = true;
 	}
 
+	public Speler(String naam) {
+		knsbnummer = 0;
+		naamKNSB = null;
+		naamHandmatig = naam;
+		ratingIJSCO = -1;
+		ratingKNSB = -1;
+		ratingHandmatig = -1;
+		aanwezig = true;
+	}
+
 	public Speler(int knsbnummer, String naamKNSB, int ratingIJSCO, int ratingKNSB) {
 		this.knsbnummer = knsbnummer;
 		this.naamKNSB = naamKNSB;

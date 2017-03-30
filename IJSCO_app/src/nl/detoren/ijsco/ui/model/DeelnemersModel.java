@@ -10,6 +10,7 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
+ * - Voorkom bij toevoegen dubbele KNSB nummers
  */
 package nl.detoren.ijsco.ui.model;
 
@@ -123,5 +124,11 @@ public class DeelnemersModel extends AbstractTableModel {
 			return "";
 		}
 	}
+
+    public void add(Speler s) {
+    	if (deelnemers != null) {
+    		deelnemers.add(s);
+    	}
+    }
 
 }

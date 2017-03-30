@@ -31,6 +31,7 @@ public class Deelnemers implements Collection<Speler> {
 	public boolean add(Speler arg0) {
 		if (arg0 != null) {
 			deelnemers.add(arg0);
+			sort();
 			return true;
 		}
 		return false;
@@ -42,6 +43,7 @@ public class Deelnemers implements Collection<Speler> {
 			for (Speler speler : arg0) {
 				add(speler);
 			}
+			sort();
 			return true;
 		}
 		return false;

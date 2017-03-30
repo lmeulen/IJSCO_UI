@@ -10,9 +10,12 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
+ * - Enter op naamveld linksboven gelijk aan toevoeg knop
+ * - Kunnen bewerken/verwijderen van een speler
  */
 package nl.detoren.ijsco.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -32,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,8 +63,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.google.gson.Gson;
 
 import nl.detoren.ijsco.data.Groep;
+import nl.detoren.ijsco.data.Speler;
 import nl.detoren.ijsco.data.Status;
 import nl.detoren.ijsco.ui.control.IJSCOIndeler;
+import nl.detoren.ijsco.ui.control.Suggesties;
 import nl.detoren.ijsco.ui.model.DeelnemersModel;
 import nl.detoren.ijsco.ui.model.SchemaModel;
 
@@ -68,7 +74,9 @@ import nl.detoren.ijsco.ui.model.SchemaModel;
 public class Mainscreen extends JFrame {
 
 	private SchemaModel schemaModel;
+	private DeelnemersModel deelnemersModel;
 	private JTable schemaTabel;
+	private JPanel hoofdPanel;
 
 	private JTextArea groepenText;
 
@@ -110,6 +118,12 @@ public class Mainscreen extends JFrame {
 			status.deelnemers = indeler.bepaalDeelnemers();
 		}
 
+//		Deelnemers tmp = (new OSBOLoader()).laadBestand("OSBO Jeugd-rating-lijst.htm");
+//		status.OSBOSpelers = new HashMap<>();
+//		for (Speler d : tmp) {
+//			status.OSBOSpelers.put(d.getKnsbnummer(), d);
+//		}
+
 		// Frame
 		setBounds(25, 25, 1300, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -117,7 +131,7 @@ public class Mainscreen extends JFrame {
 		getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
 
 		// Frame - Hoofdpanel
-		JPanel hoofdPanel = new JPanel();
+		hoofdPanel = new JPanel();
 		getContentPane().add(hoofdPanel);
 		hoofdPanel.setLayout(new GridLayout(1, 4, 0, 0));
 
@@ -300,7 +314,9 @@ public class Mainscreen extends JFrame {
 		bSchemas.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
+				status.groepen = null;
 				bepaalSchemas();
+				schemaTabel.getSelectionModel().clearSelection();
 				groepenText.setText("");
 				panel.getParent().repaint();
 			}
@@ -328,9 +344,35 @@ public class Mainscreen extends JFrame {
 	public JPanel createDeelnemersPanel() {
 		JPanel panel = new JPanel(false);
 		panel.setBackground(Color.BLACK);
-		panel.setLayout(new GridLayout(1, 0));
+		//panel.setLayout(new GridLayout(1, 0));
+		panel.setLayout(new BorderLayout());
+		{
+			JPanel innerPanel = new JPanel();
+			//innerPanel.setLayout(new GridLayout(1, 0));
+			innerPanel.add(new JLabel("Naam:"), BorderLayout.NORTH);
+			JTextField deelnemer = new JTextField(15);
+			ArrayList<String> words = new ArrayList<>();
+			for (Speler s : status.OSBOSpelers.values()) {
+				words.add(s.getNaam());
+				words.add(Integer.toString(s.getKnsbnummer()));
+			}
+			@SuppressWarnings("unused")
+			Suggesties suggesties = new Suggesties(deelnemer, this, words, 2);
+			innerPanel.add(deelnemer, BorderLayout.NORTH);
+			JButton btVoegToe = new JButton("Voeg toe");
+			btVoegToe.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent event) {
+					actieVoegSpelerToe(deelnemer.getText().trim());
+					deelnemer.setText("");
+				}
+			});
+			innerPanel.add(btVoegToe);
+			panel.add(innerPanel);
+		}
 		// panel_deelnemers.add(new JLabel("Deelnemers IJSCO toernooi"));
-		JTable deelnemersTabel = new JTable(new DeelnemersModel(panel, status.deelnemers)) {
+		deelnemersModel = new DeelnemersModel(panel, status.deelnemers);
+		JTable deelnemersTabel = new JTable(deelnemersModel) {
 			private static final long serialVersionUID = -8293073016982337108L;
 
 			@Override
@@ -366,15 +408,49 @@ public class Mainscreen extends JFrame {
 		});
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(deelnemersTabel);
-		panel.add(scrollPane);
+		panel.add(scrollPane, BorderLayout.SOUTH);
 
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(0), 30);
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(1), 55);
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(2), 150);
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(3), 40);
-		fixedComponentSize(scrollPane, 300, 650);
+		fixedComponentSize(scrollPane, 300, 630);
 		return panel;
 	}
+
+	protected void actieVoegSpelerToe(String trim) {
+		int knsbnr = 0;
+		try {
+			knsbnr = Integer.parseInt(trim );
+		} catch (NumberFormatException e) {
+			knsbnr = -1;
+		}
+		Speler nieuw = null;
+		if (knsbnr > 0) {
+			nieuw = status.OSBOSpelers.get(knsbnr);
+			nieuw = (nieuw != null) ? nieuw : new Speler(knsbnr, "", -1, -1);
+		} else {
+			for (Speler s : status.OSBOSpelers.values()) {
+				if (s.getNaam().equals(trim)) {
+					nieuw = s;
+					break;
+				}
+			}
+			nieuw = (nieuw != null) ? nieuw : new Speler(trim);
+		}
+
+		BewerkSpelerDialoog rd = new BewerkSpelerDialoog(new JFrame(), "Bewerk Speler", nieuw, deelnemersModel);
+		rd.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				System.out.println("closing...");
+			}
+
+		});
+		rd.setVisible(true);
+
+	}
+
 
 	/**
 	 * Bepaal de nieuwe integer waarde voor een textfield Als het tekstveld een
@@ -468,6 +544,7 @@ public class Mainscreen extends JFrame {
 
 	public void maakExcelSchema() {
 		try {
+			if (status.groepen == null) return;
 			int[] sheetindx = new int[] { -1, -1, -1, -1, 3, -1, 2, -1, 1, -1, 0, -1, -1, -1, -1, -1, -1, -1 };
 			FileInputStream file = new FileInputStream("Indeling.xlsm");
 			XSSFWorkbook workbook = new XSSFWorkbook(file);
