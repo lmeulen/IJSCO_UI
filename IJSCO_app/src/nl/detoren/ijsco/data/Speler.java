@@ -23,6 +23,8 @@ public class Speler {
 	private int ratingKNSB;
 	private int ratingHandmatig;
 	private boolean aanwezig;
+	private boolean overruleNaam;
+	private boolean overruleRating;
 
 	public Speler() {
 		knsbnummer = 0;
@@ -32,6 +34,8 @@ public class Speler {
 		ratingKNSB = -1;
 		ratingHandmatig = -1;
 		aanwezig = true;
+		overruleNaam = false;
+		overruleRating = false;
 	}
 
 	public Speler(String naam) {
@@ -42,6 +46,8 @@ public class Speler {
 		ratingKNSB = -1;
 		ratingHandmatig = -1;
 		aanwezig = true;
+		overruleNaam = false;
+		overruleRating = false;
 	}
 
 	public Speler(int knsbnummer, String naamKNSB, int ratingIJSCO, int ratingKNSB) {
@@ -52,6 +58,8 @@ public class Speler {
 		this.ratingKNSB = ratingKNSB;
 		this.ratingHandmatig = -1;
 		this.aanwezig = true;
+		overruleNaam = false;
+		overruleRating = false;
 	}
 
 	/**
@@ -61,14 +69,16 @@ public class Speler {
 	 * @return Rating van de speler
 	 */
 	public int getRating() {
-		if (ratingIJSCO > 0) {
+		if (overruleRating) {
+			return ratingHandmatig;
+		} else if (ratingIJSCO > 0) {
 			return ratingIJSCO;
 		} else if (ratingHandmatig > 0) {
 			return ratingHandmatig;
 		} else if (ratingKNSB > 0) {
 			return ratingKNSB;
 		} else {
-			return 0;
+			return -1;
 		}
 	}
 
@@ -79,7 +89,9 @@ public class Speler {
 	 * @return
 	 */
 	public String getNaam() {
-		if (naamKNSB != null && naamKNSB.length() > 0) {
+		if (overruleNaam) {
+			return (naamHandmatig != null ? naamHandmatig : "");
+		} else if (naamKNSB != null && naamKNSB.length() > 0) {
 			return naamKNSB;
 		} else if (naamHandmatig != null && naamHandmatig.length() > 0) {
 			return naamHandmatig;
@@ -171,4 +183,22 @@ public class Speler {
 	public void setAanwezig(boolean aanwezig) {
 		this.aanwezig = aanwezig;
 	}
+
+	public boolean isOverruleNaam() {
+		return overruleNaam;
+	}
+
+	public void setOverruleNaam(boolean overruleNaam) {
+		this.overruleNaam = overruleNaam;
+	}
+
+	public boolean isOverruleRating() {
+		return overruleRating;
+	}
+
+	public void setOverruleRating(boolean overruleRating) {
+		this.overruleRating = overruleRating;
+	}
+
+
 }

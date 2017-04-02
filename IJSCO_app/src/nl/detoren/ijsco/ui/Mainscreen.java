@@ -440,7 +440,6 @@ public class Mainscreen extends JFrame {
 		panel.setBackground(Color.BLACK);
 		//panel.setLayout(new GridLayout(1, 0));
 		panel.setLayout(new BorderLayout());
-		{
 			JPanel innerPanel = new JPanel();
 			//innerPanel.setLayout(new GridLayout(1, 0));
 			innerPanel.add(new JLabel("Naam:"), BorderLayout.NORTH);
@@ -460,6 +459,7 @@ public class Mainscreen extends JFrame {
 					deelnemer.setText("");
 				}
 			});
+
 			JButton btVoegToe = new JButton("Voeg toe");
 			btVoegToe.addActionListener(new ActionListener() {
 				@Override
@@ -470,7 +470,6 @@ public class Mainscreen extends JFrame {
 			});
 			innerPanel.add(btVoegToe);
 			panel.add(innerPanel);
-		}
 		// panel_deelnemers.add(new JLabel("Deelnemers IJSCO toernooi"));
 		deelnemersModel = new DeelnemersModel(panel, status.deelnemers);
 		JTable deelnemersTabel = new JTable(deelnemersModel) {
@@ -479,15 +478,22 @@ public class Mainscreen extends JFrame {
 			@Override
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
+				DeelnemersModel model = (DeelnemersModel) getModel();
 				// Tooltip
 				if (c instanceof JComponent) {
-					DeelnemersModel model = (DeelnemersModel) getModel();
 					((JComponent) c).setToolTipText(model.getToolTip(row, column).toString());
 				}
 
 				// Alternate row color
 				if (!isRowSelected(row)) {
 					c.setBackground(row % 2 == 0 ? Color.WHITE : Color.LIGHT_GRAY);
+				}
+
+				// Highlight overruled entries
+				if (status.deelnemers.get(row).isOverruleNaam() || status.deelnemers.get(row).isOverruleNaam()) {
+					c.setForeground(Color.BLUE);
+				} else {
+					c.setForeground(Color.BLACK);
 				}
 				return c;
 			}
@@ -554,6 +560,7 @@ public class Mainscreen extends JFrame {
 				}
 			}
 		});
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(deelnemersTabel);
 		panel.add(scrollPane, BorderLayout.SOUTH);

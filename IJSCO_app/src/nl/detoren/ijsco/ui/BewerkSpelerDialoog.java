@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -51,13 +52,13 @@ public class BewerkSpelerDialoog extends JDialog {
         setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().add(createPanel());
-        setSize(300, 7 * 24);
+        setSize(300, 9 * 24);
         setLocationRelativeTo(frame);
     }
 
     private JPanel createPanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(7, 2));
+        panel.setLayout(new GridLayout(9, 2));
         //KNSB nummer
         panel.add(new JLabel("KNSB nummer"));
         final JTextField tfKNSBnr = new JTextField((new Integer(speler.getKnsbnummer())).toString());
@@ -84,6 +85,17 @@ public class BewerkSpelerDialoog extends JDialog {
         final JTextField tfRating3 = new JTextField((new Integer(speler.getRatingKNSB()).toString()));
         tfRating3.setEditable(false);
         panel.add(tfRating3);
+
+        // Overrule booleans
+        panel.add(new JLabel("Overrule naam"));
+        final JCheckBox tfOverruleNaam = new JCheckBox("Handmatige naam");
+        tfOverruleNaam.setSelected(speler.isOverruleNaam());
+        panel.add(tfOverruleNaam);
+        panel.add(new JLabel("Overrul rating"));
+        final JCheckBox tfOverruleRating = new JCheckBox("Handmatige rating");
+        tfOverruleRating.setSelected(speler.isOverruleRating());
+        panel.add(tfOverruleRating);
+
         JButton okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
 
@@ -94,6 +106,8 @@ public class BewerkSpelerDialoog extends JDialog {
                 speler.setRatingHandmatig(rating);
                 int knsb = Integer.parseInt(tfKNSBnr.getText());
                 speler.setRatingKNSB(knsb);
+                speler.setOverruleNaam(tfOverruleNaam.isSelected());
+                speler.setOverruleRating(tfOverruleRating.isSelected());
                 setVisible(false);
                 // TODO Opslaan
                 model.add(speler);
