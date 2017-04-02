@@ -65,7 +65,7 @@ public class OSBOLoader {
 		for (Element row : rows) {
 			Elements cells = row.select("td");
 			if (cells.size() > 7) {
-				try 
+				try
 				{
 					naam = cells.get(1).text();
 				}
@@ -73,7 +73,7 @@ public class OSBOLoader {
 				{
 					System.out.println(e);
 				}
-				try 
+				try
 				{
 					knsbnummer = Integer.parseInt(cells.get(8).text());
 				}
