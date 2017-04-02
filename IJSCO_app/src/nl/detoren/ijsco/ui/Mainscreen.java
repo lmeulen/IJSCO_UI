@@ -10,13 +10,13 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
- * - Enter op naamveld linksboven gelijk aan toevoeg knop
- * - Kunnen bewerken/verwijderen van een speler
- * - Overzicht aantal aanwezige deelnemers
- * - Verwijderen/bewerken speler in contextmenu
- * - Inlezen OSBO lijst
- * - Inlezen deelnemers (toevoegen)
- * - Wissen deelnemerslijst
+ * - TODO Enter op naamveld linksboven gelijk aan toevoeg knop
+ * - TODO Kunnen bewerken/verwijderen van een speler
+ * - TODO Overzicht aantal aanwezige deelnemers
+ * - TODO Verwijderen/bewerken speler in contextmenu
+ * - TODO Inlezen OSBO lijst
+ * - TODO Inlezen deelnemers (toevoegen)
+ * - TODO Wissen deelnemerslijst
  */
 package nl.detoren.ijsco.ui;
 
@@ -358,7 +358,7 @@ public class Mainscreen extends JFrame {
 			JTextField deelnemer = new JTextField(15);
 			ArrayList<String> words = new ArrayList<>();
 			for (Speler s : status.OSBOSpelers.values()) {
-				words.add(s.getNaam());
+				words.add(s.getNaam().toLowerCase().trim());
 				words.add(Integer.toString(s.getKnsbnummer()));
 			}
 			@SuppressWarnings("unused")

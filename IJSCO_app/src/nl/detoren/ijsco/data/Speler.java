@@ -10,6 +10,7 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
+ * - TODO Hoogste prio handinvoer mogelijk maken
  */
 package nl.detoren.ijsco.data;
 
