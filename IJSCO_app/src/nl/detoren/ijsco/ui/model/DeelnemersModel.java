@@ -14,11 +14,15 @@
  */
 package nl.detoren.ijsco.ui.model;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.JComponent;
 import javax.swing.table.AbstractTableModel;
 
 import nl.detoren.ijsco.data.Deelnemers;
 import nl.detoren.ijsco.data.Speler;
+import nl.detoren.ijsco.ui.Mainscreen;
 
 @SuppressWarnings("serial")
 public class DeelnemersModel extends AbstractTableModel {
@@ -27,6 +31,8 @@ public class DeelnemersModel extends AbstractTableModel {
 	private Deelnemers deelnemers;
 
 	private String[] columnNames = { "Aanw", "Nr.", "Naam", "Rating" };
+
+	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
 
 	public DeelnemersModel(JComponent component, Deelnemers deelnemers) {
 		super();
@@ -106,8 +112,10 @@ public class DeelnemersModel extends AbstractTableModel {
     }
 
     public Object getToolTip(int row, int col) {
+    	logger.log(Level.INFO, "Opvragen tooltip voor ID = " + row);
 		if (row < deelnemers.size()) {
-			Speler speler = deelnemers.get(col);
+			Speler speler = deelnemers.get(row);
+			logger.log(Level.INFO, "Dit is speler " + speler);
 			String tt = "<HTML>";
 			if (speler != null) {
 				tt += "<TABLE><TR><TD BORDER=1 COLSPAN=2 ALIGN=CENTER>";
