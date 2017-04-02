@@ -10,9 +10,6 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
- * - TODO Kunnen bewerken/verwijderen van een speler
- * - TODO Verwijderen/bewerken speler in contextmenu
- * - TODO Fix popup. Corrupt geraakt
  */
 package nl.detoren.ijsco.ui;
 
@@ -28,6 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
@@ -46,7 +45,9 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -424,7 +425,6 @@ public class Mainscreen extends JFrame {
 	}
 
 	protected void wisDeelnemerslijst() {
-		// TODO Auto-generated method stub
 		deelnemersModel.wis();
 
 
@@ -502,6 +502,52 @@ public class Mainscreen extends JFrame {
 				panel.repaint();
 			}
 
+		});
+
+		deelnemersTabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				logger.log(Level.INFO, "MouseEvent on table fired, type : " + e.toString());
+				logger.log(Level.INFO, "Popup trigger? : " + e.isPopupTrigger());
+				if (e.isPopupTrigger()) {
+					int row = deelnemersTabel.rowAtPoint(e.getPoint());
+					JPopupMenu popup = new JPopupMenu();
+					JMenuItem menuItem = new JMenuItem("Bewerk speler");
+					menuItem.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							logger.log(Level.INFO, "Bewerk Speler  : " + row);
+							Speler s = status.deelnemers.get(row);
+							BewerkSpelerDialoog rd = new BewerkSpelerDialoog(new JFrame(), "Bewerk Speler", s, deelnemersModel);
+							rd.addWindowListener(new WindowAdapter() {
+								@Override
+								public void windowClosed(WindowEvent e) {
+									System.out.println("closing...");
+								}
+
+							});
+							rd.setVisible(true);
+						}
+
+					});
+					popup.add(menuItem);
+
+					menuItem = new JMenuItem("Verwijder Speler");
+					popup.add(menuItem);
+					menuItem.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							logger.log(Level.INFO, "Verwijder Speler  : " + row);
+							Speler s = status.deelnemers.get(row);
+							status.deelnemers.remove(s);
+							deelnemersModel.fireTableDataChanged();
+						}
+					});
+					popup.show(e.getComponent(), e.getX(), e.getY());
+
+				}
+			}
 		});
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(deelnemersTabel);
