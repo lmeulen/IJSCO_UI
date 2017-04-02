@@ -91,7 +91,7 @@ public class BewerkSpelerDialoog extends JDialog {
         final JCheckBox tfOverruleNaam = new JCheckBox("Handmatige naam");
         tfOverruleNaam.setSelected(speler.isOverruleNaam());
         panel.add(tfOverruleNaam);
-        panel.add(new JLabel("Overrul rating"));
+        panel.add(new JLabel("Overrule rating"));
         final JCheckBox tfOverruleRating = new JCheckBox("Handmatige rating");
         tfOverruleRating.setSelected(speler.isOverruleRating());
         panel.add(tfOverruleRating);

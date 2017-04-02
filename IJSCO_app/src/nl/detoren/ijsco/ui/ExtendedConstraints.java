@@ -19,7 +19,8 @@ import java.awt.Insets;
 @SuppressWarnings("serial")
 public class ExtendedConstraints extends GridBagConstraints {
 
-	//private static final Insets insets5555 = new Insets(5, 5, 5, 5);
+	@SuppressWarnings("unused")
+	private static final Insets insets5555 = new Insets(5, 5, 5, 5);
 	private static final Insets insets5500 = new Insets(5, 5, 0, 0);
 
 	@SuppressWarnings("unused")

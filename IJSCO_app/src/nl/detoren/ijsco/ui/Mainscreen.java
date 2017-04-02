@@ -10,6 +10,9 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
+ * - Optie: invoerbestand met deelnemers flexibel qua naam (nu deelnemers.csv)
+ * - Functionaliteit uit GUI code halen, o.a handleEvent -> methode aanroepen
+ * - Introductie controller?
  */
 package nl.detoren.ijsco.ui;
 
@@ -122,7 +125,6 @@ public class Mainscreen extends JFrame {
 		indeler = new IJSCOIndeler();
 		if (!leesStatus("status.json")) {
 			status = new Status();
-			status.deelnemers = indeler.bepaalDeelnemers();
 		}
 
 		//leesOSBOlijst();

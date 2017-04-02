@@ -10,6 +10,8 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
+ * - Implement retainAll
+ * - Implement toArray
  */
 package nl.detoren.ijsco.data;
 
@@ -98,7 +100,6 @@ public class Schemas implements Collection<Schema>, Iterable<Schema> {
 
 	@Override
 	public boolean remove(Object arg0) {
-		// TODO Auto-generated method stub
 		if (arg0 instanceof Schema) {
 			schemas.remove(arg0);
 			return true;

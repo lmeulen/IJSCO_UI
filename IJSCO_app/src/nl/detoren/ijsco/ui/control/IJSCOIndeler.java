@@ -24,28 +24,8 @@ import nl.detoren.ijsco.data.Schema;
 import nl.detoren.ijsco.data.Schemas;
 import nl.detoren.ijsco.data.Speler;
 import nl.detoren.ijsco.data.Status;
-import nl.detoren.ijsco.io.DeelnemersLader;
-import nl.detoren.ijsco.io.OSBOLoader;
 
 public class IJSCOIndeler {
-
-	/**
-	 * Retourneer een lijst met alle deelnemers aan het toernooi.
-	 *
-	 * @return
-	 */
-	public Deelnemers bepaalDeelnemers() {
-		// Lees deelnemers bestand in
-		Deelnemers deelnemers = new DeelnemersLader().importeerSpelers("deelnemers.csv");
-		// Lees OSBO rating lijst in
-		Deelnemers osbolijst = new OSBOLoader().laadWebsite();
-		//Deelnemers osbolijst = new OSBOLoader().laadBestand("OSBO Jeugd-rating-lijst.htm");
-		// Werk spelers bij obv OSBO lijst. OSBO lijst is leidend
-		deelnemers = controleerSpelers(deelnemers, osbolijst);
-		// Sorteer deelnemers, aflopend. op rating
-		deelnemers.sort();
-		return deelnemers;
-	}
 
 	/**
 	 * Controleer deelnemers tegen de OSBO lijst. Obv KNSB nummer is de OSBO
@@ -55,19 +35,6 @@ public class IJSCOIndeler {
 	 * @param osbolijst Osbo lijst
 	 * @return bijgewerkte spelerslijst
 	 */
-	private Deelnemers controleerSpelers(Deelnemers deelnemers, Deelnemers osbolijst) {
-		Deelnemers update = new Deelnemers();
-		for (Speler s : deelnemers) {
-			Speler osbogegevens = osbolijst.getByKNSB(s.getKnsbnummer());
-			if (osbogegevens != null) {
-				s.setNaamKNSB(osbogegevens.getNaam());
-				s.setRatingIJSCO(osbogegevens.getRatingIJSCO());
-			}
-			update.add(s);
-		}
-		return update;
-	}
-
 	public Deelnemers controleerSpelers(Deelnemers deelnemers, HashMap<Integer, Speler> osbolijst) {
 		Deelnemers update = new Deelnemers();
 		for (Speler s : deelnemers) {

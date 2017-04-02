@@ -27,6 +27,7 @@ public class DeelnemersLader {
 	/**
 	 * Importeer spelers uit een CSV bestand. De volgende items staan in dit
 	 * bestand: - KNSBnummer - naam speler - rating
+	 * Naam en Rating zijn optioneel. Alleen KNSB nummer is voldoende
 	 *
 	 * @author Leo.vanderMeulen
 	 *
@@ -45,12 +46,18 @@ public class DeelnemersLader {
 		String[] stringArr = leesBestand(bestandsnaam);
 		for (String regel : stringArr) {
 			List<String> items = Arrays.asList(regel.split(";"));
-			//List<String> items = Arrays.asList(regel.split("\\s*,\\s*"));
 			Speler s = new Speler();
 			s.setKnsbnummer(Integer.parseInt(items.get(0)));
-			// TODO: Inlezen originele gegevens, zonder aanpassing
-			s.setNaamHandmatig(items.get(1) + "(HM)");
-			s.setRatingHandmatig(Integer.parseInt(items.get(2)));
+			if (items.size() > 1) {
+				s.setNaamHandmatig(items.get(1));
+			} else {
+				s.setNaamHandmatig("-");
+			}
+			if (items.size() > 2) {
+				s.setRatingHandmatig(Integer.parseInt(items.get(2)));
+			} else {
+				s.setRatingHandmatig(-1);
+			}
 			deelnemers.add(s);
 		}
 		return deelnemers;

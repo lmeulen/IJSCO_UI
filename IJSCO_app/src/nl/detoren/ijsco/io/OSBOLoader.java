@@ -65,36 +65,28 @@ public class OSBOLoader {
 		for (Element row : rows) {
 			Elements cells = row.select("td");
 			if (cells.size() > 7) {
-				try
-				{
+				try {
 					naam = cells.get(1).text();
-				}
-				catch (Exception e)
-				{
+				} catch (Exception e) {
+					naam = null;
 					System.out.println(e);
 				}
-				try
-				{
+				try {
 					knsbnummer = Integer.parseInt(cells.get(8).text());
-				}
-				catch (Exception e)
-				{
+				} catch (Exception e) {
+					knsbnummer = 0;
 					System.out.println(e);
 				}
-				try
-				{
+				try {
 					osborating = Integer.parseInt(cells.get(3).text());
-				}
-				catch (Exception e)
-				{
+				} catch (Exception e) {
+					osborating = -1;
 					System.out.println(e);
 				}
-				try
-				{
-				knsbrating = Integer.parseInt(cells.get(4).text());
-				}
-				catch (Exception e)
-				{
+				try {
+					knsbrating = Integer.parseInt(cells.get(4).text());
+				} catch (Exception e) {
+					knsbrating = -1;
 					System.out.println(e);
 				}
 
