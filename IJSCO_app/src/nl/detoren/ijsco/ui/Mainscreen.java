@@ -10,9 +10,9 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
- * - TODO Enter op naamveld linksboven gelijk aan toevoeg knop
  * - TODO Kunnen bewerken/verwijderen van een speler
  * - TODO Verwijderen/bewerken speler in contextmenu
+ * - TODO Fix popup. Corrupt geraakt
  */
 package nl.detoren.ijsco.ui;
 
@@ -442,12 +442,19 @@ public class Mainscreen extends JFrame {
 			JTextField deelnemer = new JTextField(15);
 			ArrayList<String> words = new ArrayList<>();
 			for (Speler s : status.OSBOSpelers.values()) {
-				words.add(s.getNaam().toLowerCase().trim());
+				words.add(s.getNaam().trim());
 				words.add(Integer.toString(s.getKnsbnummer()));
 			}
 			@SuppressWarnings("unused")
 			Suggesties suggesties = new Suggesties(deelnemer, this, words, 2);
 			innerPanel.add(deelnemer, BorderLayout.NORTH);
+			deelnemer.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent event) {
+					actieVoegSpelerToe(deelnemer.getText().trim());
+					deelnemer.setText("");
+				}
+			});
 			JButton btVoegToe = new JButton("Voeg toe");
 			btVoegToe.addActionListener(new ActionListener() {
 				@Override
