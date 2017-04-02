@@ -14,6 +14,7 @@
 package nl.detoren.ijsco.ui.control;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import nl.detoren.ijsco.data.Deelnemers;
@@ -67,6 +68,18 @@ public class IJSCOIndeler {
 		return update;
 	}
 
+	public Deelnemers controleerSpelers(Deelnemers deelnemers, HashMap<Integer, Speler> osbolijst) {
+		Deelnemers update = new Deelnemers();
+		for (Speler s : deelnemers) {
+			Speler osbogegevens = osbolijst.get(s.getKnsbnummer());
+			if (osbogegevens != null) {
+				s.setNaamKNSB(osbogegevens.getNaam());
+				s.setRatingIJSCO(osbogegevens.getRatingIJSCO());
+			}
+			update.add(s);
+		}
+		return update;
+	}
 	/**
 	 * Bepaal beste groepsindeling op basis van schema en deelnemers
 	 * @param schema Schema om te vullen

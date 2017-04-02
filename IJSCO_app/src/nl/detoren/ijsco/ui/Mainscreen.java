@@ -13,8 +13,6 @@
  * - TODO Enter op naamveld linksboven gelijk aan toevoeg knop
  * - TODO Kunnen bewerken/verwijderen van een speler
  * - TODO Verwijderen/bewerken speler in contextmenu
- * - TODO Inlezen deelnemers (toevoegen)
- * - TODO Wissen deelnemerslijst
  */
 package nl.detoren.ijsco.ui;
 
@@ -70,6 +68,7 @@ import nl.detoren.ijsco.data.Deelnemers;
 import nl.detoren.ijsco.data.Groep;
 import nl.detoren.ijsco.data.Speler;
 import nl.detoren.ijsco.data.Status;
+import nl.detoren.ijsco.io.DeelnemersLader;
 import nl.detoren.ijsco.io.OSBOLoader;
 import nl.detoren.ijsco.ui.control.IJSCOIndeler;
 import nl.detoren.ijsco.ui.control.Suggesties;
@@ -166,6 +165,17 @@ public class Mainscreen extends JFrame {
 		}
 	}
 
+	public void leesDeelnemers() {
+		Deelnemers tmp = new DeelnemersLader().importeerSpelers("deelnemers.csv");
+		indeler.controleerSpelers(tmp, status.OSBOSpelers);
+		logger.log(Level.INFO, "Deelnemers ingelezen : " + tmp.size() + " spelers in lijst" );
+		deelnemersModel.wis();
+		for (Speler s : tmp) {
+			deelnemersModel.add(s);
+		}
+		deelnemersModel.fireTableDataChanged();
+	}
+
 	public JPanel createPanelGroepen() {
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.YELLOW);
@@ -243,11 +253,11 @@ public class Mainscreen extends JFrame {
 		});
 		panel.add(bOSBO, new ExtendedConstraints(0, curRow));
 
-		JButton bSpelers = new JButton("Import Spelers");
+		JButton bSpelers = new JButton("Lees deelnemers");
 		bSpelers.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				//leesOSBOlijst();
+				leesDeelnemers();
 			}
 
 		});
@@ -257,7 +267,7 @@ public class Mainscreen extends JFrame {
 		bWis.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				//leesOSBOlijst();
+				wisDeelnemerslijst();
 			}
 
 		});
@@ -411,6 +421,13 @@ public class Mainscreen extends JFrame {
 		panel.add(new JLabel(" "), new ExtendedConstraints(0, 17, 2, 1));
 		fixedComponentSize(panel, 300, 400);
 		return panel;
+	}
+
+	protected void wisDeelnemerslijst() {
+		// TODO Auto-generated method stub
+		deelnemersModel.wis();
+
+
 	}
 
 	public JPanel createDeelnemersPanel() {

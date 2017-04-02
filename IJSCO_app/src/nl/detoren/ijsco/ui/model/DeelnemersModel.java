@@ -108,17 +108,21 @@ public class DeelnemersModel extends AbstractTableModel {
     public Object getToolTip(int row, int col) {
 		if (row < deelnemers.size()) {
 			Speler speler = deelnemers.get(col);
-			String tt = "<HTML><TABLE><TR><TD BORDER=1 COLSPAN=2 ALIGN=CENTER>";
-			tt += speler.toString();
-			tt += "</TD></TR>";
-			tt += "<TR><TD>KNSBM</TD><TD>" + speler.getKnsbnummer() + "</TD></TR>";
-			tt += "<TR><TD>Naam handmatig</TD><TD>" + speler.getNaamHandmatig() + "</TD></TR>";
-			tt += "<TR><TD>Naam OSBK</TD><TD>" + speler.getNaamKNSB() + "</TD></TR>";
-			tt += "<TR><TD>Rating handmatig</TD><TD>" + speler.getRatingHandmatig() + "</TD></TR>";
-			tt += "<TR><TD>Rating OSBO</TD><TD>" + speler.getRatingIJSCO() + "</TD></TR>";
-			tt += "<TR><TD>Rating KNSB</TD><TD>" + speler.getRatingKNSB() + "</TD></TR>";
-			tt += "</TD></TR>";
-			tt += "</TABLE></HTML>";
+			String tt = "<HTML>";
+			if (speler != null) {
+				tt += "<TABLE><TR><TD BORDER=1 COLSPAN=2 ALIGN=CENTER>";
+				tt += speler.toString();
+				tt += "</TD></TR>";
+				tt += "<TR><TD>KNSBM</TD><TD>" + speler.getKnsbnummer() + "</TD></TR>";
+				tt += "<TR><TD>Naam handmatig</TD><TD>" + speler.getNaamHandmatig() + "</TD></TR>";
+				tt += "<TR><TD>Naam OSBK</TD><TD>" + speler.getNaamKNSB() + "</TD></TR>";
+				tt += "<TR><TD>Rating handmatig</TD><TD>" + speler.getRatingHandmatig() + "</TD></TR>";
+				tt += "<TR><TD>Rating OSBO</TD><TD>" + speler.getRatingIJSCO() + "</TD></TR>";
+				tt += "<TR><TD>Rating KNSB</TD><TD>" + speler.getRatingKNSB() + "</TD></TR>";
+				tt += "</TD></TR>";
+				tt += "</TABLE>";
+			}
+			tt += "</HTML>";
 			return tt;
 		} else {
 			return "";
@@ -131,4 +135,9 @@ public class DeelnemersModel extends AbstractTableModel {
     	}
     }
 
+    public void wis() {
+    	deelnemers.clear();
+		fireTableDataChanged();
+		component.repaint();
+    }
 }
