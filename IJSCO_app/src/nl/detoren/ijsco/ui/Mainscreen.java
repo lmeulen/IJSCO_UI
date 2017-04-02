@@ -205,6 +205,11 @@ public class Mainscreen extends JFrame {
 			@Override
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
+				// Tooltip
+				if (c instanceof JComponent) {
+					SchemaModel model = (SchemaModel) getModel();
+					((JComponent) c).setToolTipText(model.getToolTip(row, column).toString());
+				}
 				// Alternate row color
 				if (!isRowSelected(row)) {
 					c.setBackground(row % 2 == 0 ? Color.WHITE : Color.LIGHT_GRAY);

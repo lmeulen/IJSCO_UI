@@ -100,4 +100,29 @@ public class SchemaModel extends AbstractTableModel {
                 return String.class;
         }
     }
+
+    public Object getToolTip(int row, int col) {
+		if (row < schemas.size()) {
+			Schema s = schemas.get(row);
+			String tt = "<HTML>";
+			if (s != null) {
+				tt += "<TABLE BOREDER=1><TR><TD BORDER=1 COLSPAN=2 ALIGN=CENTER>";
+				tt += s.toString();
+				tt += "</TD></TR>";
+				tt += "<TR><TD>Aantal groepen</TD><TD>" + s.getGroepen() + "</TD></TR>";
+				tt += "<TR><TD>Te verdelen byes</TD><TD>" + s.getByes() + "</TD></TR>";
+				tt += "<TR><TD>Groottes</TD><TD><TABLE>";
+				int[]groottes = s.getGroepsgroottes();
+				for (int i = 0; i < groottes.length; i++) {
+					tt += "<TR><TD>" + String.format("Groep %1s", (char)((int)('A') + i)) + "</TD><TD>" + groottes[i] + "</TD></TR>";
+				}
+				tt += "</TABLE></TD></TR>";
+				tt += "</TABLE>";
+			}
+			tt += "</HTML>";
+			return tt;
+		} else {
+			return "";
+		}
+	}
 }
