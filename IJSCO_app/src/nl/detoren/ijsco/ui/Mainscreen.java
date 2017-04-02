@@ -12,6 +12,11 @@
  * Problemen in deze code:
  * - Enter op naamveld linksboven gelijk aan toevoeg knop
  * - Kunnen bewerken/verwijderen van een speler
+ * - Overzicht aantal aanwezige deelnemers
+ * - Verwijderen/bewerken speler in contextmenu
+ * - Inlezen OSBO lijst
+ * - Inlezen deelnemers (toevoegen)
+ * - Wissen deelnemerslijst
  */
 package nl.detoren.ijsco.ui;
 

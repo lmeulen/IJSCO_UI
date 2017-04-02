@@ -291,7 +291,7 @@ public class Suggesties {
 		}
 		boolean suggestionAdded = false;
 		for (String word : dictionary) {
-			if (word.toLowerCase().contains(typedWord)) {
+			if (word.toLowerCase().contains(typedWord.toLowerCase())) {
 				addWordToSuggestions(word);
 				suggestionAdded = true;
 			}

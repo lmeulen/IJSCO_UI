@@ -28,9 +28,16 @@ public class Deelnemers implements Collection<Speler> {
 	}
 
 	@Override
-	public boolean add(Speler arg0) {
-		if (arg0 != null) {
-			deelnemers.add(arg0);
+	public boolean add(Speler nieuw) {
+		if (nieuw != null) {
+			// Bestaande speler verwijderen
+			for (int i = 0; i < deelnemers.size(); i++) {
+				if (deelnemers.get(i).getKnsbnummer() == nieuw.getKnsbnummer()) {
+					deelnemers.remove(i);
+					break;
+				}
+			}
+			deelnemers.add(nieuw);
 			sort();
 			return true;
 		}
