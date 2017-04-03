@@ -10,9 +10,6 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
- * - Optie: invoerbestand met deelnemers flexibel qua naam (nu deelnemers.csv)
- * - Functionaliteit uit GUI code halen, o.a handleEvent -> methode aanroepen
- * - Introductie controller?
  */
 package nl.detoren.ijsco.ui;
 
@@ -46,6 +43,7 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -171,8 +169,8 @@ public class Mainscreen extends JFrame {
 		}
 	}
 
-	public void leesDeelnemers() {
-		Deelnemers tmp = new DeelnemersLader().importeerSpelers("deelnemers.csv");
+	public void leesDeelnemers(String file) {
+		Deelnemers tmp = new DeelnemersLader().importeerSpelers(file);
 		indeler.controleerSpelers(tmp, status.OSBOSpelers);
 		logger.log(Level.INFO, "Deelnemers ingelezen : " + tmp.size() + " spelers in lijst" );
 		deelnemersModel.wis();
@@ -184,7 +182,6 @@ public class Mainscreen extends JFrame {
 
 	public JPanel createPanelGroepen() {
 		JPanel panel = new JPanel();
-		panel.setBackground(Color.YELLOW);
 		panel.setLayout(new GridLayout(1, 0));
 		groepenText = new JTextArea(40, 40);
 		groepenText.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -238,7 +235,7 @@ public class Mainscreen extends JFrame {
 
 	public JPanel createInstellingenPanel() {
 		JPanel panel = new JPanel();
-		panel.setBackground(Color.ORANGE);
+		panel.setBackground(Color.LIGHT_GRAY);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] { 128, 32, 0 };
 		gbl_panel.rowHeights = new int[] { 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0 };
@@ -249,8 +246,8 @@ public class Mainscreen extends JFrame {
 		int curRow = 0;
 
 		// Header Row
-		panel.add(new JLabel("A"), new ExtendedConstraints(0, curRow));
-		panel.add(new JLabel("A"), new ExtendedConstraints(1, curRow++));
+		panel.add(new JLabel(" "), new ExtendedConstraints(0, curRow));
+		panel.add(new JLabel(" "), new ExtendedConstraints(1, curRow++));
 
 
 		// Buttons
@@ -263,12 +260,22 @@ public class Mainscreen extends JFrame {
 
 		});
 		panel.add(bOSBO, new ExtendedConstraints(0, curRow));
-
+		Component hs = this;
 		JButton bSpelers = new JButton("Lees deelnemers");
 		bSpelers.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				leesDeelnemers();
+				// Create a file chooser
+				final JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+				// In response to a button click:
+				int returnVal = fc.showOpenDialog(hs);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+					leesDeelnemers(file.getAbsolutePath());
+				}
+
 			}
 
 		});
