@@ -16,6 +16,8 @@ package nl.detoren.ijsco.ui.control;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.detoren.ijsco.data.Deelnemers;
 import nl.detoren.ijsco.data.Groep;
@@ -24,8 +26,11 @@ import nl.detoren.ijsco.data.Schema;
 import nl.detoren.ijsco.data.Schemas;
 import nl.detoren.ijsco.data.Speler;
 import nl.detoren.ijsco.data.Status;
+import nl.detoren.ijsco.ui.Mainscreen;
 
 public class IJSCOIndeler {
+
+	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
 
 	/**
 	 * Controleer deelnemers tegen de OSBO lijst. Obv KNSB nummer is de OSBO
@@ -56,6 +61,7 @@ public class IJSCOIndeler {
 	public Groepen bepaalGroep(Schema schema, Deelnemers deelnemers) {
 		ArrayList<Groepen> mogelijkheden = mogelijkeGroepen(deelnemers.getAanwezigen(), schema.getGroepen(),
 				schema.getGroepsgroottes(), schema.getByes());
+		logger.log(Level.INFO, mogelijkheden.toString());
 		Groepen groep = bepaalOptimaleGroep(mogelijkheden);
 		return groep;
 	}
@@ -114,7 +120,7 @@ public class IJSCOIndeler {
 		ArrayList<Groepen> result = new ArrayList<>();
 
 		int max = (int) Math.pow(2, groepen);
-		for (int i = 0; i <= max; i++) {
+		for (int i = 0; i < max; i++) {
 			if (Integer.bitCount(i) == byes) {
 				result.add(maakGroepen(spelers, groepen, grootte, i));
 			}
@@ -132,6 +138,8 @@ public class IJSCOIndeler {
 	 * @return
 	 */
 	private Groepen maakGroepen(Deelnemers deelnemers, int nGroepen, int[] grootte, int byemask) {
+		logger.log(Level.INFO, "Deelnemers : "  + deelnemers + ",Groepen    : "  + nGroepen +
+				",Grootte    : "  + grootte + ",Byemask    : "  + Integer.toBinaryString(byemask));
 		Groepen groepen = new Groepen(nGroepen, grootte);
 		Iterator<Speler> it = deelnemers.iterator();
 		for (int i = 0; i < nGroepen; i++) {

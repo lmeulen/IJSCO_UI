@@ -12,7 +12,6 @@
  * Problemen in deze code:
  * - Optie: invoerbestand met deelnemers flexibel qua naam (nu deelnemers.csv)
  * - Functionaliteit uit GUI code halen, o.a handleEvent -> methode aanroepen
- * - Geen filter op deelnemerstabel
  * - Introductie controller?
  */
 package nl.detoren.ijsco.ui;
@@ -283,17 +282,7 @@ public class Mainscreen extends JFrame {
 			}
 
 		});
-		panel.add(bWis, new ExtendedConstraints(0, curRow));
-
-		JButton bReserve = new JButton("NTB");
-		bReserve.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				//leesOSBOlijst();
-			}
-
-		});
-		panel.add(bReserve, new ExtendedConstraints(1, curRow++));
+		panel.add(bWis, new ExtendedConstraints(0, curRow++));
 
 		// Aantal spelers
 		panel.add(new JLabel("Aantal spelers:"), new ExtendedConstraints(0, curRow));
@@ -404,7 +393,7 @@ public class Mainscreen extends JFrame {
 //			panel.add(new JLabel("A"), new ExtendedConstraints(1, curRow++));
 //		}
 
-		JButton bSchemas = new JButton("Bepaal mogelijkheden");
+		JButton bSchemas = new JButton("1. Bepaal mogelijkheden");
 		bSchemas.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -417,7 +406,7 @@ public class Mainscreen extends JFrame {
 
 		});
 		panel.add(bSchemas, new ExtendedConstraints(0, curRow));
-		JButton bGroepen = new JButton("Bepaal groepen");
+		JButton bGroepen = new JButton("2. Bepaal groepen");
 		bGroepen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {

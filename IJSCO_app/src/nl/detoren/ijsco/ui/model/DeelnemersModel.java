@@ -113,7 +113,6 @@ public class DeelnemersModel extends AbstractTableModel {
     public Object getToolTip(int row, int col) {
 		if (row < deelnemers.size()) {
 			Speler speler = deelnemers.get(row);
-			logger.log(Level.INFO, "Dit is speler " + speler);
 			String tt = "<HTML>";
 			if (speler != null) {
 				tt += "<TABLE><TR><TD BORDER=1 COLSPAN=2 ALIGN=CENTER>";
