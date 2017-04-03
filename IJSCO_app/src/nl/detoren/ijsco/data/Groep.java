@@ -134,7 +134,7 @@ public class Groep {
 	}
 
 	public String getDescription() {
-		String result = toString() + "\n";
+		String result = naam + "\n";
 		for (Speler s : spelers) {
 			result += String.format("  %7d - %-20.20s - %04d\n", s.getKnsbnummer(), s.getNaam(), s.getRating());
 		}
