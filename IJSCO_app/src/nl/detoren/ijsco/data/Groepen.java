@@ -50,10 +50,10 @@ public class Groepen implements Iterable<Groep> {
 	}
 
 	public String toString() {
-		String result = String.format("Groepen: n=%3d, spr=%4d, stddev=%4.0f, diff=%4d%n", aantal, getSpreidingTotaal(),
+		String result = String.format("Groepen:n=%2d,spr=%4d,std=%3.0f,diff=%3d%n", aantal, getSpreidingTotaal(),
 				getSomStdDev(), getSomGroepVerschil());
 		for (Groep groep : groepen) {
-			result += "  " + groep + "\n";
+			result += " " + groep + "\n";
 		}
 		return result;
 	}

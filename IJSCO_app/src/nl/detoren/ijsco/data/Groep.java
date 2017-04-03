@@ -129,7 +129,7 @@ public class Groep {
 		String result = naam + ", ";
 		result += String.format("%2d/%2d ", aantal, grootte);
 		result += String.format("(%4d-%4d-%4d)", getMinRating(), getGemmiddeldeRating(), getMaxRating());
-		result += String.format(",std=%6.2f", getStandDev());
+		result += String.format(",std=%3.0f", getStandDev());
 		return result;
 	}
 

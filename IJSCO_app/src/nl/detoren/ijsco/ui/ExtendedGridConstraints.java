@@ -17,17 +17,17 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 @SuppressWarnings("serial")
-public class ExtendedConstraints extends GridBagConstraints {
+public class ExtendedGridConstraints extends GridBagConstraints {
 
 	@SuppressWarnings("unused")
 	private static final Insets insets5555 = new Insets(5, 5, 5, 5);
 	private static final Insets insets5500 = new Insets(5, 5, 0, 0);
 
 	@SuppressWarnings("unused")
-	private ExtendedConstraints() {
+	private ExtendedGridConstraints() {
 	}
 
-	public ExtendedConstraints(int fill, Insets borders, int x, int y, int width, int height) {
+	public ExtendedGridConstraints(int fill, Insets borders, int x, int y, int width, int height) {
 		this.fill = fill;
 		this.insets = borders;
 		this.gridx = x;
@@ -36,7 +36,7 @@ public class ExtendedConstraints extends GridBagConstraints {
 		this.gridheight = height;
 	}
 
-	public ExtendedConstraints(int fill, int x, int y, int width, int height) {
+	public ExtendedGridConstraints(int fill, int x, int y, int width, int height) {
 		this.fill = fill;
 		this.insets = insets5500;
 		this.gridx = x;
@@ -45,7 +45,7 @@ public class ExtendedConstraints extends GridBagConstraints {
 		this.gridheight = height;
 	}
 
-	public ExtendedConstraints(int x, int y, int width, int height) {
+	public ExtendedGridConstraints(int x, int y, int width, int height) {
 		this.fill = GridBagConstraints.BOTH;
 		this.insets = insets5500;
 		this.gridx = x;
@@ -54,7 +54,7 @@ public class ExtendedConstraints extends GridBagConstraints {
 		this.gridheight = height;
 	}
 
-	public ExtendedConstraints(int x, int y) {
+	public ExtendedGridConstraints(int x, int y) {
 		this.fill = GridBagConstraints.BOTH;
 		this.insets = insets5500;
 		this.gridx = x;
