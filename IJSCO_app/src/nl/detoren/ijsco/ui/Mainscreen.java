@@ -47,6 +47,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -740,6 +741,8 @@ public class Mainscreen extends JFrame {
 			System.out.println(status.groepen.getDescription());
 			groepenText.setText(status.groepen.getDescription());
 			groepenText.setCaretPosition(0);
+		} else {
+			JOptionPane.showMessageDialog(null, "Geen schema geselecteerd om te gebruiken. \n\rBepaal eerst de mogelijkheden en selecteer er één.");
 		}
 	}
 
