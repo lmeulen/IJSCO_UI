@@ -12,6 +12,7 @@
  * Problemen in deze code:
  * - Optie: invoerbestand met deelnemers flexibel qua naam (nu deelnemers.csv)
  * - Functionaliteit uit GUI code halen, o.a handleEvent -> methode aanroepen
+ * - Geen filter op deelnemerstabel
  * - Introductie controller?
  */
 package nl.detoren.ijsco.ui;
@@ -55,11 +56,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -483,7 +487,7 @@ public class Mainscreen extends JFrame {
 				DeelnemersModel model = (DeelnemersModel) getModel();
 				// Tooltip
 				if (c instanceof JComponent) {
-					((JComponent) c).setToolTipText(model.getToolTip(row, column).toString());
+					((JComponent) c).setToolTipText(model.getToolTip(convertRowIndexToModel(row), column).toString());
 				}
 
 				// Alternate row color
@@ -492,7 +496,8 @@ public class Mainscreen extends JFrame {
 				}
 
 				// Highlight overruled entries
-				if (status.deelnemers.get(row).isOverruleNaam() || status.deelnemers.get(row).isOverruleNaam()) {
+				if (status.deelnemers.get(convertRowIndexToModel(row)).isOverruleNaam() ||
+						status.deelnemers.get(convertRowIndexToModel(row)).isOverruleNaam()) {
 					c.setForeground(Color.BLUE);
 				} else {
 					c.setForeground(Color.BLACK);
@@ -530,8 +535,8 @@ public class Mainscreen extends JFrame {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							logger.log(Level.INFO, "Bewerk Speler  : " + row);
-							Speler s = status.deelnemers.get(row);
+							logger.log(Level.INFO, "Bewerk Speler  : " + deelnemersTabel.convertRowIndexToModel(row));
+							Speler s = status.deelnemers.get(deelnemersTabel.convertRowIndexToModel(row));
 							BewerkSpelerDialoog rd = new BewerkSpelerDialoog(new JFrame(), "Bewerk Speler", s, deelnemersModel);
 							rd.addWindowListener(new WindowAdapter() {
 								@Override
@@ -551,8 +556,8 @@ public class Mainscreen extends JFrame {
 					menuItem.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							logger.log(Level.INFO, "Verwijder Speler  : " + row);
-							Speler s = status.deelnemers.get(row);
+							logger.log(Level.INFO, "Verwijder Speler  : " + deelnemersTabel.convertRowIndexToModel(row));
+							Speler s = status.deelnemers.get(deelnemersTabel.convertRowIndexToModel(row));
 							status.deelnemers.remove(s);
 							deelnemersModel.fireTableDataChanged();
 						}
@@ -565,13 +570,56 @@ public class Mainscreen extends JFrame {
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(deelnemersTabel);
-		panel.add(scrollPane, BorderLayout.SOUTH);
+		innerPanel.add(scrollPane, BorderLayout.CENTER);
+
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(deelnemersModel);
+	    deelnemersTabel.setRowSorter(sorter);
+
+		innerPanel.add(new JLabel("Filter op : "));
+		JTextField tfFilter = new JTextField(10);
+		tfFilter.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				String text = tfFilter.getText();
+				logger.log(Level.INFO, "Filter tabel op : " + text);
+				if (text.length() == 0) {
+			          sorter.setRowFilter(null);
+			        } else {
+			          sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+			        }
+			}
+		});
+		innerPanel.add(tfFilter);
+		JButton btPasToe = new JButton("Apply");
+		btPasToe.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				String text = tfFilter.getText();
+				logger.log(Level.INFO, "Filter tabel op : " + text);
+				if (text.length() == 0) {
+			          sorter.setRowFilter(null);
+			        } else {
+			          sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+			        }
+			}
+		});
+		innerPanel.add(btPasToe);
+		JButton btWis = new JButton("Wis");
+		btWis.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				tfFilter.setText("");
+				logger.log(Level.INFO, "Wis filter");
+				sorter.setRowFilter(null);
+			}
+		});
+		innerPanel.add(btWis);
 
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(0), 30);
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(1), 55);
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(2), 150);
 		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(3), 40);
-		fixedComponentSize(scrollPane, 300, 630);
+		fixedComponentSize(scrollPane, 300, 580);
 		return panel;
 	}
 
