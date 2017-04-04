@@ -10,10 +10,7 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
- * - Geen feedback op import OSBO
- * - Geen feedback op import spelers
  * - Pagina eindes zijn niet goed ingesteld in de gegenereerde Excel
- * - Bestaande deelnemers valideren tegen OSBO lijst bij importeren nieuwe
  */
 package nl.detoren.ijsco.ui;
 
@@ -133,8 +130,6 @@ public class Mainscreen extends JFrame {
 			status = new Status();
 		}
 
-		//leesOSBOlijst();
-
 		// Frame
 		setBounds(25, 25, 1300, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -172,6 +167,9 @@ public class Mainscreen extends JFrame {
 		for (Speler d : tmp) {
 			status.OSBOSpelers.put(d.getKnsbnummer(), d);
 		}
+		indeler.controleerSpelers(status.deelnemers, status.OSBOSpelers);
+		JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit OSBO jeugdratinglijst");
+
 	}
 
 	public void leesDeelnemers(String file) {
@@ -183,6 +181,8 @@ public class Mainscreen extends JFrame {
 			deelnemersModel.add(s);
 		}
 		deelnemersModel.fireTableDataChanged();
+		JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit bestand");
+
 	}
 
 	public JPanel createPanelGroepen() {
