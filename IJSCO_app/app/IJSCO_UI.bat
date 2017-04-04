@@ -1,0 +1,1 @@
+java -Djava.util.logging.config.file="logging.properties" -jar IJSCO_UI.jar >> IJC_UI.log

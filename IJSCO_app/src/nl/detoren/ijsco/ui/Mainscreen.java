@@ -10,6 +10,10 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
+ * - Geen feedback op import OSBO
+ * - Geen feedback op import spelers
+ * - Pagina eindes zijn niet goed ingesteld in de gegenereerde Excel
+ * - Bestaande deelnemers valideren tegen OSBO lijst bij importeren nieuwe
  */
 package nl.detoren.ijsco.ui;
 
