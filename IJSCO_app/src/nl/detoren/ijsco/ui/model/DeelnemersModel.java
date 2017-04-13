@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.table.AbstractTableModel;
 
-import nl.detoren.ijsco.data.Deelnemers;
+import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.data.Speler;
 import nl.detoren.ijsco.ui.Mainscreen;
 
@@ -27,13 +27,13 @@ import nl.detoren.ijsco.ui.Mainscreen;
 public class DeelnemersModel extends AbstractTableModel {
 
 	private JComponent component;
-	private Deelnemers deelnemers;
+	private Spelers deelnemers;
 
 	private String[] columnNames = { "Aanw", "Nr.", "Naam", "Rating" };
 
 	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
 
-	public DeelnemersModel(JComponent component, Deelnemers deelnemers) {
+	public DeelnemersModel(JComponent component, Spelers deelnemers) {
 		super();
 		this.component = component;
 		this.deelnemers = deelnemers;

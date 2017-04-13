@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import nl.detoren.ijsco.data.Deelnemers;
+import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.data.Groep;
 import nl.detoren.ijsco.data.Groepen;
 import nl.detoren.ijsco.data.Schema;
@@ -40,8 +40,8 @@ public class IJSCOIndeler {
 	 * @param osbolijst Osbo lijst
 	 * @return bijgewerkte spelerslijst
 	 */
-	public Deelnemers controleerSpelers(Deelnemers deelnemers, HashMap<Integer, Speler> osbolijst) {
-		Deelnemers update = new Deelnemers();
+	public Spelers controleerSpelers(Spelers deelnemers, HashMap<Integer, Speler> osbolijst) {
+		Spelers update = new Spelers();
 		for (Speler s : deelnemers) {
 			Speler osbogegevens = osbolijst.get(s.getKnsbnummer());
 			if (osbogegevens != null) {
@@ -58,7 +58,7 @@ public class IJSCOIndeler {
 	 * @param deelnemers Deelnemers aan toernooi
 	 * @return
 	 */
-	public Groepen bepaalGroep(Schema schema, Deelnemers deelnemers) {
+	public Groepen bepaalGroep(Schema schema, Spelers deelnemers) {
 		ArrayList<Groepen> mogelijkheden = mogelijkeGroepen(deelnemers.getAanwezigen(), schema.getGroepen(),
 				schema.getGroepsgroottes(), schema.getByes());
 		logger.log(Level.INFO, mogelijkheden.toString());
@@ -115,7 +115,7 @@ public class IJSCOIndeler {
 	 * @param byes aantal byes
 	 * @return lijst met mogelijke groepsindelingen
 	 */
-	private ArrayList<Groepen> mogelijkeGroepen(Deelnemers spelers, int groepen, int[] grootte, int byes) {
+	private ArrayList<Groepen> mogelijkeGroepen(Spelers spelers, int groepen, int[] grootte, int byes) {
 
 		ArrayList<Groepen> result = new ArrayList<>();
 
@@ -137,7 +137,7 @@ public class IJSCOIndeler {
 	 * @param byemask Een bytemask dat aangeeft welke groepen een speler minder hebben
 	 * @return
 	 */
-	private Groepen maakGroepen(Deelnemers deelnemers, int nGroepen, int[] grootte, int byemask) {
+	private Groepen maakGroepen(Spelers deelnemers, int nGroepen, int[] grootte, int byemask) {
 		logger.log(Level.INFO, "Deelnemers : "  + deelnemers + ",Groepen    : "  + nGroepen +
 				",Grootte    : "  + grootte + ",Byemask    : "  + Integer.toBinaryString(byemask));
 		Groepen groepen = new Groepen(nGroepen, grootte);

@@ -19,11 +19,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
-public class Deelnemers implements Collection<Speler> {
+public class Spelers implements Collection<Speler> {
 
 	private ArrayList<Speler> deelnemers;
 
-	public Deelnemers() {
+	public Spelers() {
 		deelnemers = new ArrayList<>();
 	}
 
@@ -197,8 +197,8 @@ public class Deelnemers implements Collection<Speler> {
 		});
 	}
 
-	public Deelnemers getAanwezigen() {
-		Deelnemers result = new Deelnemers();
+	public Spelers getAanwezigen() {
+		Spelers result = new Spelers();
 		for (Speler s : deelnemers) {
 			if (s.isAanwezig())
 				result.add(s);

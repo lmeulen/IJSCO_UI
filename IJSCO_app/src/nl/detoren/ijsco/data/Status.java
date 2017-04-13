@@ -24,7 +24,7 @@ public class Status {
 	/**
 	 * Deelnemers aan het toernooi
 	 */
-	public Deelnemers deelnemers;
+	public Spelers deelnemers;
 	/**
 	 * Mogelijke speelschemas
 	 * Schema is aantal groepen, spelers per groep (variabel)

@@ -20,7 +20,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import nl.detoren.ijsco.data.Deelnemers;
+import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.data.Speler;
 
 /**
@@ -32,7 +32,7 @@ import nl.detoren.ijsco.data.Speler;
  */
 public class OSBOLoader {
 
-	public Deelnemers laadBestand(String bestandsnaam) {
+	public Spelers laadBestand(String bestandsnaam) {
 		try {
 			// File input = new File("OSBO Jeugd-rating-lijst.htm");
 			File input = new File(bestandsnaam);
@@ -44,7 +44,7 @@ public class OSBOLoader {
 		return null;
 	}
 
-	public Deelnemers laadWebsite() {
+	public Spelers laadWebsite() {
 		try {
 			Document doc = Jsoup.connect("http://osbo.nl/jeugd/jrating.htm").get();
 			return load(doc);
@@ -54,8 +54,8 @@ public class OSBOLoader {
 		return null;
 	}
 
-	private Deelnemers load(Document doc) {
-		Deelnemers spelers = new Deelnemers();
+	private Spelers load(Document doc) {
+		Spelers spelers = new Spelers();
 		int knsbnummer = 0;
 		int knsbrating = 0;
 		int osborating = 0;

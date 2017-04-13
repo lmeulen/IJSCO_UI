@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import nl.detoren.ijsco.data.Deelnemers;
+import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.data.Speler;
 
 public class DeelnemersLader {
@@ -39,9 +39,9 @@ public class DeelnemersLader {
 	 *            Naam van het bestand dat ingelezen moet worden
 	 * @return De ingelezen spelers verdeeld over de groepen
 	 */
-	public Deelnemers importeerSpelers(String bestandsnaam) {
+	public Spelers importeerSpelers(String bestandsnaam) {
 
-		Deelnemers deelnemers = new Deelnemers();
+		Spelers deelnemers = new Spelers();
 		// Lees het volledige bestand in naar een String array
 		String[] stringArr = leesBestand(bestandsnaam);
 		for (String regel : stringArr) {

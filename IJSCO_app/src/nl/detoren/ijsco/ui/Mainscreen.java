@@ -10,7 +10,6 @@
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Problemen in deze code:
- * - Pagina eindes zijn niet goed ingesteld in de gegenereerde Excel
  */
 package nl.detoren.ijsco.ui;
 
@@ -30,12 +29,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -64,19 +58,13 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import com.google.gson.Gson;
-
-import nl.detoren.ijsco.data.Deelnemers;
-import nl.detoren.ijsco.data.Groep;
+import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.data.Speler;
 import nl.detoren.ijsco.data.Status;
 import nl.detoren.ijsco.io.DeelnemersLader;
+import nl.detoren.ijsco.io.ExcelExport;
 import nl.detoren.ijsco.io.OSBOLoader;
+import nl.detoren.ijsco.io.StatusIO;
 import nl.detoren.ijsco.ui.control.IJSCOIndeler;
 import nl.detoren.ijsco.ui.control.Suggesties;
 import nl.detoren.ijsco.ui.model.DeelnemersModel;
@@ -126,7 +114,7 @@ public class Mainscreen extends JFrame {
 	private void initialize() {
 
 		indeler = new IJSCOIndeler();
-		if (!leesStatus("status.json")) {
+		if ((new StatusIO().read("status.json")) == null) {
 			status = new Status();
 		}
 
@@ -155,13 +143,13 @@ public class Mainscreen extends JFrame {
 
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) {
-				bewaarStatus();
+				new StatusIO().write(status);
 			}
 		});
 	}
 
 	public void leesOSBOlijst() {
-		Deelnemers tmp = (new OSBOLoader()).laadBestand("OSBO Jeugd-rating-lijst.htm");
+		Spelers tmp = (new OSBOLoader()).laadBestand("OSBO Jeugd-rating-lijst.htm");
 		logger.log(Level.INFO, "OSBO ingelezen : " + tmp.size() + " spelers in lijst" );
 		status.OSBOSpelers = new HashMap<>();
 		for (Speler d : tmp) {
@@ -173,7 +161,7 @@ public class Mainscreen extends JFrame {
 	}
 
 	public void leesDeelnemers(String file) {
-		Deelnemers tmp = new DeelnemersLader().importeerSpelers(file);
+		Spelers tmp = new DeelnemersLader().importeerSpelers(file);
 		indeler.controleerSpelers(tmp, status.OSBOSpelers);
 		logger.log(Level.INFO, "Deelnemers ingelezen : " + tmp.size() + " spelers in lijst" );
 		deelnemersModel.wis();
@@ -425,7 +413,7 @@ public class Mainscreen extends JFrame {
 				if (schemaTabel != null) {
 					int row = schemaTabel.getSelectedRow();
 					bepaalGroepen(row);
-					maakExcelSchema();
+					new ExcelExport().exportGroepen(status.groepen);
 				}
 				panel.getParent().repaint();
 			}
@@ -677,35 +665,6 @@ public class Mainscreen extends JFrame {
 		return value;
 	}
 
-	public boolean leesStatus(String bestandsnaam) {
-		try {
-			logger.log(Level.INFO, "Lees status uit bestand " + bestandsnaam);
-			Gson gson = new Gson();
-			BufferedReader br = new BufferedReader(new FileReader(bestandsnaam));
-			Status nieuw = gson.fromJson(br, Status.class);
-			status = nieuw; // assure exception is thrown when things go wrong
-			return true;
-		} catch (Exception e) {
-			// Could not read status
-			System.out.println("Failed to read status : " + e.getMessage());
-			return false;
-		}
-	}
-
-	private void bewaarStatus() {
-		try {
-			String bestandsnaam = "status.json";
-			logger.log(Level.INFO, "Sla status op in bestand " + bestandsnaam);
-			Gson gson = new Gson();
-			String jsonString = gson.toJson(status);
-			// write converted json data to a file
-			FileWriter writer = new FileWriter(bestandsnaam);
-			writer.write(jsonString);
-			writer.close();
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Error saving status : " + e.getMessage());
-		}
-	}
 
 	private void fixedComponentSize(Component c, int width, int height) {
 		c.setMinimumSize(new Dimension(width, height));
@@ -750,82 +709,6 @@ public class Mainscreen extends JFrame {
 		}
 	}
 
-	public void maakExcelSchema() {
-		try {
-			if (status.groepen == null) return;
-			int[] sheetindx = new int[] { -1, -1, -1, -1, 3, -1, 2, -1, 1, -1, 0, -1, -1, -1, -1, -1, -1, -1 };
-			FileInputStream file = new FileInputStream("Indeling.xlsm");
-			XSSFWorkbook workbook = new XSSFWorkbook(file);
-			for (Groep groep : status.groepen) {
-				logger.log(Level.INFO, "Exporteer groep : " + groep.getNaam());
-				XSSFSheet sheet = workbook.cloneSheet(sheetindx[groep.getGrootte()]);
-				updateCell(sheet, 0, 6, groep.getNaam());
-				for (int i = 0; i < groep.getGrootte(); i++) {
-					updateCell(sheet, 3 + i, 2, groep.getSpeler(i).getNaam());
-					updateCell(sheet, 3 + i, 3, groep.getSpeler(i).getKnsbnummer());
-					updateCell(sheet, 3 + i, 5, groep.getSpeler(i).getRating());
-				}
-				sheet.setForceFormulaRecalculation(true);
-				workbook.setSheetName(workbook.getSheetIndex(sheet), groep.getNaam());
-			}
-			// Remove template sheets
-			for (int i = 0; i < 4; i++) {
-				workbook.removeSheetAt(0);
-			}
-			// Close input file
-			file.close();
-			// Store Excel to new file
-			String filename = "Indeling resultaat.xlsm";
-			File outputFile = new File(filename);
-			FileOutputStream outFile = new FileOutputStream(outputFile);
-			workbook.write(outFile);
-			// Close output file
-			workbook.close();
-			outFile.close();
-			// And open it in the system editor
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Fout bij maken indeling excel : " + e.getMessage());
-		}
-	}
 
-	/**
-	 * Update a single cell in the Excel Sheet. The cell is specified by its row
-	 * and column. Row and column numbers start with 0, so column A equals 0,
-	 * column B equals 1, etc.
-	 *
-	 * @param sheet
-	 *            The Excel sheet to update
-	 * @param row
-	 *            The row number, starting with 0
-	 * @param col
-	 *            The column number, staring with 0
-	 * @param value
-	 *            THe value to store in the cell
-	 */
-	private void updateCell(XSSFSheet sheet, int row, int col, String value) {
-		Cell cell = getCell(sheet, row, col);
-		cell.setCellValue(value.trim());
-	}
-
-	private void updateCell(XSSFSheet sheet, int row, int col, int value) {
-		Cell cell = getCell(sheet, row, col);
-		cell.setCellValue(value);
-	}
-
-	private Cell getCell(XSSFSheet sheet, int row, int col) {
-		Cell cell = null;
-
-		// Retrieve the row and create when not valid
-		XSSFRow sheetrow = sheet.getRow(row);
-		if (sheetrow == null) {
-			sheetrow = sheet.createRow(row);
-		}
-		// Retrieve the correct cell from the column
-		cell = sheetrow.getCell(col);
-		if (cell == null) {
-			cell = sheetrow.createCell(col);
-		}
-		return cell;
-	}
 
 }
