@@ -114,9 +114,10 @@ public class Mainscreen extends JFrame {
 	private void initialize() {
 
 		indeler = new IJSCOIndeler();
-		if ((new StatusIO().read("status.json")) == null) {
+		status = new StatusIO().read("status.json");
+		if (status == null) {
 			status = new Status();
-			
+
 		}
 
 		// Frame

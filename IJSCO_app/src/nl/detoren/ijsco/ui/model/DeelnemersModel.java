@@ -19,8 +19,8 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.table.AbstractTableModel;
 
-import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.data.Speler;
+import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.ui.Mainscreen;
 
 @SuppressWarnings("serial")
@@ -86,6 +86,7 @@ public class DeelnemersModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object value, int row, int col) {
+    	logger.log(Level.INFO, "Setting value " + value + " @ (" + row + "," + col + "");
 		if (deelnemers != null && row < deelnemers.size()) {
 			Speler speler = deelnemers.get(row);
 			speler.setAanwezig((Boolean) value);
