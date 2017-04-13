@@ -116,6 +116,7 @@ public class Mainscreen extends JFrame {
 		indeler = new IJSCOIndeler();
 		if ((new StatusIO().read("status.json")) == null) {
 			status = new Status();
+			
 		}
 
 		// Frame
@@ -286,7 +287,11 @@ public class Mainscreen extends JFrame {
 
 		// Aantal spelers
 		panel.add(new JLabel("Aantal spelers:"), new ExtendedGridConstraints(0, curRow));
-		tfAanwezig = new JTextField(Integer.toString(status.deelnemers.aantalAanwezig()), 10);
+		if (status.deelnemers != null) {
+			tfAanwezig = new JTextField(Integer.toString(status.deelnemers.aantalAanwezig()), 10);
+		} else {
+			tfAanwezig = new JTextField(Integer.toString(0), 10);
+		}
 		tfAanwezig.setEditable(false);
 		panel.add(tfAanwezig, new ExtendedGridConstraints(1, curRow++));
 
@@ -440,9 +445,11 @@ public class Mainscreen extends JFrame {
 			innerPanel.add(new JLabel("Naam:"), BorderLayout.NORTH);
 			JTextField deelnemer = new JTextField(15);
 			ArrayList<String> words = new ArrayList<>();
-			for (Speler s : status.OSBOSpelers.values()) {
-				words.add(s.getNaam().trim());
-				words.add(Integer.toString(s.getKnsbnummer()));
+			if (status.OSBOSpelers != null) {
+				for (Speler s : status.OSBOSpelers.values()) {
+					words.add(s.getNaam().trim());
+					words.add(Integer.toString(s.getKnsbnummer()));
+				}
 			}
 			@SuppressWarnings("unused")
 			Suggesties suggesties = new Suggesties(deelnemer, this, words, 2);
