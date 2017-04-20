@@ -164,14 +164,19 @@ public class Mainscreen extends JFrame {
 
 	public void leesDeelnemers(String file) {
 		Spelers tmp = new DeelnemersLader().importeerSpelers(file);
-		indeler.controleerSpelers(tmp, status.OSBOSpelers);
-		logger.log(Level.INFO, "Deelnemers ingelezen : " + tmp.size() + " spelers in lijst" );
-		deelnemersModel.wis();
-		for (Speler s : tmp) {
-			deelnemersModel.add(s);
+		if (status.OSBOSpelers != null) {
+			indeler.controleerSpelers(tmp, status.OSBOSpelers);
+			logger.log(Level.INFO, "Deelnemers ingelezen : " + tmp.size() + " spelers in lijst" );
+			deelnemersModel.wis();
+			for (Speler s : tmp) {
+				deelnemersModel.add(s);
+			}
+			deelnemersModel.fireTableDataChanged();
+			JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit bestand");
 		}
-		deelnemersModel.fireTableDataChanged();
-		JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit bestand");
+		else {
+			JOptionPane.showMessageDialog(null, "Geen spelers ingelezen uit bestand. OSBO lijst moet eerst gelezen worden.");
+		}
 
 	}
 
