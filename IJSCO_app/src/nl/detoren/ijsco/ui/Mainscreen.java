@@ -30,6 +30,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -117,7 +120,9 @@ public class Mainscreen extends JFrame {
 		status = new StatusIO().read("status.json");
 		if (status == null) {
 			status = new Status();
-
+		}
+		if (status.deelnemers==null) {
+			status.deelnemers = new Spelers();
 		}
 
 		// Frame
@@ -151,8 +156,32 @@ public class Mainscreen extends JFrame {
 	}
 
 	public void leesOSBOlijst() {
-		Spelers tmp = (new OSBOLoader()).laadBestand("OSBO Jeugd-rating-lijst.htm");
-		logger.log(Level.INFO, "OSBO ingelezen : " + tmp.size() + " spelers in lijst" );
+		Spelers tmp = null;
+			InetAddress ip = null;
+			try {
+				ip = InetAddress.getByName("www.osbo.nl");
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (ip.isReachable(5000)) {	
+					tmp = (new OSBOLoader()).laadWebsite();
+					logger.log(Level.INFO, "OSBO van website opgehaald: " + tmp.size() + " spelers in lijst" );
+				} else {
+				try {
+					tmp = (new OSBOLoader()).laadBestand("OSBO Jeugd-rating-lijst.htm");
+				}
+				catch (Exception ex){
+					logger.log(Level.INFO, "OSBO inlezen failed! OSBO Jeugd-rating-lijst.htm niet gevonden." );
+				return;
+				}
+				logger.log(Level.INFO, "OSBO ingelezen : " + tmp.size() + " spelers in lijst" );
+}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		status.OSBOSpelers = new HashMap<>();
 		for (Speler d : tmp) {
 			status.OSBOSpelers.put(d.getKnsbnummer(), d);

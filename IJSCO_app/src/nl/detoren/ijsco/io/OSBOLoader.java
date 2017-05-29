@@ -14,6 +14,7 @@
 package nl.detoren.ijsco.io;
 
 import java.io.File;
+import java.net.URL;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,7 +37,9 @@ public class OSBOLoader {
 		try {
 			// File input = new File("OSBO Jeugd-rating-lijst.htm");
 			File input = new File(bestandsnaam);
-			Document doc = Jsoup.parse(input, "ISO-8859-9", "http://osbo.nl/jeugd/");
+			//Document doc = Jsoup.parse(input, "ISO-8859-9", "http://osbo.nl/jeugd/");
+			//Document doc = Jsoup.parse(input, "UTF-8", "http://osbo.nl/jeugd/");
+			Document doc = Jsoup.parse(input, "ISO-8859-1", "http://osbo.nl/jeugd/");
 			return load(doc);
 		} catch (Exception e) {
 			System.out.println("Error loading OSBO spelers " + e.getMessage());
@@ -46,7 +49,9 @@ public class OSBOLoader {
 
 	public Spelers laadWebsite() {
 		try {
-			Document doc = Jsoup.connect("http://osbo.nl/jeugd/jrating.htm").get();
+			//Document doc = Jsoup.connect("http://osbo.nl/jeugd/jrating.htm").get();
+			String url = "http://osbo.nl/jeugd/jrating.htm";
+			Document doc = Jsoup.parse(new URL(url).openStream(), "ISO-8859-9", url);
 			return load(doc);
 		} catch (Exception e) {
 			System.out.println("Error loading OSBO spelers " + e.getMessage());
