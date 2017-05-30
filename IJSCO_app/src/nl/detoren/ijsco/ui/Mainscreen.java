@@ -35,6 +35,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -124,7 +127,7 @@ public class Mainscreen extends JFrame {
 		if (status.deelnemers==null) {
 			status.deelnemers = new Spelers();
 		}
-
+		leesOSBOlijst();
 		// Frame
 		setBounds(25, 25, 1300, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -280,11 +283,11 @@ public class Mainscreen extends JFrame {
 
 
 		// Buttons
-		JButton bOSBO = new JButton("Import OSBO");
+		JButton bOSBO = new JButton("Alle OSBO deelnemers");
 		bOSBO.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				leesOSBOlijst();
+				voegtoeOSBOlijst();
 			}
 
 		});
@@ -688,6 +691,18 @@ public class Mainscreen extends JFrame {
 	}
 
 
+	protected void voegtoeOSBOlijst() {
+		//TODO Alle spelers uit de lijst toevoegen als ze er niet al in staan!
+		Iterator<Entry<Integer, Speler>> it = status.OSBOSpelers.entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry pair = (Map.Entry)it.next();
+			Speler s = (Speler) pair.getValue();
+			s.setAanwezig(false);
+			status.deelnemers.add(s);
+		}
+		deelnemersModel.fireTableDataChanged();
+	}
+
 	/**
 	 * Bepaal de nieuwe integer waarde voor een textfield Als het tekstveld een
 	 * geldig getal bevat, wordt deze waarde geretourneerd anders de oude waarde
@@ -747,7 +762,7 @@ public class Mainscreen extends JFrame {
 			groepenText.setText(status.groepen.getDescription());
 			groepenText.setCaretPosition(0);
 		} else {
-			JOptionPane.showMessageDialog(null, "Geen schema geselecteerd om te gebruiken. \n\rBepaal eerst de mogelijkheden en selecteer er één.");
+			JOptionPane.showMessageDialog(null, "Geen schema geselecteerd om te gebruiken. \n\rBepaal eerst de mogelijkheden en selecteer er ï¿½ï¿½n.");
 		}
 	}
 

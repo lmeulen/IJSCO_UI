@@ -51,7 +51,8 @@ public class OSBOLoader {
 		try {
 			//Document doc = Jsoup.connect("http://osbo.nl/jeugd/jrating.htm").get();
 			String url = "http://osbo.nl/jeugd/jrating.htm";
-			Document doc = Jsoup.parse(new URL(url).openStream(), "ISO-8859-9", url);
+			Document doc = Jsoup.connect(url).get();
+			//Document doc = Jsoup.parse(new URL(url).openStream(), "ISO-8859-9", url);
 			return load(doc);
 		} catch (Exception e) {
 			System.out.println("Error loading OSBO spelers " + e.getMessage());
