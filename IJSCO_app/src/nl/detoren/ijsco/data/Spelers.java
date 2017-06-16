@@ -32,7 +32,7 @@ public class Spelers implements Collection<Speler> {
 		if (nieuw != null) {
 			// Bestaande speler verwijderen
 			for (int i = 0; i < deelnemers.size(); i++) {
-				if (deelnemers.get(i).getKnsbnummer() == nieuw.getKnsbnummer()) {
+				if (deelnemers.get(i).getKnsbnummer() == nieuw.getKnsbnummer() && nieuw.getKnsbnummer() != -1) {
 					deelnemers.remove(i);
 					break;
 				}

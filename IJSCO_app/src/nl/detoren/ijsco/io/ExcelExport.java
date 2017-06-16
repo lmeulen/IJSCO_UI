@@ -19,14 +19,24 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
@@ -36,12 +46,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import nl.detoren.ijsco.data.Groep;
 import nl.detoren.ijsco.data.Groepen;
+import nl.detoren.ijsco.data.Speler;
 
 public class ExcelExport implements ExportInterface {
 
 	private final static Logger logger = Logger.getLogger(ExcelExport.class.getName());
 
 	public void exportGroepen(Groepen groepen) {
+	    String password= "abcd";
 		try {
 			if (groepen == null) return;
 			int[] sheetindx = new int[] { -1, -1, -1, -1,  3, -1,  2, -1,  1, -1,  0, -1, -1, -1, -1, -1, -1, -1 };
@@ -68,7 +80,7 @@ public class ExcelExport implements ExportInterface {
 			sheet3row++;
 			for (Groep groep : groepen) {
 				logger.log(Level.INFO, "Exporteer groep : " + groep.getNaam());
-				XSSFSheet sheet = workbook.cloneSheet(sheetindx[groep.getGrootte()]);
+				XSSFSheet sheet = workbook.cloneSheet(sheetindx[groep.getGrootte()], groep.getNaam());
 				updateCell(sheet, 0, 6, groep.getNaam());
 				updateCell(sheet2, sheet2row, 1, groep.getNaam());
 				sheet2row++;
@@ -82,13 +94,13 @@ public class ExcelExport implements ExportInterface {
 					updateCell(sheet, 3 + i, 3, groep.getSpeler(i).getKnsbnummer());
 					updateCell(sheet, 3 + i, 5, groep.getSpeler(i).getRating());
 					updateCell(sheet2, sheet2row, 0, i+1);
-					updateCell(sheet2, sheet2row, 1, groep.getSpeler(i).getNaam());
-					updateCell(sheet2, sheet2row, 2, groep.getSpeler(i).getKnsbnummer());
-					updateCell(sheet2, sheet2row, 3, groep.getSpeler(i).getRating());
+					updateCell(sheet2, sheet2row, 1, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(2) + (4+i), true);
+					updateCell(sheet2, sheet2row, 2,  "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(3) + (4+i), true);
+					updateCell(sheet2, sheet2row, 3,  "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(5) + (4+i), true);
 					if (groep.getSpeler(i).getNaam() != "Bye") {
-						updateCell(sheet3, sheet3row, 0, groep.getSpeler(i).getNaam());
-						updateCell(sheet3, sheet3row, 1, groep.getSpeler(i).getKnsbnummer());
-						updateCell(sheet3, sheet3row, 2, groep.getSpeler(i).getRating());
+						updateCell(sheet3, sheet3row, 0, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(2) + (4+i), true);
+						updateCell(sheet3, sheet3row, 1, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(3) + (4+i), true);
+						updateCell(sheet3, sheet3row, 2, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(5) + (4+i), true);
 						updateCell(sheet3, sheet3row, 3, groep.getNaam());
 					}
 					sheet2row++;
@@ -97,17 +109,23 @@ public class ExcelExport implements ExportInterface {
 				sheet2row++;
 				sheet.setForceFormulaRecalculation(true);
 				// Set print margins
-				workbook.setSheetName(workbook.getSheetIndex(sheet), groep.getNaam());
 				XSSFPrintSetup ps = sheet.getPrintSetup();
 				ps.setFitWidth((short)1);
 				sheet.setFitToPage(true);
 				sheet.setAutobreaks(false);
 				workbook.setPrintArea(workbook.getSheetIndex(sheet), 1, 26, 0, pagelngth[groep.getGrootte()]);
 				sheet.setColumnBreak(18);
-			    String password= "abcd";
 			    sheet.protectSheet(password);
 				sheet.enableLocking();
 			}
+			XSSFSheet sheet4 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Deelnemerslijst (naam)");
+			sortSheet(sheet4, 1,3, 62);
+			//XSSFSheet sheet5 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Deelnemerslijst (rating)");
+			//sortSheet(sheet5, 1,4);
+			sheet2.protectSheet(password);
+			sheet3.protectSheet(password);
+			sheet4.protectSheet(password);
+			//sheet5.protectSheet(password);
 			// Remove template sheets
 			for (int i = 0; i < 4; i++) {
 				workbook.removeSheetAt(0);
@@ -125,7 +143,7 @@ public class ExcelExport implements ExportInterface {
 			outFile.close();
 			// And open it in the system editor
 			Desktop.getDesktop().open(outputFile);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Fout bij maken indeling excel : " + e.getMessage());
 			
 		}
@@ -155,6 +173,11 @@ public class ExcelExport implements ExportInterface {
 		cell.setCellValue(value);
 	}
 
+	private void updateCell(XSSFSheet sheet, int row, int col, String value, boolean formula) {
+		Cell cell = getCell(sheet, row, col);
+		cell.setCellFormula(value);
+	}
+	
 	private void updateCell(XSSFSheet sheet, int row, int col, XSSFCellStyle style) {
 		Cell cell = getCell(sheet, row, col);
 		cell.setCellStyle(style);
@@ -188,5 +211,48 @@ public class ExcelExport implements ExportInterface {
 		}
 		return cell;
 	}
+	
+	/**
+	 * Sorts (A-Z) rows by String column
+	 * @param sheet - sheet to sort
+	 * @param column - String column to sort by
+	 * @param rowStart - sorting from this row down
+	 */
 
+	private void sortSheet(XSSFSheet sheet, int column, int rowStart, int rowEnd) {
+    	try {
+		FormulaEvaluator evaluator = sheet.getWorkbook().getCreationHelper().createFormulaEvaluator();
+		logger.log(Level.INFO, "sorting sheet: " + sheet.getSheetName());
+	    boolean sorting = true;
+	    //int lastRow = sheet.getLastRowNum();
+	    while (sorting == true) {
+	        sorting = false;
+	        for (Row row : sheet) {
+	            // skip if this row is before first to sort
+	            if (row.getRowNum()<rowStart) continue;
+	            // end if this is last row
+	            if (rowEnd==row.getRowNum()) break;
+	            Row row2 = sheet.getRow(row.getRowNum()+1);
+	            if (row2 == null) continue;
+	            int rownum1 = row.getRowNum();
+	            int rownum2 = row2.getRowNum();
+	            CellValue firstValue;
+	            CellValue secondValue;
+	            	firstValue = evaluator.evaluate(row.getCell(column));
+	            	secondValue = evaluator.evaluate(row2.getCell(column));
+	            //compare cell from current row and next row - and switch if secondValue should be before first
+	            if (secondValue.toString().compareToIgnoreCase(firstValue.toString())<0) {            
+	        		logger.log(Level.INFO, "Shifting rows" + sheet.getSheetName() + rownum1 + " - " +  rownum2);
+	            	sheet.shiftRows(row2.getRowNum(), row2.getRowNum(), -1);
+	            	logger.log(Level.INFO, "Shifting rows" + sheet.getSheetName() + rownum1 + " - " +  rownum2);
+	                sheet.shiftRows(row.getRowNum(), row.getRowNum(), 1);
+	                sorting = true;
+	            }
+	        }
+	    }
+    	}
+    	catch (Exception ex) {
+    		logger.log(Level.WARNING, "Failing Shifting rows" + sheet.getSheetName() + "Error " + ex.getMessage());
+    	}
+	}
 }

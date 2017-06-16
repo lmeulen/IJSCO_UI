@@ -107,6 +107,15 @@ public class Speler {
 		this.knsbnummer = knsbnummer;
 	}
 
+	public void setKnsbnummer(String knsbnummer) {
+		try{
+			this.knsbnummer = Integer.parseInt(knsbnummer);
+		}
+		catch (Exception e) {
+			this.knsbnummer = -1;
+		}
+	}
+
 	public String getNaamKNSB() {
 		return naamKNSB;
 	}
@@ -145,6 +154,16 @@ public class Speler {
 
 	public void setRatingHandmatig(int ratingHandmatig) {
 		this.ratingHandmatig = ratingHandmatig;
+	}
+
+	public void setRatingHandmatig(String ratingHandmatig) {
+		try {
+			this.ratingHandmatig = Integer.parseInt(ratingHandmatig);
+		}
+		catch (Exception ex)
+		{
+			this.ratingHandmatig = -1;
+		}
 	}
 
 	public boolean isBye() {
@@ -198,6 +217,8 @@ public class Speler {
 	public void setOverruleRating(boolean overruleRating) {
 		this.overruleRating = overruleRating;
 	}
+
+
 
 
 }

@@ -14,6 +14,7 @@
 package nl.detoren.ijsco.io;
 
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,26 +41,36 @@ public class DeelnemersLader {
 	 * @return De ingelezen spelers verdeeld over de groepen
 	 */
 	public Spelers importeerSpelers(String bestandsnaam) {
-
+		String item = "";
+		int aantal = 0;
 		Spelers deelnemers = new Spelers();
 		// Lees het volledige bestand in naar een String array
-		String[] stringArr = leesBestand(bestandsnaam);
-		for (String regel : stringArr) {
-			List<String> items = Arrays.asList(regel.split(";"));
-			Speler s = new Speler();
-			s.setKnsbnummer(Integer.parseInt(items.get(0)));
-			if (items.size() > 1) {
-				s.setNaamHandmatig(items.get(1));
-			} else {
-				s.setNaamHandmatig("-");
+			String[] stringArr = leesBestand(bestandsnaam);
+			for (String regel : stringArr) {
+				List<String> items = Arrays.asList(regel.split(";"));
+				Speler s = new Speler();
+				item = items.get(0);
+				s.setKnsbnummer(item);
+				item = "";
+				if (items.size() > 1) {
+					item = items.get(1);
+					s.setNaamHandmatig(item);
+				} else {
+					s.setNaamHandmatig("-");
+				}
+				item = "";
+				if (items.size() > 2) {
+						item = items.get(2);
+						s.setRatingHandmatig(item);
+				} else {
+					s.setRatingHandmatig(-1);
+				}
+				deelnemers.add(s);
+				aantal++;
+				System.out.println("Aantal deelnemers tot nu toe is " + deelnemers.size());
 			}
-			if (items.size() > 2) {
-				s.setRatingHandmatig(Integer.parseInt(items.get(2)));
-			} else {
-				s.setRatingHandmatig(-1);
-			}
-			deelnemers.add(s);
-		}
+			System.out.println("Aantal spelers is " + aantal + ".");	
+		
 		return deelnemers;
 	}
 
