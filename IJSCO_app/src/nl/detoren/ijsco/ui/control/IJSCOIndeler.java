@@ -82,7 +82,7 @@ public class IJSCOIndeler {
 		int beste_groepverschil = 0;
 		double beste_stddev = Double.MAX_VALUE;
 		for (Groepen groepen : mogelijkegroepen) {
-			if (groepen.getKleinsteGroep() >= 4) {
+			//if (groepen.getKleinsteGroep() >= 4) {
 				if (groepen.getSpreidingTotaal() < beste_spreiding) {
 					beste = groepen;
 					beste_spreiding = groepen.getSpreidingTotaal();
@@ -101,7 +101,7 @@ public class IJSCOIndeler {
 						beste_stddev = groepen.getSomStdDev();
 					}
 				}
-			}
+			//}
 		}
 		return beste;
 	}
@@ -118,11 +118,15 @@ public class IJSCOIndeler {
 	private ArrayList<Groepen> mogelijkeGroepen(Spelers spelers, int groepen, int[] grootte, int byes) {
 
 		ArrayList<Groepen> result = new ArrayList<>();
-
 		int max = (int) Math.pow(2, groepen);
+		int mask = max - 1 - 7 - 64;
 		for (int i = 0; i < max; i++) {
-			if (Integer.bitCount(i) == byes) {
-				result.add(maakGroepen(spelers, groepen, grootte, i));
+			int j = i & mask; 
+			if (Integer.bitCount(reversebits(j)) == byes) {
+				// ToDo Check byemask with mask for groups that cannot have byes
+				//
+				Groepen maakGroepen = maakGroepen(spelers, groepen, grootte, j);
+				result.add(maakGroepen);				
 			}
 		}
 		return result;
@@ -228,5 +232,15 @@ public class IJSCOIndeler {
 		for (int v : arr)
 			tot += v;
 		return (tot - n);
+	}
+	
+	private int reversebits(int x) {
+	int b=0;
+		while (x!=0){
+		  b<<=1;
+		  b|=( x &1);
+		  x>>=1;
+		}
+		return b;
 	}
 }

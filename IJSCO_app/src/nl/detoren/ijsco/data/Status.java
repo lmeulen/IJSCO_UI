@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Status {
+
 	/**
 	 * Spelers zoals bekend bij de OSBO
 	 */
@@ -58,5 +59,5 @@ public class Status {
 	public int maxAfwijkendeGroepen = 2;
 	public int minToegestaneByes = 0;
 	public int maxToegestaneByes = 3;
-
+	public String GeenByesInGroepen = "1";
 }

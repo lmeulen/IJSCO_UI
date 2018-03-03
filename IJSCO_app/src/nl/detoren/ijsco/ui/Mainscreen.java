@@ -21,6 +21,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -47,6 +48,8 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -55,6 +58,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
@@ -71,6 +75,7 @@ import nl.detoren.ijsco.io.DeelnemersLader;
 import nl.detoren.ijsco.io.ExcelExport;
 import nl.detoren.ijsco.io.OSBOLoader;
 import nl.detoren.ijsco.io.StatusIO;
+import nl.detoren.ijsco.ui.control.IJSCOController;
 import nl.detoren.ijsco.ui.control.IJSCOIndeler;
 import nl.detoren.ijsco.ui.control.Suggesties;
 import nl.detoren.ijsco.ui.model.DeelnemersModel;
@@ -87,6 +92,8 @@ public class Mainscreen extends JFrame {
 
 	private JTextArea groepenText;
 
+	private IJSCOController controller;
+	
 	IJSCOIndeler indeler;
 	private Status status;
 	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
@@ -128,6 +135,7 @@ public class Mainscreen extends JFrame {
 			status.deelnemers = new Spelers();
 		}
 		leesOSBOlijst();
+		addMenubar();
 		// Frame
 		setBounds(25, 25, 1300, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -158,6 +166,196 @@ public class Mainscreen extends JFrame {
 		});
 	}
 
+	private void addMenubar() {
+		// Menu bar met 1 niveau
+		JMenuBar menubar = new JMenuBar();
+		JMenu filemenu = new JMenu("Bestand");
+		// File menu
+		JMenuItem item = new JMenuItem("Openen...");
+		item.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		Mainscreen ms = this;
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// Create a file chooser
+				final JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+				// In response to a button click:
+				int returnVal = fc.showOpenDialog(ms);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+					//controller.leesBestand(file.getAbsolutePath());
+					ms.repaint();
+				}
+			}
+		});
+		filemenu.add(item);
+		item = new JMenuItem("Opslaan");
+		item.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//controller.saveState(true, "save");
+			}
+		});
+		filemenu.add(item);
+		filemenu.addSeparator();
+		item = new JMenuItem("Instellingen...");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieInstellingen();
+			}
+		});
+		item.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		filemenu.add(item);
+		filemenu.addSeparator();
+		item = new JMenuItem("Afsluiten");
+		item.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				//controller.saveState(false, null);
+				System.exit(EXIT_ON_CLOSE);
+			}
+		});
+		filemenu.add(item);
+		menubar.add(filemenu);
+		JMenu spelermenu = new JMenu("Speler");
+
+		item = new JMenuItem("Nieuwe speler");
+		item.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieNieuweSpeler(null, null);
+				hoofdPanel.repaint();
+			}
+		});
+		spelermenu.add(item);
+		menubar.add(spelermenu);
+
+		item = new JMenuItem("Importeer spelers");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// Create a file chooser
+				final JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+				// In response to a button click:
+				if (fc.showOpenDialog(ms) == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+					//controller.importeerSpelers(file.getAbsolutePath());
+					ms.repaint();
+				}
+			}
+		});
+		spelermenu.add(item);
+
+		menubar.add(spelermenu);
+		JMenu indelingMenu = new JMenu("Indeling");
+		item = new JMenuItem("Automatisch aan/uit");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				//actieAutomatisch();
+			}
+		});
+
+		indelingMenu.add(item);
+		item = new JMenuItem("Maak wedstrijdgroep");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieMaakWedstrijdgroep();
+			}
+		});
+
+		indelingMenu.add(item);
+		item = new JMenuItem("Maak speelschema");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evetn) {
+				//actieMaakSpeelschema();
+			}
+		});
+		indelingMenu.add(item);
+		item = new JMenuItem("Bewerk speelschema");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				//updateAutomatisch(false);
+				// ResultaatDialoog
+				//actieBewerkSchema();
+			}
+		});
+
+		indelingMenu.add(item);
+		indelingMenu.addSeparator();
+		item = new JMenuItem("Export");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				//actieExport();
+			}
+		});
+		indelingMenu.add(item);
+		indelingMenu.addSeparator();
+		item = new JMenuItem("Vul uitslagen in");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieVoerUitslagenIn();
+			}
+		});
+		indelingMenu.add(item);
+		item = new JMenuItem("Externe spelers");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieExterneSpelers();
+			}
+		});
+		indelingMenu.add(item);
+		item = new JMenuItem("Maak nieuwe stand");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieUpdateStand();
+			}
+		});
+		indelingMenu.add(item);
+		indelingMenu.addSeparator();
+		item = new JMenuItem("Volgende ronde");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieVolgendeRonde();
+			}
+		});
+		indelingMenu.add(item);
+		menubar.add(indelingMenu);
+		
+		JMenu overigmenu = new JMenu("Overig");
+
+		item = new JMenuItem("Reset punten");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//controller.resetPunten();
+				hoofdPanel.repaint();
+			}
+		});
+
+		overigmenu.add(item);
+		menubar.add(overigmenu);
+
+		this.setJMenuBar(menubar);
+
+	}
+	
 	public void leesOSBOlijst() {
 		Spelers tmp = null;
 			InetAddress ip = null;
@@ -169,19 +367,21 @@ public class Mainscreen extends JFrame {
 			}
 			try {
 				if (ip.isReachable(5000)) {	
+				//if (1 == Math.abs(0)) {
 					tmp = (new OSBOLoader()).laadWebsite();
 					logger.log(Level.INFO, "OSBO van website opgehaald: " + tmp.size() + " spelers in lijst" );
 				} else {
 				try {
-					tmp = (new OSBOLoader()).laadBestand("OSBO Jeugd-rating-lijst.htm");
+					tmp = (new OSBOLoader()).laadBestand("OSBO Jeugd-rating-lijst.html");
 				}
 				catch (Exception ex){
 					logger.log(Level.INFO, "OSBO inlezen failed! OSBO Jeugd-rating-lijst.htm niet gevonden." );
 				return;
 				}
 				logger.log(Level.INFO, "OSBO ingelezen : " + tmp.size() + " spelers in lijst" );
-}
-			} catch (IOException e) {
+				}
+			//} catch (IOException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -431,6 +631,7 @@ public class Mainscreen extends JFrame {
 		});
 		panel.add(tfMaxByes, new ExtendedGridConstraints(1, curRow++));
 
+		
 //		for (int i = 0; i < 4; i++) {
 //			panel.add(new JLabel("A"), new ExtendedConstraints(0, curRow));
 //			panel.add(new JLabel("A"), new ExtendedConstraints(1, curRow++));

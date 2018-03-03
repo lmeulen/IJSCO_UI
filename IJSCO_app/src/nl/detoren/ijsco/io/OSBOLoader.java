@@ -14,11 +14,14 @@
 package nl.detoren.ijsco.io;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 
+import org.apache.poi.util.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Entities.EscapeMode;
 import org.jsoup.select.Elements;
 
 import nl.detoren.ijsco.data.Spelers;
@@ -35,11 +38,11 @@ public class OSBOLoader {
 
 	public Spelers laadBestand(String bestandsnaam) {
 		try {
-			// File input = new File("OSBO Jeugd-rating-lijst.htm");
-			File input = new File(bestandsnaam);
-			//Document doc = Jsoup.parse(input, "ISO-8859-9", "http://osbo.nl/jeugd/");
-			//Document doc = Jsoup.parse(input, "UTF-8", "http://osbo.nl/jeugd/");
-			Document doc = Jsoup.parse(input, "ISO-8859-1", "http://osbo.nl/jeugd/");
+			File input = new File("c:/lijst.html");
+			//Document doc = Jsoup.parse(input, "UTF-8");
+			Document doc = Jsoup.parse(input, "ISO-8859-1");
+            //((org.jsoup.nodes.Document) doc).outputSettings().charset().forName("UTF-8");
+            ((org.jsoup.nodes.Document) doc).outputSettings().escapeMode(EscapeMode.xhtml);
 			return load(doc);
 		} catch (Exception e) {
 			System.out.println("Error loading OSBO spelers " + e.getMessage());
@@ -52,7 +55,12 @@ public class OSBOLoader {
 			//Document doc = Jsoup.connect("http://osbo.nl/jeugd/jrating.htm").get();
 			String url = "http://osbo.nl/jeugd/jrating.htm";
 			Document doc = Jsoup.connect(url).get();
-			//Document doc = Jsoup.parse(new URL(url).openStream(), "ISO-8859-9", url);
+			doc.head().appendElement("meta").attr("charset","UTF-8");
+			doc.head().appendElement("meta").attr("http-equiv","Content-Type").attr("content","text/html"); 
+			//Document doc = Jsoup.parse(new URL(url).openStream(), "UTF-8", url);
+		    //URI baseURI=new URI(url);
+		    //String content=IOUtils.toString(stream,"utf-8");
+		    //Document doc=Jsoup.parse(content,baseurl);		
 			return load(doc);
 		} catch (Exception e) {
 			System.out.println("Error loading OSBO spelers " + e.getMessage());
