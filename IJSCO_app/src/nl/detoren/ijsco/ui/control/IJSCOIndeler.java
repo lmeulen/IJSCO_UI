@@ -58,9 +58,9 @@ public class IJSCOIndeler {
 	 * @param deelnemers Deelnemers aan toernooi
 	 * @return
 	 */
-	public Groepen bepaalGroep(Schema schema, Spelers deelnemers) {
+	public Groepen bepaalGroep(Schema schema, Spelers deelnemers, int nobyesmask) {
 		ArrayList<Groepen> mogelijkheden = mogelijkeGroepen(deelnemers.getAanwezigen(), schema.getGroepen(),
-				schema.getGroepsgroottes(), schema.getByes());
+				schema.getGroepsgroottes(), schema.getByes(), nobyesmask);
 		logger.log(Level.INFO, mogelijkheden.toString());
 		Groepen groep = bepaalOptimaleGroep(mogelijkheden);
 		return groep;
@@ -115,16 +115,14 @@ public class IJSCOIndeler {
 	 * @param byes aantal byes
 	 * @return lijst met mogelijke groepsindelingen
 	 */
-	private ArrayList<Groepen> mogelijkeGroepen(Spelers spelers, int groepen, int[] grootte, int byes) {
+	private ArrayList<Groepen> mogelijkeGroepen(Spelers spelers, int groepen, int[] grootte, int byes, int nobyesmask) {
 
 		ArrayList<Groepen> result = new ArrayList<>();
 		int max = (int) Math.pow(2, groepen);
-		int mask = max - 1 - 7 - 64;
+		int mask = max - 1 - nobyesmask;
 		for (int i = 0; i < max; i++) {
 			int j = i & mask; 
 			if (Integer.bitCount(reversebits(j)) == byes) {
-				// ToDo Check byemask with mask for groups that cannot have byes
-				//
 				Groepen maakGroepen = maakGroepen(spelers, groepen, grootte, j);
 				result.add(maakGroepen);				
 			}

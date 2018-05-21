@@ -80,6 +80,8 @@ import nl.detoren.ijsco.ui.control.IJSCOIndeler;
 import nl.detoren.ijsco.ui.control.Suggesties;
 import nl.detoren.ijsco.ui.model.DeelnemersModel;
 import nl.detoren.ijsco.ui.model.SchemaModel;
+import nl.detoren.ijsco.ui.util.Utils;
+import nl.detoren.ijsco.view.ConfigurationDialog;
 
 @SuppressWarnings("serial")
 public class Mainscreen extends JFrame {
@@ -92,8 +94,6 @@ public class Mainscreen extends JFrame {
 
 	private JTextArea groepenText;
 
-	private IJSCOController controller;
-	
 	IJSCOIndeler indeler;
 	private Status status;
 	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
@@ -145,19 +145,20 @@ public class Mainscreen extends JFrame {
 		// Frame - Hoofdpanel
 		hoofdPanel = new JPanel();
 		getContentPane().add(hoofdPanel);
-		hoofdPanel.setLayout(new GridLayout(1, 4, 0, 0));
+		//hoofdPanel.setLayout(new GridLayout(1, 4, 0, 0));
+		hoofdPanel.setLayout(new GridLayout(1, 3, 0, 0));
 		//hoofdPanel.setLayout(new GridBagLayout());
 
 		// LINKS: Deelnemers
-		hoofdPanel.add(createDeelnemersPanel(), new ExtendedWeightConstraints(0, 0, 300.0, 650.0));
+		hoofdPanel.add(createDeelnemersPanel(), new ExtendedWeightConstraints(0, 0, 450.0, 650.0));
 		// LINKSMIDDEN: INSTELLINGEN EN CONTROL
-		hoofdPanel.add(createInstellingenPanel(), new ExtendedWeightConstraints(1, 0, 300.0, 650.0));
+		//hoofdPanel.add(createInstellingenPanel(), new ExtendedWeightConstraints(1, 0, 300.0, 650.0));
 
 		// RECHSTMIDDEN: SCENARIOS
-		hoofdPanel.add(createPanelScenarios(), new ExtendedWeightConstraints(2, 0, 300.0, 650.0));
+		hoofdPanel.add(createPanelScenarios(), new ExtendedWeightConstraints(1, 0, 300.0, 650.0));
 
 		// RECHTS: GROEPEN
-		hoofdPanel.add(createPanelGroepen(), new ExtendedWeightConstraints(3, 0, 300.0, 650.0));
+		hoofdPanel.add(createPanelGroepen(), new ExtendedWeightConstraints(2, 0, 450.0, 650.0));
 
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) {
@@ -205,7 +206,7 @@ public class Mainscreen extends JFrame {
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//actieInstellingen();
+				actieInstellingen();
 			}
 		});
 		item.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
@@ -363,22 +364,21 @@ public class Mainscreen extends JFrame {
 				ip = InetAddress.getByName("www.osbo.nl");
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			try {
-				if (ip.isReachable(5000)) {	
+				if ((ip != null) && ip.isReachable(5000)) {	
 				//if (1 == Math.abs(0)) {
 					tmp = (new OSBOLoader()).laadWebsite();
 					logger.log(Level.INFO, "OSBO van website opgehaald: " + tmp.size() + " spelers in lijst" );
 				} else {
-				try {
 					tmp = (new OSBOLoader()).laadBestand("OSBO Jeugd-rating-lijst.html");
-				}
-				catch (Exception ex){
-					logger.log(Level.INFO, "OSBO inlezen failed! OSBO Jeugd-rating-lijst.htm niet gevonden." );
-				return;
-				}
-				logger.log(Level.INFO, "OSBO ingelezen : " + tmp.size() + " spelers in lijst" );
+					if (tmp != null) {
+						logger.log(Level.INFO, "OSBO ingelezen : " + tmp.size() + " spelers in lijst" );
+					} else {
+						logger.log(Level.WARNING, "OSBO niet ingelezen : Bestand niet gevonden!" );
+						return;
+					}
 				}
 			//} catch (IOException e) {
 			} catch (Exception e) {
@@ -461,7 +461,36 @@ public class Mainscreen extends JFrame {
 		});
 		JScrollPane scrollpane = new JScrollPane();
 		scrollpane.setViewportView(schemaTabel);
+		JButton bSchemas = new JButton("1. Bepaal mogelijkheden");
+		bSchemas.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				status.groepen = null;
+				bepaalSchemas();
+				schemaTabel.getSelectionModel().clearSelection();
+				groepenText.setText("");
+				panel.getParent().repaint();
+			}
+
+		});
+//		panel.add(bSchemas, new ExtendedGridConstraints(0, 0));
+		panel.add(bSchemas);
+		//panel.add(scrollpane, new ExtendedGridConstraints(0, 2));
 		panel.add(scrollpane);
+		JButton bGroepen = new JButton("2. Bepaal groepen");
+		bGroepen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if (schemaTabel != null) {
+					int row = schemaTabel.getSelectedRow();
+					bepaalGroepen(row, IJSCOController.c().nobyesmask);
+					new ExcelExport().exportGroepen(status.groepen);
+				}
+				panel.getParent().repaint();
+			}
+		});
+		//panel.add(bGroepen, new ExtendedGridConstraints(1, 1));
+		panel.add(bGroepen);
 		return panel;
 	}
 
@@ -541,7 +570,7 @@ public class Mainscreen extends JFrame {
 		JTextField tfMinGroepen = new JTextField(Integer.toString(status.minGroepen), 10);
 		tfMinGroepen.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				status.minGroepen = newIntegerValue(tfMinGroepen, status.minGroepen);
+				status.minGroepen = Utils.newIntegerValue(tfMinGroepen, status.minGroepen);
 			}
 		});
 		panel.add(tfMinGroepen, new ExtendedGridConstraints(1, curRow++));
@@ -549,7 +578,7 @@ public class Mainscreen extends JFrame {
 		JTextField tfMaxGroepen = new JTextField(Integer.toString(status.maxGroepen), 10);
 		tfMaxGroepen.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				status.maxGroepen = newIntegerValue(tfMaxGroepen, status.maxGroepen);
+				status.maxGroepen = Utils.newIntegerValue(tfMaxGroepen, status.maxGroepen);
 			}
 		});
 		panel.add(tfMaxGroepen, new ExtendedGridConstraints(1, curRow++));
@@ -560,7 +589,7 @@ public class Mainscreen extends JFrame {
 		JTextField tfMinSpelers = new JTextField(Integer.toString(status.minSpelers), 10);
 		tfMinSpelers.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				status.minSpelers = newIntegerValue(tfMinSpelers, status.minSpelers);
+				status.minSpelers = Utils.newIntegerValue(tfMinSpelers, status.minSpelers);
 			}
 		});
 		panel.add(tfMinSpelers, new ExtendedGridConstraints(1, curRow++));
@@ -568,7 +597,7 @@ public class Mainscreen extends JFrame {
 		JTextField tfMaxSpelers = new JTextField(Integer.toString(status.maxSpelers), 10);
 		tfMaxSpelers.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				status.maxSpelers = newIntegerValue(tfMaxSpelers, status.maxSpelers);
+				status.maxSpelers = Utils.newIntegerValue(tfMaxSpelers, status.maxSpelers);
 			}
 		});
 		panel.add(tfMaxSpelers, new ExtendedGridConstraints(1, curRow++));
@@ -579,7 +608,7 @@ public class Mainscreen extends JFrame {
 		JTextField tfMinDelta = new JTextField(Integer.toString(status.minDeltaSpelers), 10);
 		tfMinDelta.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				status.minDeltaSpelers = newIntegerValue(tfMinDelta, status.minDeltaSpelers);
+				status.minDeltaSpelers = Utils.newIntegerValue(tfMinDelta, status.minDeltaSpelers);
 			}
 		});
 		panel.add(tfMinDelta, new ExtendedGridConstraints(1, curRow++));
@@ -587,7 +616,7 @@ public class Mainscreen extends JFrame {
 		JTextField tfMaxDelta = new JTextField(Integer.toString(status.maxDeltaSpelers), 10);
 		tfMaxDelta.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				status.maxDeltaSpelers = newIntegerValue(tfMaxDelta, status.maxDeltaSpelers);
+				status.maxDeltaSpelers = Utils.newIntegerValue(tfMaxDelta, status.maxDeltaSpelers);
 			}
 		});
 		panel.add(tfMaxDelta, new ExtendedGridConstraints(1, curRow++));
@@ -598,7 +627,7 @@ public class Mainscreen extends JFrame {
 		JTextField tfMinDeltaGroepen = new JTextField(Integer.toString(status.minAfwijkendeGroepen), 10);
 		tfMinDeltaGroepen.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				status.minAfwijkendeGroepen = newIntegerValue(tfMinDeltaGroepen, status.minAfwijkendeGroepen);
+				status.minAfwijkendeGroepen = Utils.newIntegerValue(tfMinDeltaGroepen, status.minAfwijkendeGroepen);
 			}
 		});
 		panel.add(tfMinDeltaGroepen, new ExtendedGridConstraints(1, curRow++));
@@ -606,7 +635,7 @@ public class Mainscreen extends JFrame {
 		JTextField tfMaxDeltaGroepen = new JTextField(Integer.toString(status.maxAfwijkendeGroepen), 10);
 		tfMaxDeltaGroepen.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				status.maxAfwijkendeGroepen = newIntegerValue(tfMaxDeltaGroepen, status.maxAfwijkendeGroepen);
+				status.maxAfwijkendeGroepen = Utils.newIntegerValue(tfMaxDeltaGroepen, status.maxAfwijkendeGroepen);
 			}
 		});
 		panel.add(tfMaxDeltaGroepen, new ExtendedGridConstraints(1, curRow++));
@@ -617,7 +646,7 @@ public class Mainscreen extends JFrame {
 		JTextField tfMinByes = new JTextField(Integer.toString(status.minToegestaneByes), 10);
 		tfMinByes.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				status.minToegestaneByes = newIntegerValue(tfMinByes, status.minToegestaneByes);
+				status.minToegestaneByes = Utils.newIntegerValue(tfMinByes, status.minToegestaneByes);
 			}
 		});
 		panel.add(tfMinByes, new ExtendedGridConstraints(1, curRow++));
@@ -626,7 +655,7 @@ public class Mainscreen extends JFrame {
 		JTextField tfMaxByes = new JTextField(Integer.toString(status.maxToegestaneByes), 10);
 		tfMaxByes.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				status.maxToegestaneByes = newIntegerValue(tfMaxByes, status.maxToegestaneByes);
+				status.maxToegestaneByes = Utils.newIntegerValue(tfMaxByes, status.maxToegestaneByes);
 			}
 		});
 		panel.add(tfMaxByes, new ExtendedGridConstraints(1, curRow++));
@@ -656,7 +685,7 @@ public class Mainscreen extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 				if (schemaTabel != null) {
 					int row = schemaTabel.getSelectedRow();
-					bepaalGroepen(row);
+					bepaalGroepen(row, IJSCOController.c().nobyesmask);
 					new ExcelExport().exportGroepen(status.groepen);
 				}
 				panel.getParent().repaint();
@@ -664,7 +693,7 @@ public class Mainscreen extends JFrame {
 		});
 		panel.add(bGroepen, new ExtendedGridConstraints(1, curRow++));
 		panel.add(new JLabel(" "), new ExtendedGridConstraints(0, 17, 2, 1));
-		fixedComponentSize(panel, 300, 400);
+		Utils.fixedComponentSize(panel, 300, 400);
 		return panel;
 	}
 
@@ -850,11 +879,11 @@ public class Mainscreen extends JFrame {
 		});
 		innerPanel.add(btWis);
 
-		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(0), 30);
-		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(1), 55);
-		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(2), 150);
-		fixedColumSize(deelnemersTabel.getColumnModel().getColumn(3), 40);
-		fixedComponentSize(scrollPane, 300, 580);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(0), 30);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(1), 55);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(2), 250);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(3), 40);
+		Utils.fixedComponentSize(scrollPane, 400, 580);
 		return panel;
 	}
 
@@ -904,37 +933,8 @@ public class Mainscreen extends JFrame {
 		deelnemersModel.fireTableDataChanged();
 	}
 
-	/**
-	 * Bepaal de nieuwe integer waarde voor een textfield Als het tekstveld een
-	 * geldig getal bevat, wordt deze waarde geretourneerd anders de oude waarde
-	 *
-	 * @param text
-	 * @param oldValue
-	 * @return
-	 */
-	private int newIntegerValue(JTextField text, int oldValue) {
-		int value;
-		try {
-			value = Integer.parseInt(text.getText());
-		} catch (Exception e) {
-			value = oldValue;
-		}
-		text.setText(Integer.toString(value));
-		return value;
-	}
 
 
-	private void fixedComponentSize(Component c, int width, int height) {
-		c.setMinimumSize(new Dimension(width, height));
-		c.setMaximumSize(new Dimension(width, height));
-		c.setPreferredSize(new Dimension(width, height));
-		c.setSize(new Dimension(width, height));
-	}
-
-	private void fixedColumSize(TableColumn c, int width) {
-		c.setMinWidth(width);
-		c.setMaxWidth(width);
-	}
 
 	/**
 	 * Bepaal de mogelijke schemas op basis van het aantals spelers en de
@@ -954,11 +954,11 @@ public class Mainscreen extends JFrame {
 	 * @param row
 	 *            Gesleecteerde schema
 	 */
-	public void bepaalGroepen(int row) {
+	public void bepaalGroepen(int row, int nobyesmask) {
 		status.schema = schemaModel.getSchema(row);
 		logger.log(Level.INFO, "Bepaal groepen voor schema " + status.schema);
 		if (status.schema != null) {
-			status.groepen = indeler.bepaalGroep(status.schema, status.deelnemers);
+			status.groepen = indeler.bepaalGroep(status.schema, status.deelnemers, nobyesmask);
 			System.out.println(status.groepen.getDescription());
 			groepenText.setText(status.groepen.getDescription());
 			groepenText.setCaretPosition(0);
@@ -967,6 +967,18 @@ public class Mainscreen extends JFrame {
 		}
 	}
 
+	public void actieInstellingen() {
+		hoofdPanel.repaint();
+		ConfigurationDialog dialoog = new ConfigurationDialog(new JFrame(), "Configuratie");
+		dialoog.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				System.out.println("closing...");
+				hoofdPanel.repaint();
+			}
 
+		});
+		dialoog.setVisible(true);
+	}
 
 }

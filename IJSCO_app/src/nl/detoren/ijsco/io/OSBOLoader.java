@@ -38,14 +38,15 @@ public class OSBOLoader {
 
 	public Spelers laadBestand(String bestandsnaam) {
 		try {
-			File input = new File("c:/lijst.html");
+			//File input = new File("c:/lijst.html");
+			File input = new File(bestandsnaam);
 			//Document doc = Jsoup.parse(input, "UTF-8");
 			Document doc = Jsoup.parse(input, "ISO-8859-1");
             //((org.jsoup.nodes.Document) doc).outputSettings().charset().forName("UTF-8");
             ((org.jsoup.nodes.Document) doc).outputSettings().escapeMode(EscapeMode.xhtml);
 			return load(doc);
 		} catch (Exception e) {
-			System.out.println("Error loading OSBO spelers " + e.getMessage());
+			//System.out.println("Error loading OSBO spelers " + e.getMessage());
 		}
 		return null;
 	}
