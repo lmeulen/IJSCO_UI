@@ -134,7 +134,7 @@ public class Mainscreen extends JFrame {
 		if (status.deelnemers==null) {
 			status.deelnemers = new Spelers();
 		}
-		leesOSBOlijst();
+		//leesOSBOlijst();
 		addMenubar();
 		// Frame
 		setBounds(25, 25, 1300, 700);
@@ -172,7 +172,8 @@ public class Mainscreen extends JFrame {
 		JMenuBar menubar = new JMenuBar();
 		JMenu filemenu = new JMenu("Bestand");
 		// File menu
-		JMenuItem item = new JMenuItem("Openen...");
+		//JMenuItem item = new JMenuItem("Openen...");
+		JMenuItem item = new JMenuItem("N/A");
 		item.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		Mainscreen ms = this;
 		item.addActionListener(new ActionListener() {
@@ -192,7 +193,8 @@ public class Mainscreen extends JFrame {
 			}
 		});
 		filemenu.add(item);
-		item = new JMenuItem("Opslaan");
+		//item = new JMenuItem("Opslaan");
+		item = new JMenuItem("N/A");
 		item.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
@@ -225,39 +227,95 @@ public class Mainscreen extends JFrame {
 		menubar.add(filemenu);
 		JMenu spelermenu = new JMenu("Speler");
 
-		item = new JMenuItem("Nieuwe speler");
-		item.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item = new JMenuItem("Wis Deelnemerslijst");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Create a file chooser
+				wisDeelnemers();
+				hoofdPanel.repaint();
+			}
+		});
+		spelermenu.add(item);
+		menubar.add(spelermenu);
+		
+		
+		item = new JMenuItem("Importeren Deelnemerslijst");
+		item.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Create a file chooser
+				final JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+				// In response to a button click:
+				int returnVal = fc.showOpenDialog(ms);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+					leesDeelnemers(file.getAbsolutePath());
+				}
+				hoofdPanel.repaint();
+			}
+		});
+		spelermenu.add(item);
+		menubar.add(spelermenu);
+		
+		item = new JMenuItem("Export Deelnemerslijst");
+		item.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Create a file chooser
+				final JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+				// In response to a button click:
+				int returnVal = fc.showOpenDialog(ms);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+					schrijfDeelnemers(file.getAbsolutePath());
+				}
+				hoofdPanel.repaint();
+			}
+		});
+		spelermenu.add(item);
+		menubar.add(spelermenu);
+		
+		
+		
+		
+		//item = new JMenuItem("Nieuwe speler");
+		item = new JMenuItem("OSBO lijst ophalen (Online)");
+		item.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//actieNieuweSpeler(null, null);
+				leesOSBOlijstOnline();
 				hoofdPanel.repaint();
 			}
 		});
 		spelermenu.add(item);
 		menubar.add(spelermenu);
 
-		item = new JMenuItem("Importeer spelers");
+		//item = new JMenuItem("Importeer spelers");
+		item = new JMenuItem("OSBO lijst ophalen (Bestand)");
+		item.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// Create a file chooser
-				final JFileChooser fc = new JFileChooser();
-				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
-				// In response to a button click:
-				if (fc.showOpenDialog(ms) == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
-					//controller.importeerSpelers(file.getAbsolutePath());
-					ms.repaint();
-				}
+			public void actionPerformed(ActionEvent e) {
+				//actieNieuweSpeler(null, null);
+				leesOSBOlijstBestand();
+				hoofdPanel.repaint();
 			}
 		});
 		spelermenu.add(item);
-
 		menubar.add(spelermenu);
+
 		JMenu indelingMenu = new JMenu("Indeling");
-		item = new JMenuItem("Automatisch aan/uit");
+		//item = new JMenuItem("Automatisch aan/uit");
+		item = new JMenuItem("N/A");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -266,7 +324,8 @@ public class Mainscreen extends JFrame {
 		});
 
 		indelingMenu.add(item);
-		item = new JMenuItem("Maak wedstrijdgroep");
+		//item = new JMenuItem("Maak wedstrijdgroep");
+		item = new JMenuItem("N/A");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -275,7 +334,8 @@ public class Mainscreen extends JFrame {
 		});
 
 		indelingMenu.add(item);
-		item = new JMenuItem("Maak speelschema");
+		//item = new JMenuItem("Maak speelschema");
+		item = new JMenuItem("N/A");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evetn) {
@@ -283,7 +343,8 @@ public class Mainscreen extends JFrame {
 			}
 		});
 		indelingMenu.add(item);
-		item = new JMenuItem("Bewerk speelschema");
+		//item = new JMenuItem("Bewerk speelschema");
+		item = new JMenuItem("N/A");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -295,7 +356,8 @@ public class Mainscreen extends JFrame {
 
 		indelingMenu.add(item);
 		indelingMenu.addSeparator();
-		item = new JMenuItem("Export");
+		//item = new JMenuItem("Export");
+		item = new JMenuItem("N/A");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -304,7 +366,8 @@ public class Mainscreen extends JFrame {
 		});
 		indelingMenu.add(item);
 		indelingMenu.addSeparator();
-		item = new JMenuItem("Vul uitslagen in");
+		//item = new JMenuItem("Vul uitslagen in");
+		item = new JMenuItem("N/A");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -312,7 +375,8 @@ public class Mainscreen extends JFrame {
 			}
 		});
 		indelingMenu.add(item);
-		item = new JMenuItem("Externe spelers");
+		//item = new JMenuItem("Externe spelers");
+		item = new JMenuItem("N/A");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -320,7 +384,8 @@ public class Mainscreen extends JFrame {
 			}
 		});
 		indelingMenu.add(item);
-		item = new JMenuItem("Maak nieuwe stand");
+		//item = new JMenuItem("Maak nieuwe stand");
+		item = new JMenuItem("N/A");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -329,7 +394,8 @@ public class Mainscreen extends JFrame {
 		});
 		indelingMenu.add(item);
 		indelingMenu.addSeparator();
-		item = new JMenuItem("Volgende ronde");
+		//item = new JMenuItem("Volgende ronde");
+		item = new JMenuItem("N/A");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -341,7 +407,8 @@ public class Mainscreen extends JFrame {
 		
 		JMenu overigmenu = new JMenu("Overig");
 
-		item = new JMenuItem("Reset punten");
+		//item = new JMenuItem("Reset punten");
+		item = new JMenuItem("N/A");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -357,14 +424,15 @@ public class Mainscreen extends JFrame {
 
 	}
 	
-	public void leesOSBOlijst() {
+	public void leesOSBOlijstOnline() {
 		Spelers tmp = null;
 			InetAddress ip = null;
 			try {
 				ip = InetAddress.getByName("www.osbo.nl");
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				logger.log(Level.WARNING, "Unknown host" );
+				e.printStackTrace();
 			}
 			try {
 				if ((ip != null) && ip.isReachable(5000)) {	
@@ -372,13 +440,7 @@ public class Mainscreen extends JFrame {
 					tmp = (new OSBOLoader()).laadWebsite();
 					logger.log(Level.INFO, "OSBO van website opgehaald: " + tmp.size() + " spelers in lijst" );
 				} else {
-					tmp = (new OSBOLoader()).laadBestand("OSBO Jeugd-rating-lijst.html");
-					if (tmp != null) {
-						logger.log(Level.INFO, "OSBO ingelezen : " + tmp.size() + " spelers in lijst" );
-					} else {
-						logger.log(Level.WARNING, "OSBO niet ingelezen : Bestand niet gevonden!" );
-						return;
-					}
+					logger.log(Level.WARNING, "Host not reachable or problem with parsing");
 				}
 			//} catch (IOException e) {
 			} catch (Exception e) {
@@ -391,9 +453,45 @@ public class Mainscreen extends JFrame {
 		}
 		indeler.controleerSpelers(status.deelnemers, status.OSBOSpelers);
 		JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit OSBO jeugdratinglijst");
-
 	}
 
+	public void leesOSBOlijstBestand() {
+		Spelers tmp = null;
+		try {
+			tmp = (new OSBOLoader()).laadBestand("OSBO Jeugd-rating-lijst.html");
+			if (tmp != null) {
+				logger.log(Level.INFO, "OSBO ingelezen : " + tmp.size() + " spelers in lijst" );
+			} else {
+				logger.log(Level.WARNING, "OSBO niet ingelezen : Bestand niet gevonden!" );
+				JOptionPane.showMessageDialog(null, "Fout met inlezen");
+				return;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.log(Level.SEVERE, "Probleem met inlezen OSBO bestand" );
+			e.printStackTrace();
+		}
+		status.OSBOSpelers = new HashMap<>();
+		for (Speler d : tmp) {
+			status.OSBOSpelers.put(d.getKnsbnummer(), d);
+		}
+		indeler.controleerSpelers(status.deelnemers, status.OSBOSpelers);
+		JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit OSBO jeugdratinglijst");
+	}
+
+	public void wisDeelnemers() {
+		
+		deelnemersModel.wis();
+		deelnemersModel.fireTableDataChanged();
+		JOptionPane.showMessageDialog(null, "Spelers uit deelnemerslijst verwijderd.");
+		
+	
+	}
+	
+	public void schrijfDeelnemers(String file) {
+		
+	}
+	
 	public void leesDeelnemers(String file) {
 		Spelers tmp = new DeelnemersLader().importeerSpelers(file);
 		if (status.OSBOSpelers != null) {
@@ -780,7 +878,9 @@ public class Mainscreen extends JFrame {
 				groepenText.setText("");
 				schemaModel.setSchemas(null);
 				schemaModel.fireTableDataChanged();
-				tfAanwezig.setText(Integer.toString(status.deelnemers.aantalAanwezig()));
+				if (status.deelnemers != null && tfAanwezig != null) {
+					tfAanwezig.setText(Integer.toString(status.deelnemers.aantalAanwezig()));
+				}
 				panel.repaint();
 			}
 
