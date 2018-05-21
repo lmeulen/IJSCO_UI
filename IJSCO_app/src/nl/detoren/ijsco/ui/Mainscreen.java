@@ -91,10 +91,12 @@ public class Mainscreen extends JFrame {
 	private JTable schemaTabel;
 	private JPanel hoofdPanel;
 	private JTextField tfAanwezig;
-
+	private IJSCOController controller;
+	
 	private JTextArea groepenText;
 
 	IJSCOIndeler indeler;
+	
 	private Status status;
 	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
 
@@ -219,7 +221,7 @@ public class Mainscreen extends JFrame {
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//controller.saveState(false, null);
+				controller.saveState(false, null);
 				System.exit(EXIT_ON_CLOSE);
 			}
 		});
@@ -241,7 +243,7 @@ public class Mainscreen extends JFrame {
 		
 		
 		item = new JMenuItem("Importeren Deelnemerslijst");
-		item.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -261,8 +263,8 @@ public class Mainscreen extends JFrame {
 		spelermenu.add(item);
 		menubar.add(spelermenu);
 		
-		item = new JMenuItem("Export Deelnemerslijst");
-		item.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item = new JMenuItem("Export Deelnemerslijst (N/A)");
+		item.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
