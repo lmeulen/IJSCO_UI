@@ -437,7 +437,8 @@ public class Mainscreen extends JFrame {
 				e.printStackTrace();
 			}
 			try {
-				if ((ip != null) && ip.isReachable(5000)) {	
+				//if ((ip != null) && ip.isReachable(5000)) {	
+				if (ip != null) {
 				//if (1 == Math.abs(0)) {
 					tmp = (new OSBOLoader()).laadWebsite();
 					logger.log(Level.INFO, "OSBO van website opgehaald: " + tmp.size() + " spelers in lijst" );

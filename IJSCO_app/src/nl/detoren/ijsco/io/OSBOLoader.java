@@ -16,6 +16,8 @@ package nl.detoren.ijsco.io;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.poi.util.IOUtils;
 import org.jsoup.Jsoup;
@@ -25,6 +27,7 @@ import org.jsoup.nodes.Entities.EscapeMode;
 import org.jsoup.select.Elements;
 
 import nl.detoren.ijsco.data.Spelers;
+import nl.detoren.ijsco.ui.Mainscreen;
 import nl.detoren.ijsco.data.Speler;
 
 /**
@@ -36,6 +39,8 @@ import nl.detoren.ijsco.data.Speler;
  */
 public class OSBOLoader {
 
+	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
+	
 	public Spelers laadBestand(String bestandsnaam) {
 		try {
 			//File input = new File("c:/lijst.html");
@@ -64,6 +69,7 @@ public class OSBOLoader {
 		    //Document doc=Jsoup.parse(content,baseurl);		
 			return load(doc);
 		} catch (Exception e) {
+			logger.log(Level.WARNING, "Error loading OSBO spelers \" + e.getMessage()");
 			System.out.println("Error loading OSBO spelers " + e.getMessage());
 		}
 		return null;
