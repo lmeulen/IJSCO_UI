@@ -99,7 +99,6 @@ public class Mainscreen extends JFrame {
 	IJSCOIndeler indeler;
 	
 	private Status status;
-	private Configuratie config;
 	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
 
 	/**
@@ -129,7 +128,8 @@ public class Mainscreen extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-
+    	logger.log(Level.INFO, "Opstarten controller");
+        IJSCOController.getInstance().start();
 		indeler = new IJSCOIndeler();
 		status = new StatusIO().read("status.json");
 		if (status == null) {
@@ -137,6 +137,9 @@ public class Mainscreen extends JFrame {
 		}
 		if (status.deelnemers==null) {
 			status.deelnemers = new Spelers();
+		}
+		if (status.config==null) {
+			status.config = new Configuratie();
 		}
 		//leesOSBOlijst();
 		addMenubar();
@@ -271,7 +274,7 @@ public class Mainscreen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Create a file chooser
-				final JFileChooser fc = new JFileChooser();
+/*				final JFileChooser fc = new JFileChooser();
 				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 				// In response to a button click:
 				int returnVal = fc.showOpenDialog(ms);
@@ -281,13 +284,10 @@ public class Mainscreen extends JFrame {
 					schrijfDeelnemers(file.getAbsolutePath());
 				}
 				hoofdPanel.repaint();
-			}
+*/			}
 		});
 		spelermenu.add(item);
 		menubar.add(spelermenu);
-		
-		
-		
 		
 		//item = new JMenuItem("Nieuwe speler");
 		item = new JMenuItem("OSBO lijst ophalen (Online)");
@@ -296,7 +296,20 @@ public class Mainscreen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//actieNieuweSpeler(null, null);
-				leesOSBOlijstOnline();
+				leeslijstOnline("www.osbo.nl", "/jeugd/jrating.htm");
+				hoofdPanel.repaint();
+			}
+		});
+		spelermenu.add(item);
+		menubar.add(spelermenu);
+
+		item = new JMenuItem("IJSCO lijst inc. PJK en JCC (Online)");
+		item.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieNieuweSpeler(null, null);
+				leeslijstOnline("ijsco.schaakverenigingdetoren.nl", "/ijsco1718/IJSCOrating1718.htm");
 				hoofdPanel.repaint();
 			}
 		});
@@ -304,15 +317,45 @@ public class Mainscreen extends JFrame {
 		menubar.add(spelermenu);
 
 		//item = new JMenuItem("Importeer spelers");
-		item = new JMenuItem("OSBO lijst ophalen (Bestand)");
+		item = new JMenuItem("OSBO/IJSCO compatible lijst inlezen (Bestand)");
 		item.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//actieNieuweSpeler(null, null);
-				leesOSBOlijstBestand();
+				// Create a file chooser
+				final JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+				// In response to a button click:
+				int returnVal = fc.showOpenDialog(ms);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+					leesOSBOlijstBestand(file.getAbsolutePath());
+				}
 				hoofdPanel.repaint();
 			}
+		});
+		spelermenu.add(item);
+		menubar.add(spelermenu);
+
+		item = new JMenuItem("Groslijst CSV inlezen (Bestand) N/A");
+		item.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieNieuweSpeler(null, null);
+				// Create a file chooser
+/*				final JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+				// In response to a button click:
+				int returnVal = fc.showOpenDialog(ms);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+					leesCSV(file.getAbsolutePath());
+				}
+				hoofdPanel.repaint();
+*/			}
 		});
 		spelermenu.add(item);
 		menubar.add(spelermenu);
@@ -428,24 +471,24 @@ public class Mainscreen extends JFrame {
 
 	}
 	
-	public void leesOSBOlijstOnline() {
+	public void leeslijstOnline(String fqdn, String page) {
 		Spelers tmp = null;
 			InetAddress ip = null;
 			try {
-				ip = InetAddress.getByName("www.osbo.nl");
+				ip = InetAddress.getByName(fqdn);
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
-				logger.log(Level.WARNING, "Unknown host" );
+				logger.log(Level.WARNING, "Unknown host: " + fqdn );
 				e.printStackTrace();
 			}
 			try {
 				//if ((ip != null) && ip.isReachable(5000)) {	
 				if (ip != null) {
 				//if (1 == Math.abs(0)) {
-					tmp = (new OSBOLoader()).laadWebsite();
-					logger.log(Level.INFO, "OSBO van website opgehaald: " + tmp.size() + " spelers in lijst" );
+					tmp = (new OSBOLoader()).laadWebsite("http://" + fqdn + page);
+					logger.log(Level.INFO, "Speler van website http://" + fqdn + page + " opgehaald: " + tmp.size() + " spelers in lijst" );
 				} else {
-					logger.log(Level.WARNING, "Host not reachable or problem with parsing");
+					logger.log(Level.WARNING, "Host " + fqdn +  " not reachable or problem with parsing");
 				}
 			//} catch (IOException e) {
 			} catch (Exception e) {
@@ -460,10 +503,10 @@ public class Mainscreen extends JFrame {
 		JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit OSBO jeugdratinglijst");
 	}
 
-	public void leesOSBOlijstBestand() {
+	public void leesOSBOlijstBestand(String filepath) {
 		Spelers tmp = null;
 		try {
-			tmp = (new OSBOLoader()).laadBestand("OSBO Jeugd-rating-lijst.html");
+			tmp = (new OSBOLoader()).laadBestand(filepath);
 			if (tmp != null) {
 				logger.log(Level.INFO, "OSBO ingelezen : " + tmp.size() + " spelers in lijst" );
 			} else {
@@ -484,6 +527,31 @@ public class Mainscreen extends JFrame {
 		JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit OSBO jeugdratinglijst");
 	}
 
+	public void leesCSV(String filepath) {
+		Spelers tmp = null;
+			try {
+				tmp = (new OSBOLoader()).laadCSV(filepath);
+				if (tmp != null) {
+					logger.log(Level.INFO, "CSV ingelezen : " + tmp.size() + " spelers in lijst" );
+				} else {
+					logger.log(Level.WARNING, "OSBO niet ingelezen : Bestand niet gevonden!" );
+					JOptionPane.showMessageDialog(null, "Fout met inlezen");
+					return;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				logger.log(Level.SEVERE, "Probleem met inlezen OSBO bestand" );
+				e.printStackTrace();
+			}
+			status.OSBOSpelers = new HashMap<>();
+			for (Speler d : tmp) {
+				status.OSBOSpelers.put(d.getKnsbnummer(), d);
+			}
+			indeler.controleerSpelers(status.deelnemers, status.OSBOSpelers);
+			JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit OSBO jeugdratinglijst");
+		}
+	
+	
 	public void wisDeelnemers() {
 		
 		deelnemersModel.wis();
@@ -1048,7 +1116,7 @@ public class Mainscreen extends JFrame {
 	public void bepaalSchemas() {
 		int ndeelnemers = status.deelnemers.aantalAanwezig();
 		logger.log(Level.INFO, "Bepaal mogelijkheden voor n=" + ndeelnemers);
-		status.schemas = indeler.mogelijkeSchemas(status, config);
+		status.schemas = indeler.mogelijkeSchemas(status);
 		status.schema = null;
 		schemaModel.setSchemas(status.schemas);
 	}

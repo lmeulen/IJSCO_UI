@@ -14,11 +14,15 @@
 package nl.detoren.ijsco.io;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.poi.util.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -56,10 +60,11 @@ public class OSBOLoader {
 		return null;
 	}
 
-	public Spelers laadWebsite() {
+	public Spelers laadWebsite(String url) {
 		try {
 			//Document doc = Jsoup.connect("http://osbo.nl/jeugd/jrating.htm").get();
-			String url = "http://osbo.nl/jeugd/jrating.htm";
+			//String url = "http://osbo.nl/jeugd/jrating.htm";
+			//String url = "http://ijsco.schaakverenigingdetoren.nl/ijsco1718/IJSCOrating1718.htm";
 			Document doc = Jsoup.connect(url).get();
 			doc.head().appendElement("meta").attr("charset","UTF-8");
 			doc.head().appendElement("meta").attr("http-equiv","Content-Type").attr("content","text/html"); 
@@ -73,6 +78,21 @@ public class OSBOLoader {
 			System.out.println("Error loading OSBO spelers " + e.getMessage());
 		}
 		return null;
+	}
+	
+	public Spelers laadCSV(String csvpath) {
+	 File csvData = new File(csvpath);
+	 CSVParser parser = null;
+	try {
+		parser = CSVParser.parse(csvData, java.nio.charset.Charset.defaultCharset(), CSVFormat.RFC4180);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	 for (CSVRecord csvRecord : parser) {
+	     //TODO
+	 }
+	return null;
 	}
 
 	private Spelers load(Document doc) {

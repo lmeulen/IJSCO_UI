@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.16.jar"/>
 	<classpathentry kind="lib" path="lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/lpdam.AMITY/Documents/IJSCO_UI/IJSCO_app/lib/jsoup-1.10.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lpdam.AMITY/git/IJSCO_UI/IJSCO_app/lib/commons-csv-1.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

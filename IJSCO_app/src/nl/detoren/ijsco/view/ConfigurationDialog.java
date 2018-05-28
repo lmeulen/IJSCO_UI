@@ -118,7 +118,6 @@ public class ConfigurationDialog extends JDialog {
 	}
 
 	public JPanel createPanelIndeling() {
-		//config = IJSCOController.c();
 		JPanel tabInstellingen = new JPanel(false);
 		tabInstellingen.setLayout(new ExtendedGridLayout(20, 2));
 		int curRow = 0;

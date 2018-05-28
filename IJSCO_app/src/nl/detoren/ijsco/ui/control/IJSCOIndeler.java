@@ -166,7 +166,8 @@ public class IJSCOIndeler {
 		return (value >> k) & 1;
 	}
 
-	public Schemas mogelijkeSchemas(Status status, Configuratie c) {
+	public Schemas mogelijkeSchemas(Status status) {
+		Configuratie c = status.config;
 		int nSpelers = status.deelnemers.aantalAanwezig();
 		Schemas mogelijkheden = new Schemas();
 		for (int n_m = c.minSpelers; n_m <= c.maxSpelers; n_m += 2) { // itereer of standaard groepsgrootte

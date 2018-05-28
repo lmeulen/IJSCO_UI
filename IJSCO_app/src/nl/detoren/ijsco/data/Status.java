@@ -16,8 +16,15 @@ package nl.detoren.ijsco.data;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import nl.detoren.ijsco.Configuratie;
+
 public class Status {
 
+	/**
+	 * Configuratie
+	 */
+	public Configuratie config;
+	
 	/**
 	 * Spelers zoals bekend bij de OSBO
 	 */

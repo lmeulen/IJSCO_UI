@@ -13,6 +13,8 @@
  */
 package nl.detoren.ijsco.ui.control;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -21,6 +23,7 @@ import java.util.logging.Logger;
 import com.google.gson.Gson;
 
 import nl.detoren.ijsco.Configuratie;
+import nl.detoren.ijsco.data.Status;
 
 public class IJSCOController {
 
@@ -31,11 +34,9 @@ public class IJSCOController {
     private static final String defaultInputfile = "uitslag.txt";
 
     private Status status;
-    private Configuratie c;
 
     protected IJSCOController() {
     	status = new Status();
-    	c = new Configuratie();
     }    
     
     public static IJSCOController getInstance() {
@@ -50,7 +51,7 @@ public class IJSCOController {
     }
 
     public static Configuratie c() {
-    	return getInstance().c;
+    	return getInstance().status.config;
     }
 
     public Status getStatus() {
@@ -64,7 +65,7 @@ public class IJSCOController {
 	 */
     public void saveState(boolean unique, String postfix) {
 		try {
-			String bestandsnaam = c.statusBestand + ".json";
+			String bestandsnaam = c().statusBestand + ".json";
 			logger.log(Level.INFO, "Sla status op in bestand " + bestandsnaam);
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(status);
@@ -84,11 +85,11 @@ public class IJSCOController {
 				writer.write(jsonString);
 				writer.close();
 			}*/
-			bestandsnaam = c.configuratieBestand + ".json";
+			bestandsnaam = c().configuratieBestand + ".json";
 			logger.log(Level.INFO, "Sla configuratie op in bestand " + bestandsnaam);
 			// write converted json data to a file
 			writer = new FileWriter(bestandsnaam);
-			jsonString = gson.toJson(c);
+			jsonString = gson.toJson(c());
 			writer.write(jsonString);
 			writer.close();
 
@@ -97,5 +98,50 @@ public class IJSCOController {
 		}
 	}
 
-}
+    public void start() {
+        leesStatusBestand();
+    }
 
+	public boolean leesStatus() {
+		return leesStatus(c().statusBestand + ".json");
+	}
+
+	public boolean leesStatus(String bestandsnaam) {
+		try {
+	    	logger.log(Level.INFO, "Lees status uit bestand " + bestandsnaam);
+			Gson gson = new Gson();
+			BufferedReader br = new BufferedReader(new FileReader(bestandsnaam));
+			Status nieuw = gson.fromJson(br, Status.class);
+			status = nieuw;	// assure exception is thrown when things go wrong
+			
+			return true;
+		} catch (Exception e) {
+			// Could not read status
+			return false;
+		}
+	}
+
+    
+	/**
+	 * Lees het status export bestand
+	 * @return true, als bestand gevonden en ingelezen
+	 */
+	public boolean leesStatusBestand() {
+		synchronized (this) {
+        	logger.log(Level.INFO, "Lees status");
+        	leesStatus("status.json");
+        	//leesConfiguratie();
+			if ((status == null)) {
+				status = new Status();
+	        	logger.log(Level.INFO, "Status bestand niet ingelezen");
+				return false;
+			}
+			if ((status.config == null)) {
+				status.config = new Configuratie();
+			}
+		}
+    	logger.log(Level.INFO, "Statusbestand ingelezen");
+		return true;
+	}
+
+}
