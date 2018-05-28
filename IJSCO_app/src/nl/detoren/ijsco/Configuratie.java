@@ -22,9 +22,7 @@ public class Configuratie {
 		 * No Byes Mask
 		 * Mask for groups that may not have a bye
 		 */
-		public int nobyesmask = 1 + 2;
 		public int minGroepen = 0;
-		public int maxToegestaneByes = 2;
 		public int maxGroepen = 10;
 		public int minSpelers = 4;
 		public int maxSpelers = 10;
@@ -33,6 +31,8 @@ public class Configuratie {
 		public int minAfwijkendeGroepen = 1;
 		public int maxAfwijkendeGroepen = 4;
 		public int minToegestaneByes = 1;
+		public int maxToegestaneByes = 2;
+		public int nobyesmask = 1 + 2;
 		
 		/**
 		 * Bestandsnaam voor configuratie bestand prefix .json wordt automatisch

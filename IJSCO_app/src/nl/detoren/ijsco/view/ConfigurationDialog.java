@@ -61,6 +61,15 @@ public class ConfigurationDialog extends JDialog {
 	private JTextField tfStatusfile;
 	private JTextField tfMinGroepen;
 	private JTextField tfMaxGroepen;
+	private JTextField tfMinSpelers;
+	private JTextField tfMaxSpelers;
+	private JTextField tfMinDelta;
+	private JTextField tfMaxDelta;
+	private JTextField tfMinDeltaGroepen;
+	private JTextField tfMaxDeltaGroepen;
+	private JTextField tfMinByes;
+	private JTextField tfMaxByes;
+	private JTextField tfNobyesmask;
 	
 	
 	public ConfigurationDialog(Frame frame, String title) {
@@ -139,7 +148,7 @@ public class ConfigurationDialog extends JDialog {
 		});
 		tabInstellingen.add(tfMinGroepen);
 		tabInstellingen.add(new JLabel("Maximum:"));
-		JTextField tfMaxGroepen = new JTextField(Integer.toString(config.maxGroepen), 10);
+		tfMaxGroepen = new JTextField(Integer.toString(config.maxGroepen), 10);
 		tfMaxGroepen.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				config.maxGroepen = Utils.newIntegerValue(tfMaxGroepen, config.maxGroepen);
@@ -151,7 +160,7 @@ public class ConfigurationDialog extends JDialog {
 		tabInstellingen.add(new JLabel("Aantal spelers per groep"));
 		tabInstellingen.add(new JLabel(" "));
 		tabInstellingen.add(new JLabel("Minimum:"));
-		JTextField tfMinSpelers = new JTextField(Integer.toString(config.minSpelers), 10);
+		tfMinSpelers = new JTextField(Integer.toString(config.minSpelers), 10);
 		tfMinSpelers.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				config.minSpelers = Utils.newIntegerValue(tfMinSpelers, config.minSpelers);
@@ -159,7 +168,7 @@ public class ConfigurationDialog extends JDialog {
 		});
 		tabInstellingen.add(tfMinSpelers);
 		tabInstellingen.add(new JLabel("Maximum:"));
-		JTextField tfMaxSpelers = new JTextField(Integer.toString(config.maxSpelers), 10);
+		tfMaxSpelers = new JTextField(Integer.toString(config.maxSpelers), 10);
 		tfMaxSpelers.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				config.maxSpelers = Utils.newIntegerValue(tfMaxSpelers, config.maxSpelers);
@@ -171,7 +180,7 @@ public class ConfigurationDialog extends JDialog {
 		tabInstellingen.add(new JLabel("Delta spelers voor uiterste groepen"));
 		tabInstellingen.add(new JLabel(" "));
 		tabInstellingen.add(new JLabel("Minimum:"));
-		JTextField tfMinDelta = new JTextField(Integer.toString(config.minDeltaSpelers), 10);
+		tfMinDelta = new JTextField(Integer.toString(config.minDeltaSpelers), 10);
 		tfMinDelta.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				config.minDeltaSpelers = Utils.newIntegerValue(tfMinDelta, config.minDeltaSpelers);
@@ -179,7 +188,7 @@ public class ConfigurationDialog extends JDialog {
 		});
 		tabInstellingen.add(tfMinDelta);
 		tabInstellingen.add(new JLabel("Maximum:"));
-		JTextField tfMaxDelta = new JTextField(Integer.toString(config.maxDeltaSpelers), 10);
+		tfMaxDelta = new JTextField(Integer.toString(config.maxDeltaSpelers), 10);
 		tfMaxDelta.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				config.maxDeltaSpelers = Utils.newIntegerValue(tfMaxDelta, config.maxDeltaSpelers);
@@ -191,7 +200,7 @@ public class ConfigurationDialog extends JDialog {
 		tabInstellingen.add(new JLabel("Aantal afwijkende groepen"));
 		tabInstellingen.add(new JLabel(" "));
 		tabInstellingen.add(new JLabel("Minimum:"));
-		JTextField tfMinDeltaGroepen = new JTextField(Integer.toString(config.minAfwijkendeGroepen), 10);
+		tfMinDeltaGroepen = new JTextField(Integer.toString(config.minAfwijkendeGroepen), 10);
 		tfMinDeltaGroepen.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				config.minAfwijkendeGroepen = Utils.newIntegerValue(tfMinDeltaGroepen, config.minAfwijkendeGroepen);
@@ -199,7 +208,7 @@ public class ConfigurationDialog extends JDialog {
 		});
 		tabInstellingen.add(tfMinDeltaGroepen);
 		tabInstellingen.add(new JLabel("Maximum:"));
-		JTextField tfMaxDeltaGroepen = new JTextField(Integer.toString(config.maxAfwijkendeGroepen), 10);
+		tfMaxDeltaGroepen = new JTextField(Integer.toString(config.maxAfwijkendeGroepen), 10);
 		tfMaxDeltaGroepen.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				config.maxAfwijkendeGroepen = Utils.newIntegerValue(tfMaxDeltaGroepen, config.maxAfwijkendeGroepen);
@@ -211,7 +220,7 @@ public class ConfigurationDialog extends JDialog {
 		tabInstellingen.add(new JLabel("Aantal toegestane byes"));
 		tabInstellingen.add(new JLabel(" "));
 		tabInstellingen.add(new JLabel("Minimum:"));
-		JTextField tfMinByes = new JTextField(Integer.toString(config.minToegestaneByes), 10);
+		tfMinByes = new JTextField(Integer.toString(config.minToegestaneByes), 10);
 		tfMinByes.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				config.minToegestaneByes = Utils.newIntegerValue(tfMinByes, config.minToegestaneByes);
@@ -220,7 +229,7 @@ public class ConfigurationDialog extends JDialog {
 		tabInstellingen.add(tfMinByes);
 
 		tabInstellingen.add(new JLabel("Maximum:"));
-		JTextField tfMaxByes = new JTextField(Integer.toString(config.maxToegestaneByes), 10);
+		tfMaxByes = new JTextField(Integer.toString(config.maxToegestaneByes), 10);
 		tfMaxByes.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				config.maxToegestaneByes = Utils.newIntegerValue(tfMaxByes, config.maxToegestaneByes);
@@ -346,13 +355,15 @@ public class ConfigurationDialog extends JDialog {
 				c.getClass().getField(fieldname).set(c, nieuw);
 			}
 		} catch (Exception e) {
+			logger.log(Level.WARNING, "Fout bij UpdateInt");
 		}
 	}
 
 
 	private void storeValues() {
 		updateIntConfig(config, "minGroepen", tfMinGroepen.getText(), 0, 25);
-		//updateIntConfig(config, "maxGroepen", tfMaxGroepen.getText(), 0, 25);
+		updateIntConfig(config, "maxGroepen", tfMaxGroepen.getText(), 0, 25);
+		updateIntConfig(config, "minSpelers", tfMinSpelers.getText(), 0, 25);
 		controller.saveState(false, "");
 	}
 }

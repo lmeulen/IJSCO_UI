@@ -1117,6 +1117,9 @@ public class Mainscreen extends JFrame {
 		int ndeelnemers = status.deelnemers.aantalAanwezig();
 		logger.log(Level.INFO, "Bepaal mogelijkheden voor n=" + ndeelnemers);
 		status.schemas = indeler.mogelijkeSchemas(status);
+		if (status.schemas.size()<1) {
+			JOptionPane.showMessageDialog(null, "Geen schema's mogelijk!");
+		}
 		status.schema = null;
 		schemaModel.setSchemas(status.schemas);
 	}
