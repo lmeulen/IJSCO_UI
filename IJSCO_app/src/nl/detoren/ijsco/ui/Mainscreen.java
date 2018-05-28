@@ -131,7 +131,8 @@ public class Mainscreen extends JFrame {
     	logger.log(Level.INFO, "Opstarten controller");
         IJSCOController.getInstance().start();
 		indeler = new IJSCOIndeler();
-		status = new StatusIO().read("status.json");
+		status = IJSCOController.getI().getStatus();
+/*		status = new StatusIO().read("status.json");
 		if (status == null) {
 			status = new Status();
 		}
@@ -141,7 +142,7 @@ public class Mainscreen extends JFrame {
 		if (status.config==null) {
 			status.config = new Configuratie();
 		}
-		//leesOSBOlijst();
+*/		//leesOSBOlijst();
 		addMenubar();
 		// Frame
 		setBounds(25, 25, 1300, 700);

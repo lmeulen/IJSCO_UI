@@ -58,6 +58,14 @@ public class IJSCOController {
     	return status;
     }
 
+    public void setStatus(Status _status) {
+    	status = _status;
+    }
+
+    public void setConfig(Configuratie _config) {
+    	status.config = _config;
+    }
+
 	/**
      * Save state of the application to disk
 	 * @param unique if true, a unique file is created with timestamp in filename
@@ -85,14 +93,14 @@ public class IJSCOController {
 				writer.write(jsonString);
 				writer.close();
 			}*/
-			bestandsnaam = c().configuratieBestand + ".json";
+/*			bestandsnaam = c().configuratieBestand + ".json";
 			logger.log(Level.INFO, "Sla configuratie op in bestand " + bestandsnaam);
 			// write converted json data to a file
 			writer = new FileWriter(bestandsnaam);
 			jsonString = gson.toJson(c());
 			writer.write(jsonString);
 			writer.close();
-
+*/
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

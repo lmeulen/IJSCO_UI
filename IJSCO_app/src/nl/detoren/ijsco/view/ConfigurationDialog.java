@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -172,6 +173,12 @@ public class ConfigurationDialog extends JDialog {
 		tfMaxSpelers.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				config.maxSpelers = Utils.newIntegerValue(tfMaxSpelers, config.maxSpelers);
+				if (config.maxSpelers > 10)
+				{
+					JOptionPane.showMessageDialog(null, "Op dit moment worden maximaal 10 spelers per groep ondersteund.");
+					tfMaxSpelers.setText(String.valueOf(10));
+					config.maxSpelers = 10;
+				}
 			}
 		});
 		tabInstellingen.add(tfMaxSpelers);
@@ -361,9 +368,10 @@ public class ConfigurationDialog extends JDialog {
 
 
 	private void storeValues() {
-		updateIntConfig(config, "minGroepen", tfMinGroepen.getText(), 0, 25);
+/*		updateIntConfig(config, "minGroepen", tfMinGroepen.getText(), 0, 25);
 		updateIntConfig(config, "maxGroepen", tfMaxGroepen.getText(), 0, 25);
 		updateIntConfig(config, "minSpelers", tfMinSpelers.getText(), 0, 25);
+*/		controller.setConfig(config);
 		controller.saveState(false, "");
 	}
 }
