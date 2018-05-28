@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -59,6 +60,7 @@ public class ConfigurationDialog extends JDialog {
 	private JTextField tfConfigfile;
 	private JTextField tfStatusfile;
 	private JTextField tfMinGroepen;
+	private JTextField tfMaxGroepen;
 	
 	
 	public ConfigurationDialog(Frame frame, String title) {
@@ -351,6 +353,7 @@ public class ConfigurationDialog extends JDialog {
 
 	private void storeValues() {
 		updateIntConfig(config, "minGroepen", tfMinGroepen.getText(), 0, 25);
+		//updateIntConfig(config, "maxGroepen", tfMaxGroepen.getText(), 0, 25);
 		controller.saveState(false, "");
 	}
 }

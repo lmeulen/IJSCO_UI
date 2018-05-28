@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.detoren.ijsco.data.Spelers;
+import nl.detoren.ijsco.Configuratie;
 import nl.detoren.ijsco.data.Groep;
 import nl.detoren.ijsco.data.Groepen;
 import nl.detoren.ijsco.data.Schema;
@@ -165,24 +166,24 @@ public class IJSCOIndeler {
 		return (value >> k) & 1;
 	}
 
-	public Schemas mogelijkeSchemas(Status status) {
+	public Schemas mogelijkeSchemas(Status status, Configuratie c) {
 		int nSpelers = status.deelnemers.aantalAanwezig();
 		Schemas mogelijkheden = new Schemas();
-		for (int n_m = status.minSpelers; n_m <= status.maxSpelers; n_m += 2) { // itereer of standaard groepsgrootte
-			for (int d_h = status.minDeltaSpelers; d_h <= status.maxDeltaSpelers; d_h += 2) { // itereer of delta (-) groepsgrootte bovenste groepen
-				for (int d_l = status.minDeltaSpelers; d_l <= status.maxDeltaSpelers; d_l += 2) { // itereer of delta (+) groepsgrootte onderste groepen
+		for (int n_m = c.minSpelers; n_m <= c.maxSpelers; n_m += 2) { // itereer of standaard groepsgrootte
+			for (int d_h = c.minDeltaSpelers; d_h <= c.maxDeltaSpelers; d_h += 2) { // itereer of delta (-) groepsgrootte bovenste groepen
+				for (int d_l = c.minDeltaSpelers; d_l <= c.maxDeltaSpelers; d_l += 2) { // itereer of delta (+) groepsgrootte onderste groepen
 					int n_hoog = n_m - d_h; // aantal spelers in bovenste groepen
 					int n_laag = n_m + d_l; // aantal spelers in onderste groepen
-					for (int i = status.minAfwijkendeGroepen; i <= status.maxAfwijkendeGroepen; i++) { // itereer over aantal (1..2) aan te passen hoogste groepen
-						for (int j = status.minAfwijkendeGroepen; j <= status.maxAfwijkendeGroepen; j++) { // itereer over aantal (1..3) aan te passen onderste groepen
+					for (int i = c.minAfwijkendeGroepen; i <= c.maxAfwijkendeGroepen; i++) { // itereer over aantal (1..2) aan te passen hoogste groepen
+						for (int j = c.minAfwijkendeGroepen; j <= c.maxAfwijkendeGroepen; j++) { // itereer over aantal (1..3) aan te passen onderste groepen
 							int size_midden = nSpelers - (n_hoog * i) - (n_laag * j); // aantal spelers in standaard groepen
 							if (size_midden > 0) {
 								int gr_midden = (size_midden / n_m) + (((size_midden % n_m) == 0) ? 0 : 1);
 								int[] groepen = creeerGroottes(i, n_hoog, gr_midden, n_m, j, n_laag);
 								int byes = bepaalByes(groepen, nSpelers);
-								if ((n_hoog >= status.minSpelers) && (n_laag <= status.maxSpelers)
-										&& (groepen.length >= status.minGroepen) && (groepen.length <= status.maxGroepen)
-										&& (byes >= status.minToegestaneByes) && (byes <= status.maxToegestaneByes)) {
+								if ((n_hoog >= c.minSpelers) && (n_laag <= c.maxSpelers)
+										&& (groepen.length >= c.minGroepen) && (groepen.length <= c.maxGroepen)
+										&& (byes >= c.minToegestaneByes) && (byes <= c.maxToegestaneByes)) {
 									mogelijkheden.add(new Schema(groepen.length, byes, groepen));
 								}
 							}

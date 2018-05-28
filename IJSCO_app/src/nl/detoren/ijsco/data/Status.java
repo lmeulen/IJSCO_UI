@@ -49,15 +49,15 @@ public class Status {
 	 */
 	public ArrayList<Groepen> mogelijkheden;
 
-	public int minGroepen = 1;
-	public int maxGroepen = 24;
-	public int minSpelers = 4;
-	public int maxSpelers = 10;
-	public int minDeltaSpelers = 0;
-	public int maxDeltaSpelers = 2;
-	public int minAfwijkendeGroepen = 0;
-	public int maxAfwijkendeGroepen = 2;
-	public int minToegestaneByes = 0;
-	public int maxToegestaneByes = 3;
-	public String GeenByesInGroepen = "1";
+	//public int minGroepen = 1;
+	//public int maxGroepen = 24;
+//	public int minSpelers = 4;
+//	public int maxSpelers = 10;
+//	public int minDeltaSpelers = 0;
+//	public int maxDeltaSpelers = 2;
+//	public int minAfwijkendeGroepen = 0;
+//	public int maxAfwijkendeGroepen = 2;
+//	public int minToegestaneByes = 0;
+//	public int maxToegestaneByes = 3;
+//	public String GeenByesInGroepen = "1";
 }

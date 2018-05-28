@@ -69,6 +69,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import nl.detoren.ijsco.data.Spelers;
+import nl.detoren.ijsco.Configuratie;
 import nl.detoren.ijsco.data.Speler;
 import nl.detoren.ijsco.data.Status;
 import nl.detoren.ijsco.io.DeelnemersLader;
@@ -98,6 +99,7 @@ public class Mainscreen extends JFrame {
 	IJSCOIndeler indeler;
 	
 	private Status status;
+	private Configuratie config;
 	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
 
 	/**
@@ -595,208 +597,208 @@ public class Mainscreen extends JFrame {
 		return panel;
 	}
 
-	public JPanel createInstellingenPanel() {
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.LIGHT_GRAY);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] { 128, 32, 0 };
-		gbl_panel.rowHeights = new int[] { 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0 };
-		gbl_panel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				Double.MIN_VALUE };
-		panel.setLayout(gbl_panel);
-		int curRow = 0;
-
-		// Header Row
-		panel.add(new JLabel(" "), new ExtendedGridConstraints(0, curRow));
-		panel.add(new JLabel(" "), new ExtendedGridConstraints(1, curRow++));
-
-
-		// Buttons
-		JButton bOSBO = new JButton("Alle OSBO deelnemers");
-		bOSBO.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				voegtoeOSBOlijst();
-			}
-
-		});
-		panel.add(bOSBO, new ExtendedGridConstraints(0, curRow));
-		Component hs = this;
-		JButton bSpelers = new JButton("Lees deelnemers");
-		bSpelers.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				// Create a file chooser
-				final JFileChooser fc = new JFileChooser();
-				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
-				// In response to a button click:
-				int returnVal = fc.showOpenDialog(hs);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
-					leesDeelnemers(file.getAbsolutePath());
-				}
-
-			}
-
-		});
-		panel.add(bSpelers, new ExtendedGridConstraints(1, curRow++));
-
-		JButton bWis = new JButton("Wis lijst");
-		bWis.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				wisDeelnemerslijst();
-			}
-
-		});
-		panel.add(bWis, new ExtendedGridConstraints(0, curRow++));
-
-		// Aantal spelers
-		panel.add(new JLabel("Aantal spelers:"), new ExtendedGridConstraints(0, curRow));
-		if (status.deelnemers != null) {
-			tfAanwezig = new JTextField(Integer.toString(status.deelnemers.aantalAanwezig()), 10);
-		} else {
-			tfAanwezig = new JTextField(Integer.toString(0), 10);
-		}
-		tfAanwezig.setEditable(false);
-		panel.add(tfAanwezig, new ExtendedGridConstraints(1, curRow++));
-
-
-		// Aantal groepen
-		JLabel label_4 = new JLabel("Aantal groepen");
-		panel.add(label_4, new ExtendedGridConstraints(0, curRow++, 2, 1));
-		panel.add(new JLabel("Minimum:"), new ExtendedGridConstraints(0, curRow));
-		JTextField tfMinGroepen = new JTextField(Integer.toString(status.minGroepen), 10);
-		tfMinGroepen.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.minGroepen = Utils.newIntegerValue(tfMinGroepen, status.minGroepen);
-			}
-		});
-		panel.add(tfMinGroepen, new ExtendedGridConstraints(1, curRow++));
-		panel.add(new JLabel("Maximum:"), new ExtendedGridConstraints(0, curRow));
-		JTextField tfMaxGroepen = new JTextField(Integer.toString(status.maxGroepen), 10);
-		tfMaxGroepen.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.maxGroepen = Utils.newIntegerValue(tfMaxGroepen, status.maxGroepen);
-			}
-		});
-		panel.add(tfMaxGroepen, new ExtendedGridConstraints(1, curRow++));
-
-		// Aantal spelers
-		panel.add(new JLabel("Aantal spelers per groep"), new ExtendedGridConstraints(0, curRow++, 2, 1));
-		panel.add(new JLabel("Minimum:"), new ExtendedGridConstraints(0, curRow));
-		JTextField tfMinSpelers = new JTextField(Integer.toString(status.minSpelers), 10);
-		tfMinSpelers.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.minSpelers = Utils.newIntegerValue(tfMinSpelers, status.minSpelers);
-			}
-		});
-		panel.add(tfMinSpelers, new ExtendedGridConstraints(1, curRow++));
-		panel.add(new JLabel("Maximum:"), new ExtendedGridConstraints(0, curRow));
-		JTextField tfMaxSpelers = new JTextField(Integer.toString(status.maxSpelers), 10);
-		tfMaxSpelers.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.maxSpelers = Utils.newIntegerValue(tfMaxSpelers, status.maxSpelers);
-			}
-		});
-		panel.add(tfMaxSpelers, new ExtendedGridConstraints(1, curRow++));
-
-		// Delta aantal spelers
-		panel.add(new JLabel("Delta spelers voor uiterste groepen"), new ExtendedGridConstraints(0, curRow++, 2, 1));
-		panel.add(new JLabel("Minimum:"), new ExtendedGridConstraints(0, curRow));
-		JTextField tfMinDelta = new JTextField(Integer.toString(status.minDeltaSpelers), 10);
-		tfMinDelta.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.minDeltaSpelers = Utils.newIntegerValue(tfMinDelta, status.minDeltaSpelers);
-			}
-		});
-		panel.add(tfMinDelta, new ExtendedGridConstraints(1, curRow++));
-		panel.add(new JLabel("Maximum:"), new ExtendedGridConstraints(0, curRow));
-		JTextField tfMaxDelta = new JTextField(Integer.toString(status.maxDeltaSpelers), 10);
-		tfMaxDelta.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.maxDeltaSpelers = Utils.newIntegerValue(tfMaxDelta, status.maxDeltaSpelers);
-			}
-		});
-		panel.add(tfMaxDelta, new ExtendedGridConstraints(1, curRow++));
-
-		// Delta aantal groepen met afwijkend aantal spelers
-		panel.add(new JLabel("Aantal afwijkende groepen"), new ExtendedGridConstraints(0, curRow++, 2, 1));
-		panel.add(new JLabel("Minimum:"), new ExtendedGridConstraints(0, curRow));
-		JTextField tfMinDeltaGroepen = new JTextField(Integer.toString(status.minAfwijkendeGroepen), 10);
-		tfMinDeltaGroepen.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.minAfwijkendeGroepen = Utils.newIntegerValue(tfMinDeltaGroepen, status.minAfwijkendeGroepen);
-			}
-		});
-		panel.add(tfMinDeltaGroepen, new ExtendedGridConstraints(1, curRow++));
-		panel.add(new JLabel("Maximum:"), new ExtendedGridConstraints(0, curRow));
-		JTextField tfMaxDeltaGroepen = new JTextField(Integer.toString(status.maxAfwijkendeGroepen), 10);
-		tfMaxDeltaGroepen.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.maxAfwijkendeGroepen = Utils.newIntegerValue(tfMaxDeltaGroepen, status.maxAfwijkendeGroepen);
-			}
-		});
-		panel.add(tfMaxDeltaGroepen, new ExtendedGridConstraints(1, curRow++));
-
-		// Byes
-		panel.add(new JLabel("Aantal toegestane byes"), new ExtendedGridConstraints(0, curRow++, 2, 1));
-		panel.add(new JLabel("Minimum:"), new ExtendedGridConstraints(0, curRow));
-		JTextField tfMinByes = new JTextField(Integer.toString(status.minToegestaneByes), 10);
-		tfMinByes.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.minToegestaneByes = Utils.newIntegerValue(tfMinByes, status.minToegestaneByes);
-			}
-		});
-		panel.add(tfMinByes, new ExtendedGridConstraints(1, curRow++));
-
-		panel.add(new JLabel("Maximum:"), new ExtendedGridConstraints(0, curRow));
-		JTextField tfMaxByes = new JTextField(Integer.toString(status.maxToegestaneByes), 10);
-		tfMaxByes.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				status.maxToegestaneByes = Utils.newIntegerValue(tfMaxByes, status.maxToegestaneByes);
-			}
-		});
-		panel.add(tfMaxByes, new ExtendedGridConstraints(1, curRow++));
-
-		
-//		for (int i = 0; i < 4; i++) {
-//			panel.add(new JLabel("A"), new ExtendedConstraints(0, curRow));
-//			panel.add(new JLabel("A"), new ExtendedConstraints(1, curRow++));
+//	public JPanel createInstellingenPanel() {
+//		JPanel panel = new JPanel();
+//		panel.setBackground(Color.LIGHT_GRAY);
+//		GridBagLayout gbl_panel = new GridBagLayout();
+//		gbl_panel.columnWidths = new int[] { 128, 32, 0 };
+//		gbl_panel.rowHeights = new int[] { 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 0 };
+//		gbl_panel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+//		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+//				Double.MIN_VALUE };
+//		panel.setLayout(gbl_panel);
+//		int curRow = 0;
+//
+//		// Header Row
+//		panel.add(new JLabel(" "), new ExtendedGridConstraints(0, curRow));
+//		panel.add(new JLabel(" "), new ExtendedGridConstraints(1, curRow++));
+//
+//
+//		// Buttons
+//		JButton bOSBO = new JButton("Alle OSBO deelnemers");
+//		bOSBO.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent event) {
+//				voegtoeOSBOlijst();
+//			}
+//
+//		});
+//		panel.add(bOSBO, new ExtendedGridConstraints(0, curRow));
+//		Component hs = this;
+//		JButton bSpelers = new JButton("Lees deelnemers");
+//		bSpelers.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent event) {
+//				// Create a file chooser
+//				final JFileChooser fc = new JFileChooser();
+//				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+//				// In response to a button click:
+//				int returnVal = fc.showOpenDialog(hs);
+//				if (returnVal == JFileChooser.APPROVE_OPTION) {
+//					File file = fc.getSelectedFile();
+//					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+//					leesDeelnemers(file.getAbsolutePath());
+//				}
+//
+//			}
+//
+//		});
+//		panel.add(bSpelers, new ExtendedGridConstraints(1, curRow++));
+//
+//		JButton bWis = new JButton("Wis lijst");
+//		bWis.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent event) {
+//				wisDeelnemerslijst();
+//			}
+//
+//		});
+//		panel.add(bWis, new ExtendedGridConstraints(0, curRow++));
+//
+//		// Aantal spelers
+//		panel.add(new JLabel("Aantal spelers:"), new ExtendedGridConstraints(0, curRow));
+//		if (status.deelnemers != null) {
+//			tfAanwezig = new JTextField(Integer.toString(status.deelnemers.aantalAanwezig()), 10);
+//		} else {
+//			tfAanwezig = new JTextField(Integer.toString(0), 10);
 //		}
-
-		JButton bSchemas = new JButton("1. Bepaal mogelijkheden");
-		bSchemas.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				status.groepen = null;
-				bepaalSchemas();
-				schemaTabel.getSelectionModel().clearSelection();
-				groepenText.setText("");
-				panel.getParent().repaint();
-			}
-
-		});
-		panel.add(bSchemas, new ExtendedGridConstraints(0, curRow));
-		JButton bGroepen = new JButton("2. Bepaal groepen");
-		bGroepen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				if (schemaTabel != null) {
-					int row = schemaTabel.getSelectedRow();
-					bepaalGroepen(row, IJSCOController.c().nobyesmask);
-					new ExcelExport().exportGroepen(status.groepen);
-				}
-				panel.getParent().repaint();
-			}
-		});
-		panel.add(bGroepen, new ExtendedGridConstraints(1, curRow++));
-		panel.add(new JLabel(" "), new ExtendedGridConstraints(0, 17, 2, 1));
-		Utils.fixedComponentSize(panel, 300, 400);
-		return panel;
-	}
+//		tfAanwezig.setEditable(false);
+//		panel.add(tfAanwezig, new ExtendedGridConstraints(1, curRow++));
+//
+//
+//		// Aantal groepen
+//		JLabel label_4 = new JLabel("Aantal groepen");
+//		panel.add(label_4, new ExtendedGridConstraints(0, curRow++, 2, 1));
+//		panel.add(new JLabel("Minimum:"), new ExtendedGridConstraints(0, curRow));
+//		JTextField tfMinGroepen = new JTextField(Integer.toString(status.minGroepen), 10);
+//		tfMinGroepen.addFocusListener(new FocusAdapter() {
+//			public void focusLost(FocusEvent e) {
+//				status.minGroepen = Utils.newIntegerValue(tfMinGroepen, status.minGroepen);
+//			}
+//		});
+//		panel.add(tfMinGroepen, new ExtendedGridConstraints(1, curRow++));
+//		panel.add(new JLabel("Maximum:"), new ExtendedGridConstraints(0, curRow));
+//		JTextField tfMaxGroepen = new JTextField(Integer.toString(status.maxGroepen), 10);
+//		tfMaxGroepen.addFocusListener(new FocusAdapter() {
+//			public void focusLost(FocusEvent e) {
+//				status.maxGroepen = Utils.newIntegerValue(tfMaxGroepen, status.maxGroepen);
+//			}
+//		});
+//		panel.add(tfMaxGroepen, new ExtendedGridConstraints(1, curRow++));
+//
+//		// Aantal spelers
+//		panel.add(new JLabel("Aantal spelers per groep"), new ExtendedGridConstraints(0, curRow++, 2, 1));
+//		panel.add(new JLabel("Minimum:"), new ExtendedGridConstraints(0, curRow));
+//		JTextField tfMinSpelers = new JTextField(Integer.toString(status.minSpelers), 10);
+//		tfMinSpelers.addFocusListener(new FocusAdapter() {
+//			public void focusLost(FocusEvent e) {
+//				status.minSpelers = Utils.newIntegerValue(tfMinSpelers, status.minSpelers);
+//			}
+//		});
+//		panel.add(tfMinSpelers, new ExtendedGridConstraints(1, curRow++));
+//		panel.add(new JLabel("Maximum:"), new ExtendedGridConstraints(0, curRow));
+//		JTextField tfMaxSpelers = new JTextField(Integer.toString(status.maxSpelers), 10);
+//		tfMaxSpelers.addFocusListener(new FocusAdapter() {
+//			public void focusLost(FocusEvent e) {
+//				status.maxSpelers = Utils.newIntegerValue(tfMaxSpelers, status.maxSpelers);
+//			}
+//		});
+//		panel.add(tfMaxSpelers, new ExtendedGridConstraints(1, curRow++));
+//
+//		// Delta aantal spelers
+//		panel.add(new JLabel("Delta spelers voor uiterste groepen"), new ExtendedGridConstraints(0, curRow++, 2, 1));
+//		panel.add(new JLabel("Minimum:"), new ExtendedGridConstraints(0, curRow));
+//		JTextField tfMinDelta = new JTextField(Integer.toString(status.minDeltaSpelers), 10);
+//		tfMinDelta.addFocusListener(new FocusAdapter() {
+//			public void focusLost(FocusEvent e) {
+//				status.minDeltaSpelers = Utils.newIntegerValue(tfMinDelta, status.minDeltaSpelers);
+//			}
+//		});
+//		panel.add(tfMinDelta, new ExtendedGridConstraints(1, curRow++));
+//		panel.add(new JLabel("Maximum:"), new ExtendedGridConstraints(0, curRow));
+//		JTextField tfMaxDelta = new JTextField(Integer.toString(status.maxDeltaSpelers), 10);
+//		tfMaxDelta.addFocusListener(new FocusAdapter() {
+//			public void focusLost(FocusEvent e) {
+//				status.maxDeltaSpelers = Utils.newIntegerValue(tfMaxDelta, status.maxDeltaSpelers);
+//			}
+//		});
+//		panel.add(tfMaxDelta, new ExtendedGridConstraints(1, curRow++));
+//
+//		// Delta aantal groepen met afwijkend aantal spelers
+//		panel.add(new JLabel("Aantal afwijkende groepen"), new ExtendedGridConstraints(0, curRow++, 2, 1));
+//		panel.add(new JLabel("Minimum:"), new ExtendedGridConstraints(0, curRow));
+//		JTextField tfMinDeltaGroepen = new JTextField(Integer.toString(status.minAfwijkendeGroepen), 10);
+//		tfMinDeltaGroepen.addFocusListener(new FocusAdapter() {
+//			public void focusLost(FocusEvent e) {
+//				status.minAfwijkendeGroepen = Utils.newIntegerValue(tfMinDeltaGroepen, status.minAfwijkendeGroepen);
+//			}
+//		});
+//		panel.add(tfMinDeltaGroepen, new ExtendedGridConstraints(1, curRow++));
+//		panel.add(new JLabel("Maximum:"), new ExtendedGridConstraints(0, curRow));
+//		JTextField tfMaxDeltaGroepen = new JTextField(Integer.toString(status.maxAfwijkendeGroepen), 10);
+//		tfMaxDeltaGroepen.addFocusListener(new FocusAdapter() {
+//			public void focusLost(FocusEvent e) {
+//				status.maxAfwijkendeGroepen = Utils.newIntegerValue(tfMaxDeltaGroepen, status.maxAfwijkendeGroepen);
+//			}
+//		});
+//		panel.add(tfMaxDeltaGroepen, new ExtendedGridConstraints(1, curRow++));
+//
+//		// Byes
+//		panel.add(new JLabel("Aantal toegestane byes"), new ExtendedGridConstraints(0, curRow++, 2, 1));
+//		panel.add(new JLabel("Minimum:"), new ExtendedGridConstraints(0, curRow));
+//		JTextField tfMinByes = new JTextField(Integer.toString(status.minToegestaneByes), 10);
+//		tfMinByes.addFocusListener(new FocusAdapter() {
+//			public void focusLost(FocusEvent e) {
+//				status.minToegestaneByes = Utils.newIntegerValue(tfMinByes, status.minToegestaneByes);
+//			}
+//		});
+//		panel.add(tfMinByes, new ExtendedGridConstraints(1, curRow++));
+//
+//		panel.add(new JLabel("Maximum:"), new ExtendedGridConstraints(0, curRow));
+//		JTextField tfMaxByes = new JTextField(Integer.toString(status.maxToegestaneByes), 10);
+//		tfMaxByes.addFocusListener(new FocusAdapter() {
+//			public void focusLost(FocusEvent e) {
+//				status.maxToegestaneByes = Utils.newIntegerValue(tfMaxByes, status.maxToegestaneByes);
+//			}
+//		});
+//		panel.add(tfMaxByes, new ExtendedGridConstraints(1, curRow++));
+//
+//		
+////		for (int i = 0; i < 4; i++) {
+////			panel.add(new JLabel("A"), new ExtendedConstraints(0, curRow));
+////			panel.add(new JLabel("A"), new ExtendedConstraints(1, curRow++));
+////		}
+//
+//		JButton bSchemas = new JButton("1. Bepaal mogelijkheden");
+//		bSchemas.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent event) {
+//				status.groepen = null;
+//				bepaalSchemas();
+//				schemaTabel.getSelectionModel().clearSelection();
+//				groepenText.setText("");
+//				panel.getParent().repaint();
+//			}
+//
+//		});
+//		panel.add(bSchemas, new ExtendedGridConstraints(0, curRow));
+//		JButton bGroepen = new JButton("2. Bepaal groepen");
+//		bGroepen.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent event) {
+//				if (schemaTabel != null) {
+//					int row = schemaTabel.getSelectedRow();
+//					bepaalGroepen(row, IJSCOController.c().nobyesmask);
+//					new ExcelExport().exportGroepen(status.groepen);
+//				}
+//				panel.getParent().repaint();
+//			}
+//		});
+//		panel.add(bGroepen, new ExtendedGridConstraints(1, curRow++));
+//		panel.add(new JLabel(" "), new ExtendedGridConstraints(0, 17, 2, 1));
+//		Utils.fixedComponentSize(panel, 300, 400);
+//		return panel;
+//	}
 
 	protected void wisDeelnemerslijst() {
 		deelnemersModel.wis();
@@ -1046,7 +1048,7 @@ public class Mainscreen extends JFrame {
 	public void bepaalSchemas() {
 		int ndeelnemers = status.deelnemers.aantalAanwezig();
 		logger.log(Level.INFO, "Bepaal mogelijkheden voor n=" + ndeelnemers);
-		status.schemas = indeler.mogelijkeSchemas(status);
+		status.schemas = indeler.mogelijkeSchemas(status, config);
 		status.schema = null;
 		schemaModel.setSchemas(status.schemas);
 	}
