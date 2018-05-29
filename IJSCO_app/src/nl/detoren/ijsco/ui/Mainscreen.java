@@ -12,7 +12,6 @@
  * Problemen in deze code:
  */
 package nl.detoren.ijsco.ui;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -59,10 +58,12 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -177,13 +178,14 @@ public class Mainscreen extends JFrame {
 
 	private void addMenubar() {
 		// Menu bar met 1 niveau
+		Mainscreen ms = this;
 		JMenuBar menubar = new JMenuBar();
 		JMenu filemenu = new JMenu("Bestand");
 		// File menu
-		//JMenuItem item = new JMenuItem("Openen...");
-		JMenuItem item = new JMenuItem("N/A");
+		JMenuItem item;
+/*		item = new JMenuItem("Openen...");
 		item.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		Mainscreen ms = this;
+
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -201,8 +203,8 @@ public class Mainscreen extends JFrame {
 			}
 		});
 		filemenu.add(item);
-		//item = new JMenuItem("Opslaan");
-		item = new JMenuItem("N/A");
+*/
+/*		item = new JMenuItem("Opslaan");
 		item.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
@@ -211,6 +213,7 @@ public class Mainscreen extends JFrame {
 			}
 		});
 		filemenu.add(item);
+*/
 		filemenu.addSeparator();
 		item = new JMenuItem("Instellingen...");
 		item.addActionListener(new ActionListener() {
@@ -269,13 +272,13 @@ public class Mainscreen extends JFrame {
 		spelermenu.add(item);
 		menubar.add(spelermenu);
 		
-		item = new JMenuItem("Export Deelnemerslijst (N/A)");
+/*		item = new JMenuItem("Export Deelnemerslijst (N/A)");
 		item.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Create a file chooser
-/*				final JFileChooser fc = new JFileChooser();
+				final JFileChooser fc = new JFileChooser();
 				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 				// In response to a button click:
 				int returnVal = fc.showOpenDialog(ms);
@@ -285,9 +288,10 @@ public class Mainscreen extends JFrame {
 					schrijfDeelnemers(file.getAbsolutePath());
 				}
 				hoofdPanel.repaint();
-*/			}
+			}
 		});
 		spelermenu.add(item);
+*/
 		menubar.add(spelermenu);
 		
 		//item = new JMenuItem("Nieuwe speler");
@@ -339,14 +343,14 @@ public class Mainscreen extends JFrame {
 		spelermenu.add(item);
 		menubar.add(spelermenu);
 
-		item = new JMenuItem("Groslijst CSV inlezen (Bestand) N/A");
+/*		item = new JMenuItem("Groslijst CSV inlezen (Bestand) N/A");
 		item.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//actieNieuweSpeler(null, null);
 				// Create a file chooser
-/*				final JFileChooser fc = new JFileChooser();
+				final JFileChooser fc = new JFileChooser();
 				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 				// In response to a button click:
 				int returnVal = fc.showOpenDialog(ms);
@@ -356,12 +360,12 @@ public class Mainscreen extends JFrame {
 					leesCSV(file.getAbsolutePath());
 				}
 				hoofdPanel.repaint();
-*/			}
+			}
 		});
 		spelermenu.add(item);
-		menubar.add(spelermenu);
+*/		menubar.add(spelermenu);
 
-		JMenu indelingMenu = new JMenu("Indeling");
+/*		JMenu indelingMenu = new JMenu("Indeling");
 		//item = new JMenuItem("Automatisch aan/uit");
 		item = new JMenuItem("N/A");
 		item.addActionListener(new ActionListener() {
@@ -452,8 +456,8 @@ public class Mainscreen extends JFrame {
 		});
 		indelingMenu.add(item);
 		menubar.add(indelingMenu);
-		
-		JMenu overigmenu = new JMenu("Overig");
+*/		
+/*		JMenu overigmenu = new JMenu("Overig");
 
 		//item = new JMenuItem("Reset punten");
 		item = new JMenuItem("N/A");
@@ -467,7 +471,7 @@ public class Mainscreen extends JFrame {
 
 		overigmenu.add(item);
 		menubar.add(overigmenu);
-
+*/
 		this.setJMenuBar(menubar);
 
 	}
@@ -480,7 +484,8 @@ public class Mainscreen extends JFrame {
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				logger.log(Level.WARNING, "Unknown host: " + fqdn );
-				e.printStackTrace();
+			    ShowWarning("Unknown host: " + fqdn);
+			    return;
 			}
 			try {
 				//if ((ip != null) && ip.isReachable(5000)) {	
@@ -490,11 +495,15 @@ public class Mainscreen extends JFrame {
 					logger.log(Level.INFO, "Speler van website http://" + fqdn + page + " opgehaald: " + tmp.size() + " spelers in lijst" );
 				} else {
 					logger.log(Level.WARNING, "Host " + fqdn +  " not reachable or problem with parsing");
+				    ShowWarning("Host " + fqdn + "not reachable or problem with parsing");
+				    return;
 				}
 			//} catch (IOException e) {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+			    ShowWarning("Fout opgetreden bij online inlezen lijst van " + fqdn);
+			    return;
 			}
 		status.OSBOSpelers = new HashMap<>();
 		for (Speler d : tmp) {
@@ -504,6 +513,26 @@ public class Mainscreen extends JFrame {
 		JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit OSBO jeugdratinglijst");
 	}
 
+	public void ShowWarning(String warning) {
+/*		JPanel p = new JPanel(new BorderLayout());
+		DefaultTableModel tableModel = new DefaultTableModel();
+		tableModel.addColumn("Selection", new Object[] { "A", "B", "C" });
+
+		JTable table = new JTable(tableModel);
+		ListSelectionModel selectionModel = table.getSelectionModel();
+		p.add(table, BorderLayout.CENTER);
+*/
+		Object[] options = { "OK" };
+		int option = JOptionPane.showOptionDialog(null, warning, "Warning",
+		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+		null, options, options[0]);
+
+		//int option = JOptionPane.showConfirmDialog(null, warning, "Warning", , JOptionPane.ERROR_MESSAGE);
+	    if (option == 0) {
+	    	return;
+	    }
+
+	}
 	public void leesOSBOlijstBestand(String filepath) {
 		Spelers tmp = null;
 		try {
