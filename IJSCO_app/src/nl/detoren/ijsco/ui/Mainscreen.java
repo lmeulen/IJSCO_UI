@@ -236,64 +236,8 @@ public class Mainscreen extends JFrame {
 		});
 		filemenu.add(item);
 		menubar.add(filemenu);
-		JMenu spelermenu = new JMenu("Speler");
+		JMenu spelermenu = new JMenu("Spelersdatabase");
 
-		item = new JMenuItem("Wis Deelnemerslijst");
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Create a file chooser
-				wisDeelnemers();
-				hoofdPanel.repaint();
-			}
-		});
-		spelermenu.add(item);
-		menubar.add(spelermenu);
-		
-		
-		item = new JMenuItem("Importeren Deelnemerslijst");
-		item.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Create a file chooser
-				final JFileChooser fc = new JFileChooser();
-				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
-				// In response to a button click:
-				int returnVal = fc.showOpenDialog(ms);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
-					leesDeelnemers(file.getAbsolutePath());
-				}
-				hoofdPanel.repaint();
-			}
-		});
-		spelermenu.add(item);
-		menubar.add(spelermenu);
-		
-/*		item = new JMenuItem("Export Deelnemerslijst (N/A)");
-		item.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Create a file chooser
-				final JFileChooser fc = new JFileChooser();
-				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
-				// In response to a button click:
-				int returnVal = fc.showOpenDialog(ms);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
-					schrijfDeelnemers(file.getAbsolutePath());
-				}
-				hoofdPanel.repaint();
-			}
-		});
-		spelermenu.add(item);
-*/
-		menubar.add(spelermenu);
-		
 		//item = new JMenuItem("Nieuwe speler");
 		item = new JMenuItem("OSBO lijst ophalen (Online)");
 		item.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
@@ -306,7 +250,6 @@ public class Mainscreen extends JFrame {
 			}
 		});
 		spelermenu.add(item);
-		menubar.add(spelermenu);
 
 		item = new JMenuItem("IJSCO lijst inc. PJK en JCC (Online)");
 		item.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
@@ -319,7 +262,6 @@ public class Mainscreen extends JFrame {
 			}
 		});
 		spelermenu.add(item);
-		menubar.add(spelermenu);
 
 		//item = new JMenuItem("Importeer spelers");
 		item = new JMenuItem("OSBO/IJSCO compatible lijst inlezen (Bestand)");
@@ -341,7 +283,6 @@ public class Mainscreen extends JFrame {
 			}
 		});
 		spelermenu.add(item);
-		menubar.add(spelermenu);
 
 /*		item = new JMenuItem("Groslijst CSV inlezen (Bestand) N/A");
 		item.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
@@ -363,7 +304,96 @@ public class Mainscreen extends JFrame {
 			}
 		});
 		spelermenu.add(item);
-*/		menubar.add(spelermenu);
+*/
+		menubar.add(spelermenu);
+
+JMenu deelnemersmenu = new JMenu("Deelnemers");
+
+item = new JMenuItem("Wis Deelnemerslijst");
+item.addActionListener(new ActionListener() {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// Create a file chooser
+		wisDeelnemers();
+		hoofdPanel.repaint();
+	}
+});
+deelnemersmenu.add(item);
+
+item = new JMenuItem("Importeren Deelnemerslijst");
+item.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+item.addActionListener(new ActionListener() {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// Create a file chooser
+		final JFileChooser fc = new JFileChooser();
+		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		// In response to a button click:
+		int returnVal = fc.showOpenDialog(ms);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+			leesDeelnemers(file.getAbsolutePath());
+		}
+		hoofdPanel.repaint();
+	}
+});
+deelnemersmenu.add(item);
+
+/*		item = new JMenuItem("Export Deelnemerslijst (N/A)");
+item.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+item.addActionListener(new ActionListener() {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// Create a file chooser
+		final JFileChooser fc = new JFileChooser();
+		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		// In response to a button click:
+		int returnVal = fc.showOpenDialog(ms);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+			schrijfDeelnemers(file.getAbsolutePath());
+		}
+		hoofdPanel.repaint();
+	}
+});
+deelnemersmenu.add(item);
+*/
+	menubar.add(deelnemersmenu);
+
+	
+	JMenu uitslagenmenu = new JMenu("Uitslagen");
+
+	item = new JMenuItem("Importeer uitslagenbestand");
+/*	item.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// Create a file chooser
+			wisDeelnemers();
+			hoofdPanel.repaint();
+		}
+	});
+*/
+	uitslagenmenu.add(item);
+	menubar.add(uitslagenmenu);	
+	
+
+	JMenu ratingmenu = new JMenu("Ratingverwerking");
+
+	item = new JMenuItem("Verstuur rating");
+/*	item.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// Create a file chooser
+			wisDeelnemers();
+			hoofdPanel.repaint();
+		}
+	});
+*/
+	ratingmenu.add(item);
+	menubar.add(ratingmenu);	
+	
 
 /*		JMenu indelingMenu = new JMenu("Indeling");
 		//item = new JMenuItem("Automatisch aan/uit");

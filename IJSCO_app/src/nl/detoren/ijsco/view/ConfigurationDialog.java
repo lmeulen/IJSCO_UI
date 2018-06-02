@@ -70,7 +70,7 @@ public class ConfigurationDialog extends JDialog {
 	private JTextField tfMaxDeltaGroepen;
 	private JTextField tfMinByes;
 	private JTextField tfMaxByes;
-	private JTextField tfNobyesmask;
+	private JTextField tfNoByesMask;
 	
 	
 	public ConfigurationDialog(Frame frame, String title) {
@@ -144,7 +144,7 @@ public class ConfigurationDialog extends JDialog {
 		tfMinGroepen = new JTextField(Integer.toString(config.minGroepen), 10);
 		tfMinGroepen.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				config.minGroepen = Utils.newIntegerValue(tfMinGroepen, config.minGroepen);
+					config.minGroepen = Utils.newIntegerValue(tfMinGroepen, config.minGroepen);
 			}
 		});
 		tabInstellingen.add(tfMinGroepen);
@@ -164,7 +164,13 @@ public class ConfigurationDialog extends JDialog {
 		tfMinSpelers = new JTextField(Integer.toString(config.minSpelers), 10);
 		tfMinSpelers.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				config.minSpelers = Utils.newIntegerValue(tfMinSpelers, config.minSpelers);
+				int temp= Utils.newIntegerValue(tfMinSpelers, config.minSpelers);
+				if ((temp & 1) == 0) {
+					config.minSpelers = temp;
+				} else {
+					JOptionPane.showMessageDialog(null, "Een groep bestaat uit een even aantal spelers.");
+					tfMinSpelers.setText(String.valueOf(config.minSpelers));
+				}
 			}
 		});
 		tabInstellingen.add(tfMinSpelers);
@@ -172,12 +178,18 @@ public class ConfigurationDialog extends JDialog {
 		tfMaxSpelers = new JTextField(Integer.toString(config.maxSpelers), 10);
 		tfMaxSpelers.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				config.maxSpelers = Utils.newIntegerValue(tfMaxSpelers, config.maxSpelers);
-				if (config.maxSpelers > 10)
-				{
-					JOptionPane.showMessageDialog(null, "Op dit moment worden maximaal 10 spelers per groep ondersteund.");
-					tfMaxSpelers.setText(String.valueOf(10));
-					config.maxSpelers = 10;
+				int temp= Utils.newIntegerValue(tfMaxSpelers, config.maxSpelers);
+				if ((temp & 1) == 0) {
+					config.maxSpelers = temp;
+					if (config.maxSpelers > 10)
+					{
+						JOptionPane.showMessageDialog(null, "Op dit moment worden maximaal 10 spelers per groep ondersteund.");
+						tfMaxSpelers.setText(String.valueOf(10));
+						config.maxSpelers = 10;
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Een groep bestaat uit een even aantal spelers.");
+					tfMaxSpelers.setText(String.valueOf(config.maxSpelers));
 				}
 			}
 		});
@@ -190,6 +202,13 @@ public class ConfigurationDialog extends JDialog {
 		tfMinDelta = new JTextField(Integer.toString(config.minDeltaSpelers), 10);
 		tfMinDelta.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
+				int temp= Utils.newIntegerValue(tfMinDelta, config.minDeltaSpelers);
+				if ((temp & 1) == 0) {
+					config.minDeltaSpelers = temp;
+				} else {
+					JOptionPane.showMessageDialog(null, "Een groep bestaat uit een even aantal spelers.");
+					tfMinDelta.setText(String.valueOf(config.minDeltaSpelers));
+				}
 				config.minDeltaSpelers = Utils.newIntegerValue(tfMinDelta, config.minDeltaSpelers);
 			}
 		});
@@ -198,6 +217,13 @@ public class ConfigurationDialog extends JDialog {
 		tfMaxDelta = new JTextField(Integer.toString(config.maxDeltaSpelers), 10);
 		tfMaxDelta.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
+				int temp= Utils.newIntegerValue(tfMaxDelta, config.maxDeltaSpelers);
+				if ((temp & 1) == 0) {
+					config.maxDeltaSpelers = temp;
+				} else {
+					JOptionPane.showMessageDialog(null, "Een groep bestaat uit een even aantal spelers.");
+					tfMaxDelta.setText(String.valueOf(config.maxDeltaSpelers));
+				}
 				config.maxDeltaSpelers = Utils.newIntegerValue(tfMaxDelta, config.maxDeltaSpelers);
 			}
 		});
@@ -244,6 +270,15 @@ public class ConfigurationDialog extends JDialog {
 		});
 		tabInstellingen.add(tfMaxByes);
 
+		// No Byes
+		tabInstellingen.add(new JLabel("No byes for groep (komma seperated):"));
+		tfNoByesMask = new JTextField(config.nobyesmask);
+		tfNoByesMask.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				config.nobyesmask = Utils.newIntegerValue(tfNoByesMask, config.nobyesmask);
+			}
+		});
+		tabInstellingen.add(tfNoByesMask);
 		
 //		for (int i = 0; i < 4; i++) {
 //			panel.add(new JLabel("A"), new ExtendedConstraints(0, curRow));
