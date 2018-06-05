@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Leo van der Meulen
+ * Copyright (C) 2018 Lars Dam
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation version 3.0
@@ -9,7 +9,8 @@
  * GNU General Public License for more details.
  * See: http://www.gnu.org/licenses/gpl-3.0.html
  *
- * Problemen in deze code:
+ * Known issues in this code:
+ * - ...
  */
 package nl.detoren.ijsco.data;
 

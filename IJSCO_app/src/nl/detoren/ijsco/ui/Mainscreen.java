@@ -75,6 +75,7 @@ import nl.detoren.ijsco.data.Speler;
 import nl.detoren.ijsco.data.Status;
 import nl.detoren.ijsco.io.DeelnemersLader;
 import nl.detoren.ijsco.io.ExcelExport;
+import nl.detoren.ijsco.io.ExcelImport;
 import nl.detoren.ijsco.io.OSBOLoader;
 import nl.detoren.ijsco.io.StatusIO;
 import nl.detoren.ijsco.ui.control.IJSCOController;
@@ -364,17 +365,27 @@ deelnemersmenu.add(item);
 
 	
 	JMenu uitslagenmenu = new JMenu("Uitslagen");
-
+	Component hs = this;
 	item = new JMenuItem("Importeer uitslagenbestand");
-/*	item.addActionListener(new ActionListener() {
+	item.addActionListener(new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Create a file chooser
-			wisDeelnemers();
+			final JFileChooser fc = new JFileChooser();
+			fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+
+			// In response to a button click:
+			int returnVal = fc.showOpenDialog(hs);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
+				logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+				new ExcelImport().importeerUitslagen(file);
+			}
+			
 			hoofdPanel.repaint();
 		}
 	});
-*/
+
 	uitslagenmenu.add(item);
 	menubar.add(uitslagenmenu);	
 	
