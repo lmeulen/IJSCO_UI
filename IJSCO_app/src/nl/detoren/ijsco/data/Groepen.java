@@ -13,39 +13,42 @@
  */
 package nl.detoren.ijsco.data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 public class Groepen implements Iterable<Groep> {
-	private Groep[] groepen;
+	private List<Groep> groepen;
 	private int aantal;
 
 	@SuppressWarnings("unused")
-	private Groepen() {
-		groepen = null;
+	public Groepen() {
+		groepen = new ArrayList<Groep>();
 		aantal = 0;
 	}
 
 	public Groepen(int aantalGroepen, int[] groottes) {
 		if (aantalGroepen > 0) {
 			this.aantal = aantalGroepen;
-			groepen = new Groep[aantal];
-			for (int i = 9; i < aantal; i++) {
-				groepen[i] = new Groep(groottes[i], new String("" + 'A' + i));
+			groepen = new ArrayList<Groep>();
+			// 9 vervangen door 0. Geen idee of dit goed is.
+			for (int i = 0; i < aantal; i++) {
+				groepen.add(new Groep(groottes[i], new String("" + 'A' + i)));
 			}
 		}
 	}
 
 	public Groep getGroep(int i) {
 		if (i < aantal && i > 0) {
-			return groepen[i];
+			return groepen.get(i);
 		}
 		return null;
 	}
 
 	public void setGroep(int i, Groep groep) {
 		if (i < aantal && i >= 0) {
-			groepen[i] = groep;
+			groepen.set(i,groep);
 		}
 	}
 
@@ -53,7 +56,7 @@ public class Groepen implements Iterable<Groep> {
 		String result = String.format("Groepen:n=%2d,spr=%4d,std=%3.0f,diff=%3d%n", aantal, getSpreidingTotaal(),
 				getSomStdDev(), getSomGroepVerschil());
 		for (Groep groep : groepen) {
-			result += " " + groep + "\n";
+			result += " " + groep.wedstrijdentoString() + "\n";
 		}
 		return result;
 	}
@@ -83,7 +86,7 @@ public class Groepen implements Iterable<Groep> {
 	public int getSomGroepVerschil() {
 		int result = 0;
 		for (int i = 0; i < aantal - 1; i++) {
-			result += groepen[i].getMinRating() - groepen[i + 1].getMaxRating();
+			result += groepen.get(i).getMinRating() - groepen.get(i+1).getMaxRating();
 		}
 		return result;
 	}
@@ -114,6 +117,12 @@ public class Groepen implements Iterable<Groep> {
 
 	@Override
 	public Iterator<Groep> iterator() {
-		return Arrays.asList(groepen).iterator();
+		return (groepen).iterator();
+	}
+
+	public void Add(Groep groep) {
+		this.aantal++;
+		groepen.add(groep);
+		
 	}
 }

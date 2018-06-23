@@ -103,7 +103,7 @@ public class Wedstrijd {
 	}
 
 	/**
-	 * Geef uitslag in Toto stijl, waarbij 1=winst wit, 2=winst zwart, 3=remise
+	 * Geef uitslag in Toto stijl, waarbij 1=winst wit, 2=winst zwart, 3=remise, etc
 	 * @param Uitslag
 	 */
 	public void setUitslag(int Uitslag) {
@@ -130,7 +130,10 @@ public class Wedstrijd {
 	 * 0 = 0-1 => 2 (Toto)
 	 * 1 = 1-0 => 1 (Toto)
 	 * 2 = remise => 3 (Toto)
-	 * 
+	 * 3 = 0-1 => 5 (adjourned)
+	 * 4 = 1-0 => 4 (adjourned)
+	 * 5 = remise => 6 (adjourned)
+	 * 6 = 0-0 => 0 (reglementair)
 	 * 7 = 0-1 => 2 (reglementair)
 	 * 8 = 1-0 => 1 (reglementair)
 	 * 9 = remise => 3 (reglementair)
@@ -142,6 +145,11 @@ public class Wedstrijd {
 	 */
 	public void setUitslag012(int uitslag) {
 		nietReglementair = true;
+		adjourned = false;
+		if (uitslag > 3 && uitslag <7 ) {
+			uitslag -= 3;
+			adjourned = true;
+		}		
 		if (uitslag > 6 ) {
 			uitslag -= 7;
 			nietReglementair = false;
@@ -151,8 +159,17 @@ public class Wedstrijd {
 
 	@Override
 	public String toString() {
-		String result = wit.toString() + "- " + zwart.toString() + "- ";
+		String result;
+		try {
+		result = wit.toString() + " - " + zwart.toString() + "- ";
+		} catch (Exception ex)
+		{
+			result = "wit - zwart - ";
+		}
 		switch (uitslag) {
+		case 0:
+			result += " 0  -  0";
+			break;
 		case 1:
 			result += " 1  -  0";
 			break;
@@ -165,7 +182,8 @@ public class Wedstrijd {
 		default:
 			result += "";
 		}
-		if (!nietReglementair) result += "R";
+		if (!nietReglementair) result += "F";
+		if (adjourned) result += "A";
 		return result;
 	}
 

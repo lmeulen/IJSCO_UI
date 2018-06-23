@@ -13,6 +13,8 @@
  */
 package nl.detoren.ijsco.data;
 
+import nl.detoren.ijsco.ui.control.IJSCOController;
+
 public class Speler {
 
 	private int knsbnummer;
@@ -26,29 +28,41 @@ public class Speler {
 	private boolean overruleRating;
 
 	public Speler() {
-		knsbnummer = 0;
-		naamKNSB = null;
-		naamHandmatig = null;
-		ratingIJSCO = -1;
-		ratingKNSB = -1;
-		ratingHandmatig = -1;
-		aanwezig = true;
-		overruleNaam = false;
-		overruleRating = false;
+		this.knsbnummer = 0;
+		this.naamKNSB = null;
+		this.naamHandmatig = null;
+		this.ratingIJSCO = -1;
+		this.ratingKNSB = -1;
+		this.ratingHandmatig = -1;
+		this.aanwezig = true;
+		this.overruleNaam = false;
+		this.overruleRating = false;
 	}
 
 	public Speler(String naam) {
-		knsbnummer = 0;
-		naamKNSB = null;
-		naamHandmatig = naam;
-		ratingIJSCO = -1;
-		ratingKNSB = -1;
-		ratingHandmatig = -1;
-		aanwezig = true;
-		overruleNaam = false;
-		overruleRating = false;
+		this.knsbnummer = 0;
+		this.naamKNSB = null; 
+		this.naamHandmatig = naam;
+		this.ratingIJSCO = -1;
+		this.ratingKNSB = -1;
+		this.ratingHandmatig = -1;
+		this.aanwezig = true;
+		this.overruleNaam = false;
+		this.overruleRating = false;
 	}
 
+	public Speler(int knsbnummer) {
+		this.knsbnummer = knsbnummer;
+		this.naamKNSB = null;
+		this.naamHandmatig = null;
+		this.ratingIJSCO = -1;
+		this.ratingKNSB = -1;
+		this.ratingHandmatig = -1;
+		this.aanwezig = true;
+		this.overruleNaam = false;
+		this.overruleRating = false;
+	}
+	
 	public Speler(int knsbnummer, String naamKNSB, int ratingIJSCO, int ratingKNSB) {
 		this.knsbnummer = knsbnummer;
 		this.naamKNSB = naamKNSB;
@@ -57,8 +71,8 @@ public class Speler {
 		this.ratingKNSB = ratingKNSB;
 		this.ratingHandmatig = -1;
 		this.aanwezig = true;
-		overruleNaam = false;
-		overruleRating = false;
+		this.overruleNaam = false;
+		this.overruleRating = false;
 	}
 
 	/**
@@ -190,7 +204,7 @@ public class Speler {
 
 	public String toString() {
 		String result = "";
-		result += knsbnummer + " - " + getNaam() + " - " + getRating();
+		result += knsbnummer + ", " + getNaam() + ", " + getRating();
 		return result;
 	}
 

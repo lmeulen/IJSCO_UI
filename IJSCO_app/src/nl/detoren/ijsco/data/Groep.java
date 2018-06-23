@@ -19,14 +19,16 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 public class Groep {
 	private Speler[] spelers;
 	private int grootte;
-	private int aantal;
+	private int aantalspelers;
 	private String naam;
-
-	@SuppressWarnings("unused")
-	private Groep() {
+	private Wedstrijd[] wedstrijden;
+	private int aantalwedstrijden;
+	
+	@SuppressWarnings("unused") Groep() {
 		grootte = 0;
 		spelers = null;
-		aantal = 0;
+		aantalspelers = 0;
+		wedstrijden = null;
 		naam = "";
 	}
 
@@ -38,13 +40,19 @@ public class Groep {
 				spelers[i] = new Speler();
 				spelers[i].setBye();
 			}
-			this.aantal = 0;
+			this.wedstrijden = new Wedstrijd[((grootte-1)*grootte)/2];
+			this.aantalspelers = 0;
 		} else {
 			this.grootte = 0;
 			this.spelers = null;
-			this.aantal = 0;
+			this.aantalspelers = 0;
+			this.wedstrijden = null;
 		}
 		this.naam = naam;
+	}
+
+	public Groep(Groep groep) {
+
 	}
 
 	public String getNaam() {
@@ -59,43 +67,52 @@ public class Groep {
 	 * Voeg een speler toe aan de groep.
 	 *
 	 * @param s
-	 *            Spler
+	 *            Speler
 	 * @return true, als gelukt om speler toe te voegen false, als groep reeds
 	 *         vol is
 	 */
 	public boolean addSpeler(Speler s) {
-		if (aantal < grootte) {
-			spelers[aantal] = s;
-			aantal++;
+		if (aantalspelers < grootte) {
+			spelers[aantalspelers] = s;
+			aantalspelers++;
 			return true;
 		}
 		return false;
 	}
 
+	public boolean addWedstrijd(Wedstrijd w) {
+		if (aantalwedstrijden < (((grootte-1)*grootte)/2)) {
+			wedstrijden[aantalwedstrijden] = w;
+			aantalwedstrijden++;
+			return true;
+		}
+		return false;
+	}
+	
 	public Speler getSpeler(int i) {
 		return (i < grootte) ? spelers[i] : null;
 	}
 
 	public int getMinRating() {
 		int result = 9999;
-		for (int i = 0; i < aantal; ++i) {
+		for (int i = 0; i < aantalspelers; ++i) {
 			result = (!spelers[i].isBye()) ? Math.min(result, spelers[i].getRating()) : result;
 		}
-		return aantal > 0 ? result : 0;
+		return aantalspelers > 0 ? result : 0;
 	}
 
 	public int getMaxRating() {
 		int result = 0;
-		for (int i = 0; i < aantal; ++i) {
+		for (int i = 0; i < aantalspelers; ++i) {
 			result = (!spelers[i].isBye()) ? Math.max(result, spelers[i].getRating()) : result;
 		}
-		return aantal > 0 ? result : 0;
+		return aantalspelers > 0 ? result : 0;
 	}
 
 	public int getGemmiddeldeRating() {
 		int totaal = 0;
 		int n = 0;
-		for (int i = 0; i < aantal; ++i) {
+		for (int i = 0; i < aantalspelers; ++i) {
 			if (!spelers[i].isBye()) {
 				totaal += spelers[i].getRating();
 				n++;
@@ -105,7 +122,7 @@ public class Groep {
 	}
 
 	public int getAantal() {
-		return aantal;
+		return aantalspelers;
 	}
 
 	public int getGrootte() {
@@ -114,7 +131,7 @@ public class Groep {
 
 	public double getStandDev() {
 		SummaryStatistics stats = new SummaryStatistics();
-		for (int i = 0; i < aantal; ++i) {
+		for (int i = 0; i < aantalspelers; ++i) {
 			if (!spelers[i].isBye()) {
 				stats.addValue(spelers[i].getRating());
 			}
@@ -128,12 +145,24 @@ public class Groep {
 
 	public String toString() {
 		String result = naam + ", ";
-		result += String.format("%2d/%2d ", aantal, grootte);
+		result += String.format("%2d/%2d ", aantalspelers, grootte);
 		result += String.format("(%4d-%4d-%4d)", getMinRating(), getGemmiddeldeRating(), getMaxRating());
 		result += String.format(",std=%3.0f", getStandDev());
 		return result;
 	}
-
+	
+	public String wedstrijdentoString() {
+		String result = naam + " : ";
+		try {
+			for (Wedstrijd w : this.wedstrijden) {
+				result += "\r\n" + w.toString();
+			}
+		}
+		catch (Exception ex) {
+			
+		}
+		return result;
+	}
 	public String getDescription() {
 		String result = naam + "\n";
 		for (Speler s : spelers) {

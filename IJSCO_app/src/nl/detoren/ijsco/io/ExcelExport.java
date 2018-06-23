@@ -56,8 +56,8 @@ public class ExcelExport implements ExportInterface {
 	    String password= "abcd";
 		try {
 			if (groepen == null) return;
-			int[] sheetindx = new int[] { -1, -1, -1, -1,  3, -1,  2, -1,  1, -1,  0, -1, -1, -1, -1, -1, -1, -1 };
-			int[] pagelngth = new int[] { -1, -1, -1, -1, 20, -1, 35, -1, 54, -1, 77, -1, -1, -1, -1, -1, -1, -1 };
+			int[] sheetindx = new int[] { -1, -1, -1, -1,  5, -1,  4, -1,  3, -1,  2, -1, 1, -1, 0, -1, -1, -1 };
+			int[] pagelngth = new int[] { -1, -1, -1, -1, 20, -1, 35, -1, 54, -1, 77, -1, 100, -1, 127, -1, -1, -1 };
 			int sheet2row = 2;
 			int sheet3row = 2;
 			FileInputStream file = new FileInputStream("Indeling.xlsm");
@@ -127,7 +127,7 @@ public class ExcelExport implements ExportInterface {
 			sheet4.protectSheet(password);
 			//sheet5.protectSheet(password);
 			// Remove template sheets
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 6; i++) {
 				workbook.removeSheetAt(0);
 			}
 			
