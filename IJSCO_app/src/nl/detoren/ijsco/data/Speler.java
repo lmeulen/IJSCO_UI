@@ -208,6 +208,13 @@ public class Speler {
 		return result;
 	}
 
+	public String toFormattedString() {
+		String result = "";
+		result += String.format("%1$10s | %2$34s | %3$6s", knsbnummer, this.getNaam(), this.getRating());
+//		result += String.format("%1 10d | %2$20s | %3 6d", knsbnummer, this.getNaam(), this.getRating());
+		return result;
+	}
+
 	public boolean isAanwezig() {
 		return aanwezig;
 	}

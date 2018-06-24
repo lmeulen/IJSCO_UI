@@ -286,7 +286,7 @@ public class ExcelImport implements ImportInterface {
     			// logger.log(Level.INFO, "Waarde is " + value + " !");
     			break;
     		default:
-    			logger.log(Level.WARNING, "Wwaarde is geen String!");
+    			logger.log(Level.WARNING, "Waarde is geen String!");
 			}
 		}
 		return value;

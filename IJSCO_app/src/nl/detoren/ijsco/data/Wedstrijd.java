@@ -161,29 +161,31 @@ public class Wedstrijd {
 	public String toString() {
 		String result;
 		try {
-		result = wit.toString() + " - " + zwart.toString() + "- ";
-		} catch (Exception ex)
+		result = String.format("%1$50s vs %2$50s => ", wit.toFormattedString(),zwart.toFormattedString());
+//		result = String.format("%1$20s vs %2$20s => ", wit.toString(),zwart.toString());
+			} catch (Exception ex)
 		{
-			result = "wit - zwart - ";
+			result = String.format("%1$36s vs %2$36s => ", "wit", "zwart");
 		}
 		switch (uitslag) {
 		case 0:
-			result += " 0  -  0";
+			result += " 0  -   0";
 			break;
 		case 1:
-			result += " 1  -  0";
+			result += " 1  -   0";
 			break;
 		case 2:
-			result += " 0  -  1";
+			result += " 0  -   1";
 			break;
 		case 3:
 			result += "1/2 - 1/2";
 			break;
 		default:
-			result += "";
+			result += "         ";
 		}
 		if (!nietReglementair) result += "F";
-		if (adjourned) result += "A";
+		else if (adjourned) result += "A";
+		else result += " ";
 		return result;
 	}
 
