@@ -33,6 +33,8 @@ public class Configuratie {
 		public int minToegestaneByes = 1;
 		public int maxToegestaneByes = 2;
 		public int nobyesmask = 1 + 2;
+
+		public String appTitle = "Indeling Interregionale Jeugd Schaak COmpetitie (IJSCO)";
 		
 		/**
 		 * Bestandsnaam voor configuratie bestand prefix .json wordt automatisch

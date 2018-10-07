@@ -100,6 +100,9 @@ public class OSBOLoader {
 		int knsbnummer = 0;
 		int knsbrating = 0;
 		int osborating = 0;
+		String vereniging = "";
+		int geboortejaar = 0;
+		String categorie = "";
 		String naam = "";
 		Element table = doc.select("table").first();
 		Elements rows = table.select("tr");
@@ -130,8 +133,26 @@ public class OSBOLoader {
 					knsbrating = -1;
 					System.out.println(e);
 				}
+				try {
+					vereniging = cells.get(2).text();
+				} catch (Exception e) {
+					vereniging = "";
+					System.out.println(e);
+				}
+				try {
+					geboortejaar = Integer.parseInt(cells.get(6).text());
+				} catch (Exception e) {
+					geboortejaar = -1;
+					System.out.println(e);
+				}
+				try {
+					categorie = cells.get(7).text();
+				} catch (Exception e) {
+					categorie = "-";
+					System.out.println(e);
+				}
 
-				Speler s = new Speler(knsbnummer, naam, osborating, knsbrating);
+				Speler s = new Speler(knsbnummer, naam, vereniging, geboortejaar, categorie, osborating, knsbrating);
 				spelers.add(s);
 			}
 		}

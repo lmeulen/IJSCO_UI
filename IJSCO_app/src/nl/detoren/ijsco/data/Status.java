@@ -56,6 +56,8 @@ public class Status {
 	 */
 	public ArrayList<Groepen> mogelijkheden;
 
+	public GroepsUitslagen groepenuitslagen;
+
 	//public int minGroepen = 1;
 	//public int maxGroepen = 24;
 //	public int minSpelers = 4;

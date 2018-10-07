@@ -62,7 +62,7 @@ public class Groepen implements Iterable<Groep> {
 	}
 
 	public String getDescription() {
-		String result = toString() + "\n";
+		String result = toString(	) + "\n";
 		for (Groep groep : groepen) {
 			result += groep.getDescription() + "\n";
 		}

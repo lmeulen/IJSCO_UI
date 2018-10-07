@@ -14,6 +14,8 @@
  */
 package nl.detoren.ijsco.data;
 
+import java.util.ArrayList;
+
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 public class Groep {
@@ -89,9 +91,21 @@ public class Groep {
 		return false;
 	}
 	
+	public Wedstrijd[] getWedstrijden() {
+		return this.wedstrijden;
+	}
+	
 	public Speler getSpeler(int i) {
 		return (i < grootte) ? spelers[i] : null;
 	}
+
+    /**
+     * Retourneert lijst van spelers in deze groeo
+     * @return
+     */
+    public Speler[] getSpelers() {
+        return spelers;
+    }
 
 	public int getMinRating() {
 		int result = 9999;
