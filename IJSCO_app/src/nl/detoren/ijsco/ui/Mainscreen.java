@@ -651,7 +651,12 @@ deelnemersmenu.add(item);
 		if (status.OSBOSpelers != null) {
 			indeler.controleerSpelers(tmp, status.OSBOSpelers);
 			logger.log(Level.INFO, "Deelnemers ingelezen : " + tmp.size() + " spelers in lijst" );
-			deelnemersModel.wis();
+			try {
+				deelnemersModel.wis();
+			} 
+			catch (Exception ex) {
+				logger.log(Level.INFO, "DeelnemersModel kan niet gewist worden : " + ex.getMessage() + "");				
+			}
 			for (Speler s : tmp) {
 				deelnemersModel.add(s);
 			}
@@ -661,7 +666,7 @@ deelnemersmenu.add(item);
 		else {
 			JOptionPane.showMessageDialog(null, "Geen spelers ingelezen uit bestand. OSBO lijst moet eerst gelezen worden.");
 		}
-
+		logger.log(Level.INFO, "Deelnemers inlezen uit bestand afgerond." );
 	}
 
 	public JPanel createPanelGroepen() {
