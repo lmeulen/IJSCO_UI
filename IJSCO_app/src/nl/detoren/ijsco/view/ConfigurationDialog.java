@@ -181,11 +181,16 @@ public class ConfigurationDialog extends JDialog {
 				int temp= Utils.newIntegerValue(tfMaxSpelers, config.maxSpelers);
 				if ((temp & 1) == 0) {
 					config.maxSpelers = temp;
-					if (config.maxSpelers > 10)
+					if (config.maxSpelers > 14)
 					{
-						JOptionPane.showMessageDialog(null, "Op dit moment worden maximaal 10 spelers per groep ondersteund.");
+						JOptionPane.showMessageDialog(null, "Op dit moment worden maximaal 14 spelers per groep ondersteund.");
 						tfMaxSpelers.setText(String.valueOf(10));
-						config.maxSpelers = 10;
+						config.maxSpelers = 14;
+					} else {
+						if (config.maxSpelers > 10)
+						{
+							JOptionPane.showMessageDialog(null, "Op dit moment zijn groepen van 12 en 14 spelers niet (volledig) functioneel.");
+						}
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Een groep bestaat uit een even aantal spelers.");

@@ -71,15 +71,20 @@ import javax.swing.table.TableRowSorter;
 
 import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.Configuratie;
+import nl.detoren.ijsco.data.Groepen;
+import nl.detoren.ijsco.data.GroepsUitslagen;
 import nl.detoren.ijsco.data.Speler;
 import nl.detoren.ijsco.data.Status;
 import nl.detoren.ijsco.io.DeelnemersLader;
 import nl.detoren.ijsco.io.ExcelExport;
+import nl.detoren.ijsco.io.ExcelImport;
 import nl.detoren.ijsco.io.OSBOLoader;
+import nl.detoren.ijsco.io.OutputUitslagen;
 import nl.detoren.ijsco.io.StatusIO;
 import nl.detoren.ijsco.ui.control.IJSCOController;
 import nl.detoren.ijsco.ui.control.IJSCOIndeler;
 import nl.detoren.ijsco.ui.control.Suggesties;
+import nl.detoren.ijsco.ui.control.Uitslagverwerker;
 import nl.detoren.ijsco.ui.model.DeelnemersModel;
 import nl.detoren.ijsco.ui.model.SchemaModel;
 import nl.detoren.ijsco.ui.util.Utils;
@@ -94,7 +99,8 @@ public class Mainscreen extends JFrame {
 	private JPanel hoofdPanel;
 	private JTextField tfAanwezig;
 	private IJSCOController controller;
-	
+	private String appVersion = "0.2.0.2beta";
+
 	private JTextArea groepenText;
 
 	IJSCOIndeler indeler;
@@ -125,30 +131,33 @@ public class Mainscreen extends JFrame {
 		initialize();
 	}
 
-	/**
+	/**	
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+    	logger.log(Level.INFO, "IJSCO-UI version " + appVersion);
     	logger.log(Level.INFO, "Opstarten controller");
         IJSCOController.getInstance().start();
+		setTitle(IJSCOController.c().appTitle + " - versie " + this.appVersion);
 		indeler = new IJSCOIndeler();
 		status = IJSCOController.getI().getStatus();
 /*		status = new StatusIO().read("status.json");
 		if (status == null) {
 			status = new Status();
 		}
+*/
 		if (status.deelnemers==null) {
 			status.deelnemers = new Spelers();
 		}
 		if (status.config==null) {
 			status.config = new Configuratie();
 		}
-*/		//leesOSBOlijst();
+		//leesOSBOlijst();
 		addMenubar();
 		// Frame
 		setBounds(25, 25, 1300, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("IJSCO Groepenindeler");
+		setTitle(IJSCOController.c().appTitle + " - versie " + this.appVersion);
 		getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
 
 		// Frame - Hoofdpanel
@@ -364,17 +373,30 @@ deelnemersmenu.add(item);
 
 	
 	JMenu uitslagenmenu = new JMenu("Uitslagen");
-
+	Component hs = this;
 	item = new JMenuItem("Importeer uitslagenbestand");
-/*	item.addActionListener(new ActionListener() {
+	item.addActionListener(new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Create a file chooser
-			wisDeelnemers();
+			final JFileChooser fc = new JFileChooser();
+			fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+
+			// In response to a button click:
+			int returnVal = fc.showOpenDialog(hs);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
+				logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+				status.groepenuitslagen = (GroepsUitslagen) new ExcelImport().importeerUitslagen(file);
+				new OutputUitslagen().exportuitslagen(status.groepenuitslagen);
+				GroepsUitslagen verwerkteUitslag = new Uitslagverwerker().verwerkUitslag(status.groepenuitslagen);
+				logger.log(Level.INFO, verwerkteUitslag.ToString());
+				new OutputUitslagen().exporteindresultaten(verwerkteUitslag);
+			}	
 			hoofdPanel.repaint();
 		}
 	});
-*/
+
 	uitslagenmenu.add(item);
 	menubar.add(uitslagenmenu);	
 	
@@ -630,9 +652,15 @@ deelnemersmenu.add(item);
 		if (status.OSBOSpelers != null) {
 			indeler.controleerSpelers(tmp, status.OSBOSpelers);
 			logger.log(Level.INFO, "Deelnemers ingelezen : " + tmp.size() + " spelers in lijst" );
-			deelnemersModel.wis();
+			try {
+				deelnemersModel.wis();
+			} 
+			catch (Exception ex) {
+				logger.log(Level.INFO, "DeelnemersModel kan niet gewist worden : " + ex.getMessage() + "");				
+			}
 			for (Speler s : tmp) {
 				deelnemersModel.add(s);
+				status.deelnemers.add(s);
 			}
 			deelnemersModel.fireTableDataChanged();
 			JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit bestand");
@@ -640,7 +668,7 @@ deelnemersmenu.add(item);
 		else {
 			JOptionPane.showMessageDialog(null, "Geen spelers ingelezen uit bestand. OSBO lijst moet eerst gelezen worden.");
 		}
-
+		logger.log(Level.INFO, "Deelnemers inlezen uit bestand afgerond." );
 	}
 
 	public JPanel createPanelGroepen() {
@@ -1130,7 +1158,7 @@ deelnemersmenu.add(item);
 		Speler nieuw = null;
 		if (knsbnr > 0) {
 			nieuw = status.OSBOSpelers.get(knsbnr);
-			nieuw = (nieuw != null) ? nieuw : new Speler(knsbnr, "", -1, -1);
+			nieuw = (nieuw != null) ? nieuw : new Speler(knsbnr, "", "", -1, -1);
 		} else {
 			for (Speler s : status.OSBOSpelers.values()) {
 				if (s.getNaam().equals(trim)) {

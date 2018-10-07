@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Leo van der Meulen
+ * Copyright (C) 2016-2018 Leo van der Meulen & Lars Dam
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation version 3.0
@@ -43,13 +43,19 @@ public class IJSCOIndeler {
 	 */
 	public Spelers controleerSpelers(Spelers deelnemers, HashMap<Integer, Speler> osbolijst) {
 		Spelers update = new Spelers();
-		for (Speler s : deelnemers) {
-			Speler osbogegevens = osbolijst.get(s.getKnsbnummer());
-			if (osbogegevens != null) {
-				s.setNaamKNSB(osbogegevens.getNaam());
-				s.setRatingIJSCO(osbogegevens.getRatingIJSCO());
-			}
-			update.add(s);
+		if (deelnemers != null) { 
+			for (Speler s : deelnemers) {
+				if (osbolijst == null) {
+					logger.log(Level.WARNING, "Osbolijst is null");
+				} else {
+					Speler osbogegevens = osbolijst.get(s.getKnsbnummer());
+					if (osbogegevens != null) {
+						s.setNaamKNSB(osbogegevens.getNaam());
+						s.setRatingIJSCO(osbogegevens.getRatingIJSCO());
+					}
+					update.add(s);
+				}
+			}	
 		}
 		return update;
 	}

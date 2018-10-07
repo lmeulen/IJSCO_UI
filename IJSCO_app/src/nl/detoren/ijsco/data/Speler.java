@@ -13,11 +13,16 @@
  */
 package nl.detoren.ijsco.data;
 
+import nl.detoren.ijsco.ui.control.IJSCOController;
+
 public class Speler {
 
 	private int knsbnummer;
 	private String naamKNSB;
 	private String naamHandmatig;
+	private String vereniging; 
+	private int geboortejaar;
+	private String categorie;
 	private int ratingIJSCO;
 	private int ratingKNSB;
 	private int ratingHandmatig;
@@ -26,39 +31,74 @@ public class Speler {
 	private boolean overruleRating;
 
 	public Speler() {
-		knsbnummer = 0;
-		naamKNSB = null;
-		naamHandmatig = null;
-		ratingIJSCO = -1;
-		ratingKNSB = -1;
-		ratingHandmatig = -1;
-		aanwezig = true;
-		overruleNaam = false;
-		overruleRating = false;
+		this.knsbnummer = 0;
+		this.naamKNSB = null;
+		this.naamHandmatig = null;
+		this.vereniging = null;
+		this.ratingIJSCO = -1;
+		this.ratingKNSB = -1;
+		this.ratingHandmatig = -1;
+		this.aanwezig = true;
+		this.overruleNaam = false;
+		this.overruleRating = false;
 	}
 
 	public Speler(String naam) {
-		knsbnummer = 0;
-		naamKNSB = null;
-		naamHandmatig = naam;
-		ratingIJSCO = -1;
-		ratingKNSB = -1;
-		ratingHandmatig = -1;
-		aanwezig = true;
-		overruleNaam = false;
-		overruleRating = false;
+		this.knsbnummer = 0;
+		this.naamKNSB = null; 
+		this.naamHandmatig = naam;
+		this.vereniging = null;
+		this.ratingIJSCO = -1;
+		this.ratingKNSB = -1;
+		this.ratingHandmatig = -1;
+		this.aanwezig = true;
+		this.overruleNaam = false;
+		this.overruleRating = false;
 	}
 
-	public Speler(int knsbnummer, String naamKNSB, int ratingIJSCO, int ratingKNSB) {
+	public Speler(int knsbnummer) {
+		this.knsbnummer = knsbnummer;
+		this.naamKNSB = null;
+		this.naamHandmatig = null;
+		this.vereniging = null;
+		this.ratingIJSCO = -1;
+		this.ratingKNSB = -1;
+		this.ratingHandmatig = -1;
+		this.aanwezig = true;
+		this.overruleNaam = false;
+		this.overruleRating = false;
+	}
+	
+	public Speler(int knsbnummer, String naamKNSB, String vereniging, int ratingIJSCO, int ratingKNSB) {
 		this.knsbnummer = knsbnummer;
 		this.naamKNSB = naamKNSB;
 		this.naamHandmatig = null;
+		this.vereniging = vereniging;
 		this.ratingIJSCO = ratingIJSCO;
 		this.ratingKNSB = ratingKNSB;
 		this.ratingHandmatig = -1;
 		this.aanwezig = true;
-		overruleNaam = false;
-		overruleRating = false;
+		this.overruleNaam = false;
+		this.overruleRating = false;
+	}
+
+	public Speler(Speler speler) {
+	}
+
+	public Speler(int knsbnummer, String naamKNSB, String vereniging, int geboortejaar, String categorie, int ratingIJSCO,
+			int ratingKNSB) {
+		this.knsbnummer = knsbnummer;
+		this.naamKNSB = naamKNSB;
+		this.naamHandmatig = null;
+		this.vereniging = vereniging;
+		this.setGeboortejaar(geboortejaar);
+		this.setCategorie(categorie);
+		this.ratingIJSCO = ratingIJSCO;
+		this.ratingKNSB = ratingKNSB;
+		this.ratingHandmatig = -1;
+		this.aanwezig = true;
+		this.overruleNaam = false;
+		this.overruleRating = false;
 	}
 
 	/**
@@ -132,6 +172,14 @@ public class Speler {
 		this.naamHandmatig = naamHandmatig;
 	}
 
+	public String getVereniging() {
+		return vereniging;
+	}
+
+	public void setVereniging(String vereniging) {
+		this.vereniging = vereniging;
+	}
+
 	public int getRatingIJSCO() {
 		return ratingIJSCO;
 	}
@@ -179,6 +227,19 @@ public class Speler {
 		ratingHandmatig = -1;
 	}
 
+    /**
+     * Wordt dezelfde speler gerepresenteerd door het andere object?
+     * @param speler
+     * @return
+     */
+    public boolean gelijkAan(Speler speler) {
+        return (this.getNaam().equals(speler.getNaam())
+//                && this.getInitialen().equals(speler.getInitialen())
+//                && this.getGroep() == speler.getGroep()
+        		&& this.getNaamKNSB() == speler.getNaamKNSB()
+                && this.getKnsbnummer() == speler.getKnsbnummer());
+    }
+
 	public String toStringComplete() {
 		String result = "";
 		result += knsbnummer + " - ";
@@ -190,7 +251,14 @@ public class Speler {
 
 	public String toString() {
 		String result = "";
-		result += knsbnummer + " - " + getNaam() + " - " + getRating();
+		result += knsbnummer + ", " + getNaam() + ", " + getRating();
+		return result;
+	}
+
+	public String toFormattedString() {
+		String result = "";
+		result += String.format("%1$10s | %2$34s | %3$6s", knsbnummer, this.getNaam(), this.getRating());
+//		result += String.format("%1 10d | %2$20s | %3 6d", knsbnummer, this.getNaam(), this.getRating());
 		return result;
 	}
 
@@ -216,6 +284,22 @@ public class Speler {
 
 	public void setOverruleRating(boolean overruleRating) {
 		this.overruleRating = overruleRating;
+	}
+
+	public int getGeboortejaar() {
+		return geboortejaar;
+	}
+
+	public void setGeboortejaar(int geboortejaar) {
+		this.geboortejaar = geboortejaar;
+	}
+
+	public String getCategorie() {
+		return categorie;
+	}
+
+	public void setCategorie(String categorie) {
+		this.categorie = categorie;
 	}
 
 

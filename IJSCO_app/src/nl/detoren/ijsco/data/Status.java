@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Leo van der Meulen
+ * Copyright (C) 2018 Lars Dam
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation version 3.0
@@ -55,6 +55,8 @@ public class Status {
 	 * groep, maar verdeling byes over groepen verschilt
 	 */
 	public ArrayList<Groepen> mogelijkheden;
+
+	public GroepsUitslagen groepenuitslagen;
 
 	//public int minGroepen = 1;
 	//public int maxGroepen = 24;
