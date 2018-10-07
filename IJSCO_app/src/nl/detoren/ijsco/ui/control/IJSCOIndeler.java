@@ -43,17 +43,19 @@ public class IJSCOIndeler {
 	 */
 	public Spelers controleerSpelers(Spelers deelnemers, HashMap<Integer, Speler> osbolijst) {
 		Spelers update = new Spelers();
-		for (Speler s : deelnemers) {
-			if (osbolijst == null) {
-				logger.log(Level.WARNING, "Osbolijst is null");
-			} else {
-				Speler osbogegevens = osbolijst.get(s.getKnsbnummer());
-				if (osbogegevens != null) {
-					s.setNaamKNSB(osbogegevens.getNaam());
-					s.setRatingIJSCO(osbogegevens.getRatingIJSCO());
+		if (deelnemers != null) { 
+			for (Speler s : deelnemers) {
+				if (osbolijst == null) {
+					logger.log(Level.WARNING, "Osbolijst is null");
+				} else {
+					Speler osbogegevens = osbolijst.get(s.getKnsbnummer());
+					if (osbogegevens != null) {
+						s.setNaamKNSB(osbogegevens.getNaam());
+						s.setRatingIJSCO(osbogegevens.getRatingIJSCO());
+					}
+					update.add(s);
 				}
-			update.add(s);
-			}
+			}	
 		}
 		return update;
 	}

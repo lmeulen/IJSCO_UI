@@ -145,13 +145,14 @@ public class Mainscreen extends JFrame {
 		if (status == null) {
 			status = new Status();
 		}
+*/
 		if (status.deelnemers==null) {
 			status.deelnemers = new Spelers();
 		}
 		if (status.config==null) {
 			status.config = new Configuratie();
 		}
-*/		//leesOSBOlijst();
+		//leesOSBOlijst();
 		addMenubar();
 		// Frame
 		setBounds(25, 25, 1300, 700);
@@ -659,6 +660,7 @@ deelnemersmenu.add(item);
 			}
 			for (Speler s : tmp) {
 				deelnemersModel.add(s);
+				status.deelnemers.add(s);
 			}
 			deelnemersModel.fireTableDataChanged();
 			JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit bestand");
