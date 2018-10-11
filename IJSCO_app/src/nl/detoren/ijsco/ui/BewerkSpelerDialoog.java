@@ -105,7 +105,7 @@ public class BewerkSpelerDialoog extends JDialog {
                 int rating = Integer.parseInt(tfRating.getText());
                 speler.setRatingHandmatig(rating);
                 int knsb = Integer.parseInt(tfKNSBnr.getText());
-                speler.setRatingKNSB(knsb);
+                speler.setKnsbnummer(knsb);
                 speler.setOverruleNaam(tfOverruleNaam.isSelected());
                 speler.setOverruleRating(tfOverruleRating.isSelected());
                 setVisible(false);

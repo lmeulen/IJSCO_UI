@@ -56,7 +56,9 @@ public class ExcelExport implements ExportInterface {
 	    String password= "abcd";
 		try {
 			if (groepen == null) return;
+			// sheetindx geeft index in Excel template op basis van groepsgrootte. -1: geen sheet voor groepsgrootte 
 			int[] sheetindx = new int[] { -1, -1, -1, -1,  5, -1,  4, -1,  3, -1,  2, -1, 1, -1, 0, -1, -1, -1 };
+			// pagelngth geeft lengte in Excel template op basis van groepsgrootte. -1: geen sheet voor groepsgrootte
 			int[] pagelngth = new int[] { -1, -1, -1, -1, 20, -1, 35, -1, 54, -1, 77, -1, 100, -1, 127, -1, -1, -1 };
 			int sheet2row = 2;
 			int sheet3row = 2;
