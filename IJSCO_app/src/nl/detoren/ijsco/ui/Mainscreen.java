@@ -260,17 +260,17 @@ public class Mainscreen extends JFrame {
 		});
 		spelermenu.add(item);
 
-		item = new JMenuItem("IJSCO lijst inc. PJK en JCC (Online)");
-		item.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//actieNieuweSpeler(null, null);
-				leeslijstOnline("ijsco.schaakverenigingdetoren.nl", "/ijsco1718/IJSCOrating1718.htm");
-				hoofdPanel.repaint();
-			}
-		});
-		spelermenu.add(item);
+//		item = new JMenuItem("IJSCO lijst inc. PJK en JCC (Online)");
+//		item.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+//		item.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				//actieNieuweSpeler(null, null);
+//				leeslijstOnline("ijsco.schaakverenigingdetoren.nl", "/ijsco1718/IJSCOrating1718.htm");
+//				hoofdPanel.repaint();
+//			}
+//		});
+//		spelermenu.add(item);
 
 		//item = new JMenuItem("Importeer spelers");
 		item = new JMenuItem("OSBO/IJSCO compatible lijst inlezen (Bestand)");
