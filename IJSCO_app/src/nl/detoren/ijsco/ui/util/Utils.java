@@ -19,16 +19,25 @@ package nl.detoren.ijsco.ui.util;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.JTextField;
 import javax.swing.table.TableColumn;
+
+import nl.detoren.ijsco.ui.Mainscreen;
 
 /**
  *
  * @author Lars Dam
  */
 public class Utils {
-    
+
+	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
+	
     public static void fixedComponentSize(Component c, int width, int height) {
         c.setMinimumSize(new Dimension(width, height));
         c.setMaximumSize(new Dimension(width, height));
@@ -190,6 +199,67 @@ public class Utils {
 			value = oldValue;
 		}
 		text.setText(Integer.toString(value));
+		return value;
+	}
+
+	/**
+	 * Bepaal de nieuwe comma seperated waarde voor een textfield Als het tekstveld een
+	 * geldig getal bevat, wordt deze waarde geretourneerd anders de oude waarde
+	 *
+	 * @param text
+	 * @param oldValue
+	 * @return
+	 */
+	public static String newCSValue(JTextField text, String oldValue) {
+		String value;
+		try {
+			logger.log(Level.INFO, "text : " + text.getText());
+			Scanner scanner = new Scanner(text.getText());
+			scanner.useDelimiter(",");
+			List<Integer> list = new ArrayList<Integer>();
+			while (scanner.hasNextInt()) {
+				int next = scanner.nextInt();
+				logger.log(Level.INFO, "nextInt : " + next);
+			    list.add(next);
+			}
+			scanner.close();
+			value = list.stream()
+			     .map(i -> i.toString())
+			     .collect(Collectors.joining(","));
+			logger.log(Level.INFO, "Value : " + value);
+			}
+		catch (Exception e) {
+			value = oldValue;
+			logger.log(Level.INFO, "Exception: Rest Value : " + value);			
+		}
+		text.setText(value);
+		return value;
+	}
+
+	public static String listToString(List<Integer> nobyes) {	
+		String value;
+		value = nobyes.stream()
+		     .map(i -> i.toString())
+		     .collect(Collectors.joining(", "));
+		return value;
+	}
+
+	public static List<Integer> stringToList(String nobyes) {	
+		Scanner scanner = new Scanner(nobyes);
+		scanner.useDelimiter(",");
+		List<Integer> list = new ArrayList<Integer>();
+		while (scanner.hasNextInt()) {
+		    list.add(scanner.nextInt());
+		}
+		scanner.close();
+		return list;
+	}
+
+	public static int toMask(List<Integer> nobyes) {
+		int value = 0;
+		for (int groep : nobyes) {
+			value += 2^groep;
+		}
 		return value;
 	}
 

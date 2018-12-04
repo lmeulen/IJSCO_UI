@@ -58,6 +58,8 @@ public class ExcelExport implements ExportInterface {
 			if (groepen == null) return;
 			// sheetindx geeft index in Excel template op basis van groepsgrootte. -1: geen sheet voor groepsgrootte 
 			int[] sheetindx = new int[] { -1, -1, -1, -1,  5, -1,  4, -1,  3, -1,  2, -1, 1, -1, 0, -1, -1, -1 };
+			// columnsize geeft lengte in Excel template op basis van groepsgrootte. -1: geen sheet voor groepsgrootte
+			int[] columnsize = new int[] { -1, -1, -1, -1, 20, -1, 35, -1, 54, -1, 77, -1, 100, -1, 127, -1, -1, -1 };
 			// pagelngth geeft lengte in Excel template op basis van groepsgrootte. -1: geen sheet voor groepsgrootte
 			int[] pagelngth = new int[] { -1, -1, -1, -1, 20, -1, 35, -1, 54, -1, 77, -1, 100, -1, 127, -1, -1, -1 };
 			int sheet2row = 2;
@@ -112,6 +114,7 @@ public class ExcelExport implements ExportInterface {
 				sheet.setForceFormulaRecalculation(true);
 				// Set print margins
 				XSSFPrintSetup ps = sheet.getPrintSetup();
+				ps.setLandscape(true);
 				ps.setFitWidth((short)1);
 				sheet.setFitToPage(true);
 				sheet.setAutobreaks(false);

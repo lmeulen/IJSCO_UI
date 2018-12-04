@@ -13,14 +13,19 @@
  */
 package nl.detoren.ijsco;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Configuratie {
 
 	public Configuratie() {
 		
 	}
 		/**
-		 * No Byes Mask
-		 * Mask for groups that may not have a bye
+		 * No Byes List 
+		 * List for groups that may not have a bye
+		 * ToDo For functioning this must be converted to a int serving as mask.
 		 */
 		public int minGroepen = 0;
 		public int maxGroepen = 10;
@@ -32,7 +37,7 @@ public class Configuratie {
 		public int maxAfwijkendeGroepen = 4;
 		public int minToegestaneByes = 1;
 		public int maxToegestaneByes = 2;
-		public int nobyesmask = 1 + 2;
+		public List<Integer> nobyes = Arrays.asList(1,2);
 
 		public String appTitle = "Indeling Interregionale Jeugd Schaak COmpetitie (IJSCO)";
 		

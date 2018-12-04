@@ -277,10 +277,12 @@ public class ConfigurationDialog extends JDialog {
 
 		// No Byes
 		tabInstellingen.add(new JLabel("No byes for groep (komma seperated):"));
-		tfNoByesMask = new JTextField(config.nobyesmask);
+		tfNoByesMask = new JTextField(Utils.listToString(config.nobyes));
 		tfNoByesMask.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				config.nobyesmask = Utils.newIntegerValue(tfNoByesMask, config.nobyesmask);
+				logger.log(Level.INFO, "No Byes Textfield: " + tfNoByesMask.getText());
+				config.nobyes = Utils.stringToList(Utils.newCSValue(tfNoByesMask, Utils.listToString(config.nobyes)));
+				logger.log(Level.INFO, "config.nobyes: " + Utils.listToString(config.nobyes));
 			}
 		});
 		tabInstellingen.add(tfNoByesMask);
