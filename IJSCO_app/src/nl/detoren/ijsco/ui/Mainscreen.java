@@ -91,7 +91,7 @@ public class Mainscreen extends JFrame {
 	private JPanel hoofdPanel;
 	private JTextField tfAanwezig;
 	private IJSCOController controller;
-	private String appVersion = "0.2.1.0";
+	private String appVersion = "0.2.2.0";
 
 	private JTextArea groepenText;
 
