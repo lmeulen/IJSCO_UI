@@ -1,1 +1,0 @@
-java -jar IJSCO_UI.jar > IJSCO_UI.log 2>&1 
