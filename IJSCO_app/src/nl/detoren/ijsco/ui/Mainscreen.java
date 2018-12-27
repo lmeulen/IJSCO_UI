@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Leo van der Meulen
+ * Copyright (C) 2016-2018 Leo van der Meulen, Lars Dam
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation version 3.0
@@ -61,6 +61,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import org.apache.commons.io.FilenameUtils;
 
 import nl.detoren.ijsco.Configuratie;
 import nl.detoren.ijsco.data.GroepsUitslagen;
@@ -240,13 +242,25 @@ public class Mainscreen extends JFrame {
 		JMenu spelermenu = new JMenu("Spelersdatabase");
 
 		//item = new JMenuItem("Nieuwe speler");
-		item = new JMenuItem("OSBO lijst ophalen (Online)");
+		item = new JMenuItem("OSBO htmllijst ophalen (Online)");
 		item.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//actieNieuweSpeler(null, null);
 				leeslijstOnline("www.osbo.nl", "/jeugd/jrating.htm");
+				hoofdPanel.repaint();
+			}
+		});
+		spelermenu.add(item);
+
+		item = new JMenuItem("OSBO JSON lijst ophalen (Online)");
+		item.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieNieuweSpeler(null, null);
+				leeslijstOnline("www.osbo.nl", "/jeugd/currentratings.json");
 				hoofdPanel.repaint();
 			}
 		});
@@ -535,7 +549,16 @@ deelnemersmenu.add(item);
 				//if ((ip != null) && ip.isReachable(5000)) {	
 				if (ip != null) {
 				//if (1 == Math.abs(0)) {
-					tmp = (new OSBOLoader()).laadWebsite("http://" + fqdn + page);
+					String ext = FilenameUtils.getExtension(page);
+					switch (ext) {
+					case "html":
+					case "htm":
+						tmp = (new OSBOLoader()).laadWebsite("https://" + fqdn + page);
+						break;
+					case "json":
+						tmp = (new OSBOLoader()).laadJSON("https://" + fqdn + page);
+						break;
+					}
 					logger.log(Level.INFO, "Speler van website http://" + fqdn + page + " opgehaald: " + tmp.size() + " spelers in lijst" );
 				} else {
 					logger.log(Level.WARNING, "Host " + fqdn +  " not reachable or problem with parsing");

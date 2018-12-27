@@ -13,6 +13,10 @@
  */
 package nl.detoren.ijsco.data;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import nl.detoren.ijsco.ui.control.IJSCOController;
 
 public class Speler {
@@ -35,6 +39,7 @@ public class Speler {
 		this.naamKNSB = null;
 		this.naamHandmatig = null;
 		this.vereniging = null;
+		this.geboortejaar = -1;
 		this.ratingIJSCO = -1;
 		this.ratingKNSB = -1;
 		this.ratingHandmatig = -1;
@@ -48,6 +53,7 @@ public class Speler {
 		this.naamKNSB = null; 
 		this.naamHandmatig = naam;
 		this.vereniging = null;
+		this.geboortejaar = -1;
 		this.ratingIJSCO = -1;
 		this.ratingKNSB = -1;
 		this.ratingHandmatig = -1;
@@ -61,6 +67,7 @@ public class Speler {
 		this.naamKNSB = null;
 		this.naamHandmatig = null;
 		this.vereniging = null;
+		this.geboortejaar = 1;
 		this.ratingIJSCO = -1;
 		this.ratingKNSB = -1;
 		this.ratingHandmatig = -1;
@@ -74,6 +81,7 @@ public class Speler {
 		this.naamKNSB = naamKNSB;
 		this.naamHandmatig = null;
 		this.vereniging = vereniging;
+		this.geboortejaar = -1;
 		this.ratingIJSCO = ratingIJSCO;
 		this.ratingKNSB = ratingKNSB;
 		this.ratingHandmatig = -1;
@@ -302,7 +310,49 @@ public class Speler {
 		this.categorie = categorie;
 	}
 
-
-
-
+	public void bepaalCategorie() {
+		if (this.geboortejaar != -1) {
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(new Date());
+			int catnr = calendar.get(Calendar.YEAR) - this.geboortejaar; 
+			switch (catnr) {
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+				this.setCategorie("H");
+				break;
+			case 8:
+				this.setCategorie("G");
+				break;
+			case 9:
+				this.setCategorie("F");
+				break;
+			case 10:
+				this.setCategorie("E");
+				break;
+			case 11:
+			case 12:
+				this.setCategorie("D");
+				break;
+			case 13:
+			case 14:
+				this.setCategorie("C");
+				break;
+			case 15:
+			case 16:
+				this.setCategorie("B");
+				break;
+			case 17:
+			case 18:
+			case 19:
+			case 20:
+				this.setCategorie("A");	
+				break;
+			}
+		}
+	}
 }

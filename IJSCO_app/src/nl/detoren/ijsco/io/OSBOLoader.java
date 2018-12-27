@@ -13,17 +13,29 @@
  */
 package nl.detoren.ijsco.io;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.math3.util.MultidimensionalCounter.Iterator;
 import org.apache.poi.util.IOUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -59,7 +71,6 @@ public class OSBOLoader {
 		}
 		return null;
 	}
-
 	public Spelers laadWebsite(String url) {
 		try {
 			//Document doc = Jsoup.connect("http://osbo.nl/jeugd/jrating.htm").get();
@@ -80,6 +91,42 @@ public class OSBOLoader {
 		return null;
 	}
 	
+	  private static String readAll(Reader rd) throws IOException {
+		    StringBuilder sb = new StringBuilder();
+		    int cp;
+		    while ((cp = rd.read()) != -1) {
+		      sb.append((char) cp);
+		    }
+		    return sb.toString();
+		  }
+
+	  public static JSONArray readJsonFromUrl(String url) throws IOException {
+		    InputStream is = new URL(url).openStream();
+		    try {
+		      BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+		      String jsonText = readAll(rd);
+		      //JSONObject json = new JSONObject(jsonText);
+		      Object o = JSONValue.parse(jsonText);
+		      JSONArray json = (JSONArray) o; 
+		      return json;
+		    } finally {
+		      is.close();
+		    }
+	  }
+
+	public Spelers laadJSON(String url) {
+		Spelers spelers = null;
+		try {
+			JSONArray json = readJsonFromUrl(url);
+			spelers = parseJSON(json);
+			
+		} catch (Exception e) {
+			logger.log(Level.WARNING, "Error loading OSBO spelers " + e.getMessage());
+			System.out.println("Error loading OSBO spelers " + e.getMessage());
+		}
+		return spelers;
+	}
+
 	public Spelers laadCSV(String csvpath) {
 	 File csvData = new File(csvpath);
 	 CSVParser parser = null;
@@ -95,6 +142,36 @@ public class OSBOLoader {
 	return null;
 	}
 
+	private Spelers parseJSON(JSONArray json) {
+		Spelers spelers = new Spelers();
+		for (Object l : json){
+			if (l instanceof JSONObject) {
+				logger.log(Level.INFO, "JSONObject" + l.toString());
+				JSONObject jo = (JSONObject) l;
+				JSONObject s = (JSONObject) jo.get("speler");
+				Speler speler = new Speler();
+				long k = (long) s.get("knsbnummer");
+				speler.setKnsbnummer((int) k);
+				logger.log(Level.INFO, String.format("%s",speler.getKnsbnummer()));
+				String voornaam = (String) s.get("voornaam");
+				String tussenvoegsel = (String) s.get("tussenvoegsel");
+				String achternaam = (String) s.get("achternaam");
+				String samengestelde_naam = voornaam;
+				if (tussenvoegsel != null && !tussenvoegsel.trim().isEmpty()) samengestelde_naam += " " + tussenvoegsel;
+				if (achternaam != null && !achternaam.trim().isEmpty()) samengestelde_naam += " " + achternaam;
+				speler.setNaamKNSB(samengestelde_naam);
+				int g = Integer.parseInt((String) s.get("geboortejaar"));
+				speler.setGeboortejaar((int) g);
+				long r = (long) jo.get("osborating");
+				speler.setRatingIJSCO((int) r);
+				speler.bepaalCategorie();
+				logger.log(Level.INFO, "test");
+				spelers.add(speler);
+			}
+		}
+		return spelers;
+	}
+	
 	private Spelers load(Document doc) {
 		Spelers spelers = new Spelers();
 		int knsbnummer = 0;
