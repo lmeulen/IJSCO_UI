@@ -3,7 +3,7 @@ package nl.detoren.ijsco.data;
 public class UitslagSpeler implements Comparable{
 
 	private int rang;
-	private int id;
+	private int uitslagspelerid;
 	private String naam;
 	private int geboortejaar;
 	private String categorie;
@@ -41,11 +41,11 @@ public class UitslagSpeler implements Comparable{
 	}
 
 	public void setId (int id) {
-		this.id = id;
+		this.uitslagspelerid = id;
 	}
 	
 	public int getId() {
-		return id;
+		return uitslagspelerid;
 	}
 
 	public void setStartrating (int startrating) {
@@ -129,7 +129,7 @@ public class UitslagSpeler implements Comparable{
 
 	public String toFormattedString() {
 			String result = "";
-			result += String.format("%1$10d | %2$20s", knsbnummer, this.getNaam());
+			result += String.format("%1$10d | %2$-34s", knsbnummer, this.getNaam());
 //			result += String.format("%1$10d | %2$34s | %3$6d | %4$6d | %5$6d | %6$6d | %7$6d", knsbnummer, this.getNaam(), this.getVereniging(), this.getGeboortejaar(), this.getPunten()/10, this.getSB()/100, this.getStartrating());
 //			result += String.format("%1 10d | %2$20s | %3 6d", knsbnummer, this.getNaam(), this.getStartrating());
 			return result;

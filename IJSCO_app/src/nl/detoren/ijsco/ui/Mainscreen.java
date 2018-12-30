@@ -81,8 +81,10 @@ import nl.detoren.ijsco.ui.control.Suggesties;
 import nl.detoren.ijsco.ui.control.Uitslagverwerker;
 import nl.detoren.ijsco.ui.model.DeelnemersModel;
 import nl.detoren.ijsco.ui.model.SchemaModel;
+import nl.detoren.ijsco.ui.util.SendAttachmentInEmail;
 import nl.detoren.ijsco.ui.util.Utils;
 import nl.detoren.ijsco.view.ConfigurationDialog;
+import nl.detoren.ijsco.view.ToernooiDialog;
 
 @SuppressWarnings("serial")
 public class Mainscreen extends JFrame {
@@ -93,7 +95,6 @@ public class Mainscreen extends JFrame {
 	private JPanel hoofdPanel;
 	private JTextField tfAanwezig;
 	private IJSCOController controller;
-	private String appVersion = "0.2.2.0";
 
 	private JTextArea groepenText;
 
@@ -123,16 +124,20 @@ public class Mainscreen extends JFrame {
 	 */
 	public Mainscreen() {
 		initialize();
+		if (status.toernooi.getBeschrijving().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "U moet eerst toernooi gegeven invoeren!");
+			bewerkToernooi();
+		}
 	}
 
 	/**	
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-    	logger.log(Level.INFO, "IJSCO-UI version " + appVersion);
+    	logger.log(Level.INFO, "IJSCO-UI version " + IJSCOController.getAppVersion());
     	logger.log(Level.INFO, "Opstarten controller");
         IJSCOController.getInstance().start();
-		setTitle(IJSCOController.c().appTitle + " - versie " + this.appVersion);
+		setTitle(IJSCOController.c().appTitle + " - versie " + IJSCOController.getAppVersion());
 		indeler = new IJSCOIndeler();
 		status = IJSCOController.getI().getStatus();
 /*		status = new StatusIO().read("status.json");
@@ -151,7 +156,7 @@ public class Mainscreen extends JFrame {
 		// Frame
 		setBounds(25, 25, 1300, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle(IJSCOController.c().appTitle + " - versie " + this.appVersion);
+		setTitle(IJSCOController.c().appTitle + " - versie " + IJSCOController.getAppVersion());
 		getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
 
 		// Frame - Hoofdpanel
@@ -239,20 +244,30 @@ public class Mainscreen extends JFrame {
 		});
 		filemenu.add(item);
 		menubar.add(filemenu);
-		JMenu spelermenu = new JMenu("Spelersdatabase");
-
-		//item = new JMenuItem("Nieuwe speler");
-		item = new JMenuItem("OSBO htmllijst ophalen (Online)");
-		item.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		
+		/**
+		 *  Toernooi menu 
+    	 */
+		
+		JMenu toernooimenu = new JMenu("Toernooi");
+		item = new JMenuItem("Toernooiinformatie");
+		item.setAccelerator(KeyStroke.getKeyStroke('T', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//actieNieuweSpeler(null, null);
-				leeslijstOnline("www.osbo.nl", "/jeugd/jrating.htm");
+				bewerkToernooi();
 				hoofdPanel.repaint();
 			}
 		});
-		spelermenu.add(item);
+		toernooimenu.add(item);
+		menubar.add(toernooimenu);		
+		
+		/**
+		 *  Spelersdatabase menu 
+    	 */
+		
+		JMenu spelermenu = new JMenu("Spelersdatabase");
 
 		item = new JMenuItem("OSBO JSON lijst ophalen (Online)");
 		item.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
@@ -266,19 +281,18 @@ public class Mainscreen extends JFrame {
 		});
 		spelermenu.add(item);
 
-//		item = new JMenuItem("IJSCO lijst inc. PJK en JCC (Online)");
-//		item.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-//		item.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				//actieNieuweSpeler(null, null);
-//				leeslijstOnline("ijsco.schaakverenigingdetoren.nl", "/ijsco1718/IJSCOrating1718.htm");
-//				hoofdPanel.repaint();
-//			}
-//		});
-//		spelermenu.add(item);
+		item = new JMenuItem("OSBO htmllijst ophalen !verouderd! (Online)");
+		item.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieNieuweSpeler(null, null);
+				leeslijstOnline("www.osbo.nl", "/jeugd/jrating.htm");
+				hoofdPanel.repaint();
+			}
+		});
+		spelermenu.add(item);
 
-		//item = new JMenuItem("Importeer spelers");
 		item = new JMenuItem("OSBO/IJSCO compatible lijst inlezen (Bestand)");
 		item.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
@@ -394,10 +408,14 @@ deelnemersmenu.add(item);
 				File file = fc.getSelectedFile();
 				logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
 				status.groepenuitslagen = (GroepsUitslagen) new ExcelImport().importeerUitslagen(file);
-				new OutputUitslagen().exportuitslagen(status.groepenuitslagen);
+				OutputUitslagen ou = new OutputUitslagen();
+				ou.exportuitslagen(status.groepenuitslagen);
+				IJSCOController.t().wisUitslagen();
+				ou.exportJSON(status.groepenuitslagen);
 				GroepsUitslagen verwerkteUitslag = new Uitslagverwerker().verwerkUitslag(status.groepenuitslagen);
 				logger.log(Level.INFO, verwerkteUitslag.ToString());
 				new OutputUitslagen().exporteindresultaten(verwerkteUitslag);
+				JOptionPane.showMessageDialog(null, "Uitslagen geimporteerd en bestanden aangemaakt.");
 			}	
 			hoofdPanel.repaint();
 		}
@@ -407,20 +425,21 @@ deelnemersmenu.add(item);
 	menubar.add(uitslagenmenu);	
 	
 
-	JMenu ratingmenu = new JMenu("Ratingverwerking");
+	JMenu osbomenu = new JMenu("OSBO");
 
-	item = new JMenuItem("Verstuur rating");
-/*	item.addActionListener(new ActionListener() {
+	item = new JMenuItem("Verstuur uitslagen handmatig.");
+	item.addActionListener(new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Create a file chooser
-			wisDeelnemers();
+			SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
+			SAIM.sendAttachement();
 			hoofdPanel.repaint();
 		}
 	});
-*/
-	ratingmenu.add(item);
-	menubar.add(ratingmenu);	
+
+	osbomenu.add(item);
+	menubar.add(osbomenu);	
 	
 
 /*		JMenu indelingMenu = new JMenu("Indeling");
@@ -534,6 +553,25 @@ deelnemersmenu.add(item);
 
 	}
 	
+	/*
+	 * Bewerk toernooi instellingen 
+	 */
+	public void bewerkToernooi() {
+		hoofdPanel.repaint();
+		ToernooiDialog dialoog = new ToernooiDialog(new JFrame(), "Toernooiinstellingen");
+		dialoog.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				System.out.println("closing...");
+				hoofdPanel.repaint();
+			}
+
+		});
+		dialoog.setVisible(true);		
+	}
+	
+	
+	
 	public void leeslijstOnline(String fqdn, String page) {
 		Spelers tmp = null;
 			InetAddress ip = null;
@@ -559,7 +597,7 @@ deelnemersmenu.add(item);
 						tmp = (new OSBOLoader()).laadJSON("https://" + fqdn + page);
 						break;
 					}
-					logger.log(Level.INFO, "Speler van website http://" + fqdn + page + " opgehaald: " + tmp.size() + " spelers in lijst" );
+					logger.log(Level.INFO, "Spelers van website http://" + fqdn + page + " opgehaald: " + tmp.size() + " spelers in lijst" );
 				} else {
 					logger.log(Level.WARNING, "Host " + fqdn +  " not reachable or problem with parsing");
 				    ShowWarning("Host " + fqdn + "not reachable or problem with parsing");

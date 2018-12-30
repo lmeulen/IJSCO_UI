@@ -248,7 +248,7 @@ import nl.detoren.ijsco.data.WedstrijdUitslag;
 			// V> = verliezer heeft de hoogste rating
 			// V< = verliezer heeft de laagste rating
 			// R> = remise met de hoogste rating
-			// R< = remise met de laagste rating
+ 			// R< = remise met de laagste rating
 			//
 			// In de volgende tabel wordt de aanpassing van de rating weergegeven
 			// rating

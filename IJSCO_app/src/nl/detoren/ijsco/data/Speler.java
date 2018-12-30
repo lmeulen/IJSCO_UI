@@ -16,11 +16,18 @@ package nl.detoren.ijsco.data;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.detoren.ijsco.ui.control.IJSCOController;
 
 public class Speler {
 
+	//region Static
+    private final static Logger logger = Logger.getLogger(IJSCOController.class.getName());
+	//endregion 
+
+    //region Properties
 	private int knsbnummer;
 	private String naamKNSB;
 	private String naamHandmatig;
@@ -33,6 +40,7 @@ public class Speler {
 	private boolean aanwezig;
 	private boolean overruleNaam;
 	private boolean overruleRating;
+	//endregion Properties
 
 	public Speler() {
 		this.knsbnummer = 0;
@@ -265,7 +273,12 @@ public class Speler {
 
 	public String toFormattedString() {
 		String result = "";
-		result += String.format("%1$10s | %2$34s | %3$6s", knsbnummer, this.getNaam(), this.getRating());
+		try {
+			result += String.format("%1$10s | %2$34s | %3$6s", knsbnummer, this.getNaam(), this.getRating());
+		}
+		catch (Exception ex) {
+			logger.log(Level.WARNING, "Speler toFormattedString problem");
+		}
 //		result += String.format("%1 10d | %2$20s | %3 6d", knsbnummer, this.getNaam(), this.getRating());
 		return result;
 	}

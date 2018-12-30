@@ -1,158 +1,229 @@
+Toernooi : IJSCO Oosterbeek
+Datum : Fri Dec 28 12:00:00 CET 2018
+Organiserende vereniging : SV De Stelling
+Locatie : Dorenweerd College
+Plaats : Doorwerth
 
 -----------------------------
 
 Groep A : 
-   8588492 | Katja Tangarife Ramirez *   8526958 | Matthijs van Dodeweerd 0  -   1 
-   8566492 |       Joep Westerhof   8445019 |        Stein van Tol 0  -   1 
-   8589856 |       Abel Hogenhout   8566503 |     Jannes Westerhof 0  -   1 
-   8632360 |        Bram Zaalmink   8621800 |      Wouter Wieggers 0  -   1 
-   8588492 | Katja Tangarife Ramirez *   8621800 |      Wouter Wieggers 0  -   1 
-   8566503 |     Jannes Westerhof   8632360 |        Bram Zaalmink 0  -   1 
-   8445019 |        Stein van Tol   8589856 |       Abel Hogenhout 1  -   0 
-   8526958 | Matthijs van Dodeweerd   8566492 |       Joep Westerhof 1  -   0 
-   8566492 |       Joep Westerhof   8588492 | Katja Tangarife Ramirez *1/2 - 1/2 
-   8589856 |       Abel Hogenhout   8526958 | Matthijs van Dodeweerd 0  -   1 
-   8632360 |        Bram Zaalmink   8445019 |        Stein van Tol 0  -   1 
-   8621800 |      Wouter Wieggers   8566503 |     Jannes Westerhof 1  -   0 
-   8588492 | Katja Tangarife Ramirez *   8566503 |     Jannes Westerhof1/2 - 1/2 
-   8445019 |        Stein van Tol   8621800 |      Wouter Wieggers 1  -   0 
-   8526958 | Matthijs van Dodeweerd   8632360 |        Bram Zaalmink 1  -   0 
-   8566492 |       Joep Westerhof   8589856 |       Abel Hogenhout 1  -   0 
-   8589856 |       Abel Hogenhout   8588492 | Katja Tangarife Ramirez * 0  -   1 
-   8632360 |        Bram Zaalmink   8566492 |       Joep Westerhof 1  -   0 
-   8621800 |      Wouter Wieggers   8526958 | Matthijs van Dodeweerd 0  -   1 
-   8566503 |     Jannes Westerhof   8445019 |        Stein van Tol 0  -   1 
-   8588492 | Katja Tangarife Ramirez *   8445019 |        Stein van Tol 0  -   1 
-   8526958 | Matthijs van Dodeweerd   8566503 |     Jannes Westerhof 0  -   1 
-   8566492 |       Joep Westerhof   8621800 |      Wouter Wieggers1/2 - 1/2 
-   8589856 |       Abel Hogenhout   8632360 |        Bram Zaalmink 0  -   1 
-   8632360 |        Bram Zaalmink   8588492 | Katja Tangarife Ramirez * 0  -   1 
-   8621800 |      Wouter Wieggers   8589856 |       Abel Hogenhout 1  -   0 
-   8566503 |     Jannes Westerhof   8566492 |       Joep Westerhof 1  -   0 
-   8445019 |        Stein van Tol   8526958 | Matthijs van Dodeweerd1/2 - 1/2 
+   8295309 | Willeke Knottnerus *                 8274266 | Thomas Beerdsen                      1  -   0 
+   8524736 | Tobias de Vries                      8413383 | Max Warmerdam                        1  -   0 
+   8560255 | William Shakhverdian                 8511250 | Anna Martinez *                     1/2 - 1/2 
+   8295309 | Willeke Knottnerus *                 8511250 | Anna Martinez *                      1  -   0 
+   8413383 | Max Warmerdam                        8560255 | William Shakhverdian                 0  -   1 
+   8274266 | Thomas Beerdsen                      8524736 | Tobias de Vries                     1/2 - 1/2 
+   8524736 | Tobias de Vries                      8295309 | Willeke Knottnerus *                 1  -   0 
+   8560255 | William Shakhverdian                 8274266 | Thomas Beerdsen                     1/2 - 1/2 
+   8511250 | Anna Martinez *                      8413383 | Max Warmerdam                        0  -   1 
+   8295309 | Willeke Knottnerus *                 8413383 | Max Warmerdam                        1  -   0 
+   8274266 | Thomas Beerdsen                      8511250 | Anna Martinez *                     1/2 - 1/2 
+   8524736 | Tobias de Vries                      8560255 | William Shakhverdian                 1  -   0 
+   8560255 | William Shakhverdian                 8295309 | Willeke Knottnerus *                 1  -   0 
+   8511250 | Anna Martinez *                      8524736 | Tobias de Vries                      1  -   0 
+   8413383 | Max Warmerdam                        8274266 | Thomas Beerdsen                      0  -   1 
 Groep B : 
-   8647474 |          Karsten Dam   8697359 |    Wilfried Snijders 1  -   0 
-   8659233 |  Tobias van Lieshout   8593464 |      Nestor Shirokov 1  -   0 
-   8749455 | Cecilia Pereira Garza *   8669210 |         Floran Ahoud1/2 - 1/2 
-   8729754 |         Bram Wierbos   8750687 |         Faya Damen * 1  -   0 
-   8647474 |          Karsten Dam   8750687 |         Faya Damen * 0  -   1 
-   8669210 |         Floran Ahoud   8729754 |         Bram Wierbos 0  -   1 
-   8593464 |      Nestor Shirokov   8749455 | Cecilia Pereira Garza * 1  -   0 
-   8697359 |    Wilfried Snijders   8659233 |  Tobias van Lieshout 0  -   1 
-   8659233 |  Tobias van Lieshout   8647474 |          Karsten Dam1/2 - 1/2 
-   8749455 | Cecilia Pereira Garza *   8697359 |    Wilfried Snijders 1  -   0 
-   8729754 |         Bram Wierbos   8593464 |      Nestor Shirokov 0  -   1 
-   8750687 |         Faya Damen *   8669210 |         Floran Ahoud 0  -   1 
-   8647474 |          Karsten Dam   8669210 |         Floran Ahoud 0  -   1 
-   8593464 |      Nestor Shirokov   8750687 |         Faya Damen * 0  -   1 
-   8697359 |    Wilfried Snijders   8729754 |         Bram Wierbos 0  -   1 
-   8659233 |  Tobias van Lieshout   8749455 | Cecilia Pereira Garza * 0  -   1 
-   8749455 | Cecilia Pereira Garza *   8647474 |          Karsten Dam 0  -   1 
-   8729754 |         Bram Wierbos   8659233 |  Tobias van Lieshout 0  -   1 
-   8750687 |         Faya Damen *   8697359 |    Wilfried Snijders 0  -   1 
-   8669210 |         Floran Ahoud   8593464 |      Nestor Shirokov1/2 - 1/2 
-   8647474 |          Karsten Dam   8593464 |      Nestor Shirokov 0  -   1 
-   8697359 |    Wilfried Snijders   8669210 |         Floran Ahoud 1  -   0 
-   8659233 |  Tobias van Lieshout   8750687 |         Faya Damen * 0  -   1 
-   8749455 | Cecilia Pereira Garza *   8729754 |         Bram Wierbos 1  -   0 
-   8729754 |         Bram Wierbos   8647474 |          Karsten Dam 0  -   1 
-   8750687 |         Faya Damen *   8749455 | Cecilia Pereira Garza * 0  -   1 
-   8669210 |         Floran Ahoud   8659233 |  Tobias van Lieshout 1  -   0 
-   8593464 |      Nestor Shirokov   8697359 |    Wilfried Snijders 0  -   1 
+   8320279 | Tim Evendijk                         8560915 | Imre Woest *                         1  -   0 
+   8426165 | Floris van Capelleveen               8649487 | Sa�a Albers                         1/2 - 1/2 
+   8320444 | Jim Pronk                            8360121 | Ruben de Vries                       1  -   0 
+   8419587 | Jeffrey van Eek                      8572927 | Lennart Molanus                     1/2 - 1/2 
+   8320279 | Tim Evendijk                         8572927 | Lennart Molanus                      1  -   0 
+   8360121 | Ruben de Vries                       8419587 | Jeffrey van Eek                     1/2 - 1/2 
+   8649487 | Sa�a Albers                          8320444 | Jim Pronk                            1  -   0 
+   8560915 | Imre Woest *                         8426165 | Floris van Capelleveen               1  -   0 
+   8426165 | Floris van Capelleveen               8320279 | Tim Evendijk                         1  -   0 
+   8320444 | Jim Pronk                            8560915 | Imre Woest *                        1/2 - 1/2 
+   8419587 | Jeffrey van Eek                      8649487 | Sa�a Albers                          0  -   1 
+   8572927 | Lennart Molanus                      8360121 | Ruben de Vries                       0  -   1 
+   8320279 | Tim Evendijk                         8360121 | Ruben de Vries                       0  -   1 
+   8649487 | Sa�a Albers                          8572927 | Lennart Molanus                      0  -   1 
+   8560915 | Imre Woest *                         8419587 | Jeffrey van Eek                      0  -   1 
+   8426165 | Floris van Capelleveen               8320444 | Jim Pronk                            0  -   1 
+   8320444 | Jim Pronk                            8320279 | Tim Evendijk                         1  -   0 
+   8419587 | Jeffrey van Eek                      8426165 | Floris van Capelleveen               1  -   0 
+   8572927 | Lennart Molanus                      8560915 | Imre Woest *                         1  -   0 
+   8360121 | Ruben de Vries                       8649487 | Sa�a Albers                          1  -   0 
+   8320279 | Tim Evendijk                         8649487 | Sa�a Albers                         1/2 - 1/2 
+   8560915 | Imre Woest *                         8360121 | Ruben de Vries                       1  -   0 
+   8426165 | Floris van Capelleveen               8572927 | Lennart Molanus                     1/2 - 1/2 
+   8320444 | Jim Pronk                            8419587 | Jeffrey van Eek                      1  -   0 
+   8419587 | Jeffrey van Eek                      8320279 | Tim Evendijk                         0  -   1 
+   8572927 | Lennart Molanus                      8320444 | Jim Pronk                            0  -   1 
+   8360121 | Ruben de Vries                       8426165 | Floris van Capelleveen               0  -   1 
+   8649487 | Sa�a Albers                          8560915 | Imre Woest *                         0  -   1 
 Groep C : 
-   8796139 |           Ziad Dodik   8704828 |      Maarten van Eck 0  -   1 
-   8557670 |     Iva Binnendijk *   8631359 |   Jelle van Mullekom 1  -   0 
-   8532414 |       Philip Gabbert   8705015 |      Julian Frankema 0  -   1 
-   8631359 |   Jelle van Mullekom   8532414 |       Philip Gabbert 0  -   1 
-   8704828 |      Maarten van Eck   8557670 |     Iva Binnendijk * 0  -   1 
-   8794742 |          Oscar Zecha   8796139 |           Ziad Dodik 1  -   0 
-   8557670 |     Iva Binnendijk *   8794742 |          Oscar Zecha 0  -   1 
-   8532414 |       Philip Gabbert   8704828 |      Maarten van Eck 0  -   1 
-   8705015 |      Julian Frankema   8631359 |   Jelle van Mullekom 0  -   1 
-   8704828 |      Maarten van Eck   8705015 |      Julian Frankema 1  -   0 
-   8794742 |          Oscar Zecha   8532414 |       Philip Gabbert 1  -   0 
-   8796139 |           Ziad Dodik   8557670 |     Iva Binnendijk * 1  -   0 
-   8532414 |       Philip Gabbert   8796139 |           Ziad Dodik 0  -   1 
-   8705015 |      Julian Frankema   8794742 |          Oscar Zecha 0  -   1 
-   8631359 |   Jelle van Mullekom   8704828 |      Maarten van Eck 0  -   1 
-   8794742 |          Oscar Zecha   8631359 |   Jelle van Mullekom 1  -   0 
-   8796139 |           Ziad Dodik   8705015 |      Julian Frankema 0  -   1 
-   8557670 |     Iva Binnendijk *   8532414 |       Philip Gabbert 0  -   1 
-   8705015 |      Julian Frankema   8557670 |     Iva Binnendijk *1/2 - 1/2 
-   8631359 |   Jelle van Mullekom   8796139 |           Ziad Dodik 0  -   1 
-   8704828 |      Maarten van Eck   8794742 |          Oscar Zecha 0  -   1 
+   8605718 | Hilbert Buijs                        8588184 | Pieter Damaschek                     1  -   0 
+   8418256 | Marjon Landsbergen *                 8557714 | Lars Boere                          1/2 - 1/2 
+   8528443 | Tu-San Nguyen                        8461915 | Joab Weseman                         1  -   0 
+   8593552 | Julian van Meegen                    8553358 | Florian Molanus                      1  -   0 
+   8605718 | Hilbert Buijs                        8553358 | Florian Molanus                      0  -   1 
+   8461915 | Joab Weseman                         8593552 | Julian van Meegen                    0  -   1 
+   8557714 | Lars Boere                           8528443 | Tu-San Nguyen                        0  -   1 
+   8588184 | Pieter Damaschek                     8418256 | Marjon Landsbergen *                 0  -   1 
+   8418256 | Marjon Landsbergen *                 8605718 | Hilbert Buijs                        1  -   0 
+   8528443 | Tu-San Nguyen                        8588184 | Pieter Damaschek                     1  -   0 
+   8593552 | Julian van Meegen                    8557714 | Lars Boere                           1  -   0 
+   8553358 | Florian Molanus                      8461915 | Joab Weseman                         1  -   0 
+   8605718 | Hilbert Buijs                        8461915 | Joab Weseman                         1  -   0 
+   8557714 | Lars Boere                           8553358 | Florian Molanus                     1/2 - 1/2 
+   8588184 | Pieter Damaschek                     8593552 | Julian van Meegen                    1  -   0 
+   8418256 | Marjon Landsbergen *                 8528443 | Tu-San Nguyen                       1/2 - 1/2 
+   8528443 | Tu-San Nguyen                        8605718 | Hilbert Buijs                        1  -   0 
+   8593552 | Julian van Meegen                    8418256 | Marjon Landsbergen *                1/2 - 1/2 
+   8553358 | Florian Molanus                      8588184 | Pieter Damaschek                     1  -   0 
+   8461915 | Joab Weseman                         8557714 | Lars Boere                           1  -   0 
+   8605718 | Hilbert Buijs                        8557714 | Lars Boere                          1/2 - 1/2 
+   8588184 | Pieter Damaschek                     8461915 | Joab Weseman                        1/2 - 1/2 
+   8418256 | Marjon Landsbergen *                 8553358 | Florian Molanus                     1/2 - 1/2 
+   8528443 | Tu-San Nguyen                        8593552 | Julian van Meegen                    1  -   0 
+   8593552 | Julian van Meegen                    8605718 | Hilbert Buijs                        1  -   0 
+   8553358 | Florian Molanus                      8528443 | Tu-San Nguyen                       1/2 - 1/2 
+   8461915 | Joab Weseman                         8418256 | Marjon Landsbergen *                 1  -   0 
+   8557714 | Lars Boere                           8588184 | Pieter Damaschek                    1/2 - 1/2 
 Groep D : 
-   8632261 |          Robert Nica   8731239 |    Fleur Westerhof * 0  -   1 
-   8783709 |     Teun Cloosterman   8626068 | Magdalena Shirokov * 1  -   0 
-   8768298 |          Koen Wattel   8669353 |        Maurijn Ahoud 0  -   1 
-   8626068 | Magdalena Shirokov *   8768298 |          Koen Wattel 0  -   1 
-   8731239 |    Fleur Westerhof *   8783709 |     Teun Cloosterman 1  -   0 
-   8704872 |        Reiko Dirksen   8632261 |          Robert Nica 1  -   0 
-   8783709 |     Teun Cloosterman   8704872 |        Reiko Dirksen 0  -   1 
-   8768298 |          Koen Wattel   8731239 |    Fleur Westerhof * 0  -   1 
-   8669353 |        Maurijn Ahoud   8626068 | Magdalena Shirokov * 1  -   0 
-   8731239 |    Fleur Westerhof *   8669353 |        Maurijn Ahoud 1  -   0 
-   8704872 |        Reiko Dirksen   8768298 |          Koen Wattel 1  -   0 
-   8632261 |          Robert Nica   8783709 |     Teun Cloosterman 0  -   1 
-   8768298 |          Koen Wattel   8632261 |          Robert Nica 1  -   0 
-   8669353 |        Maurijn Ahoud   8704872 |        Reiko Dirksen 0  -   1 
-   8626068 | Magdalena Shirokov *   8731239 |    Fleur Westerhof * 0  -   1 
-   8704872 |        Reiko Dirksen   8626068 | Magdalena Shirokov * 1  -   0 
-   8632261 |          Robert Nica   8669353 |        Maurijn Ahoud 0  -   1 
-   8783709 |     Teun Cloosterman   8768298 |          Koen Wattel 0  -   1 
-   8669353 |        Maurijn Ahoud   8783709 |     Teun Cloosterman 0  -   1 
-   8626068 | Magdalena Shirokov *   8632261 |          Robert Nica 0  -   1 
-   8731239 |    Fleur Westerhof *   8704872 |        Reiko Dirksen 0  -   1 
+   8526507 | Rutger van den Berg                  8496565 | Marnix van Tol                       1  -   0 
+   8605938 | Bart van Enckevort                   8621800 | Wouter Wieggers                     1/2 - 1/2 
+   8522019 | Ivan Engelen                         8559870 | Jian van de Pol                      1  -   0 
+   8613572 | Nijs Ogink                           8433117 | Jonas van der Weijden               1/2 - 1/2 
+   8526507 | Rutger van den Berg                  8433117 | Jonas van der Weijden                1  -   0 
+   8559870 | Jian van de Pol                      8613572 | Nijs Ogink                           0  -   1 
+   8621800 | Wouter Wieggers                      8522019 | Ivan Engelen                         1  -   0 
+   8496565 | Marnix van Tol                       8605938 | Bart van Enckevort                   1  -   0 
+   8605938 | Bart van Enckevort                   8526507 | Rutger van den Berg                 1/2 - 1/2 
+   8522019 | Ivan Engelen                         8496565 | Marnix van Tol                       1  -   0 
+   8613572 | Nijs Ogink                           8621800 | Wouter Wieggers                      0  -   1 
+   8433117 | Jonas van der Weijden                8559870 | Jian van de Pol                      0  -   1 
+   8526507 | Rutger van den Berg                  8559870 | Jian van de Pol                      1  -   0 
+   8621800 | Wouter Wieggers                      8433117 | Jonas van der Weijden                0  -   1 
+   8496565 | Marnix van Tol                       8613572 | Nijs Ogink                          1/2 - 1/2 
+   8605938 | Bart van Enckevort                   8522019 | Ivan Engelen                         1  -   0 
+   8522019 | Ivan Engelen                         8526507 | Rutger van den Berg                 1/2 - 1/2 
+   8613572 | Nijs Ogink                           8605938 | Bart van Enckevort                   1  -   0 
+   8433117 | Jonas van der Weijden                8496565 | Marnix van Tol                       1  -   0 
+   8559870 | Jian van de Pol                      8621800 | Wouter Wieggers                     1/2 - 1/2 
+   8526507 | Rutger van den Berg                  8621800 | Wouter Wieggers                      0  -   1 
+   8496565 | Marnix van Tol                       8559870 | Jian van de Pol                      0  -   1 
+   8605938 | Bart van Enckevort                   8433117 | Jonas van der Weijden                1  -   0 
+   8522019 | Ivan Engelen                         8613572 | Nijs Ogink                          1/2 - 1/2 
+   8613572 | Nijs Ogink                           8526507 | Rutger van den Berg                  1  -   0 
+   8433117 | Jonas van der Weijden                8522019 | Ivan Engelen                         0  -   1 
+   8559870 | Jian van de Pol                      8605938 | Bart van Enckevort                  1/2 - 1/2 
+   8621800 | Wouter Wieggers                      8496565 | Marnix van Tol                       1  -   0 
 Groep E : 
-   8761390 |   Elianne Snijders *   8800671 |      Eelco Drijfhout 1  -   0 
-   8795831 |     David Militonian   8803520 |     Tigran Grigorjan 1  -   0 
-   8662632 |      Oscar Hengeveld   8724661 |    Yaroslav Shirokov 0  -   1 
-   8704993 |       Joris Frankema   8762424 |       David Formanoy 0  -   1 
-   8761390 |   Elianne Snijders *   8762424 |       David Formanoy 1  -   0 
-   8724661 |    Yaroslav Shirokov   8704993 |       Joris Frankema 0  -   1 
-   8803520 |     Tigran Grigorjan   8662632 |      Oscar Hengeveld 1  -   0 
-   8800671 |      Eelco Drijfhout   8795831 |     David Militonian 1  -   0 
-   8795831 |     David Militonian   8761390 |   Elianne Snijders * 1  -   0 
-   8662632 |      Oscar Hengeveld   8800671 |      Eelco Drijfhout 0  -   1 
-   8704993 |       Joris Frankema   8803520 |     Tigran Grigorjan 0  -   1 
-   8762424 |       David Formanoy   8724661 |    Yaroslav Shirokov 0  -   1 
-   8761390 |   Elianne Snijders *   8724661 |    Yaroslav Shirokov 0  -   1 
-   8803520 |     Tigran Grigorjan   8762424 |       David Formanoy 1  -   0 
-   8800671 |      Eelco Drijfhout   8704993 |       Joris Frankema 1  -   0 
-   8795831 |     David Militonian   8662632 |      Oscar Hengeveld 0  -   1 
-   8662632 |      Oscar Hengeveld   8761390 |   Elianne Snijders * 1  -   0 
-   8704993 |       Joris Frankema   8795831 |     David Militonian 0  -   1 
-   8762424 |       David Formanoy   8800671 |      Eelco Drijfhout1/2 - 1/2 
-   8724661 |    Yaroslav Shirokov   8803520 |     Tigran Grigorjan 1  -   0 
-   8761390 |   Elianne Snijders *   8803520 |     Tigran Grigorjan 1  -   0 
-   8800671 |      Eelco Drijfhout   8724661 |    Yaroslav Shirokov1/2 - 1/2 
-   8795831 |     David Militonian   8762424 |       David Formanoy 1  -   0 
-   8662632 |      Oscar Hengeveld   8704993 |       Joris Frankema 0  -   1 
-   8704993 |       Joris Frankema   8761390 |   Elianne Snijders * 0  -   1 
-   8762424 |       David Formanoy   8662632 |      Oscar Hengeveld 0  -   1 
-   8724661 |    Yaroslav Shirokov   8795831 |     David Militonian 1  -   0 
-   8803520 |     Tigran Grigorjan   8800671 |      Eelco Drijfhout 0  -   1 
+   8618676 | Xander Klaassen                      8705785 | Aristides Buntara                    1  -   0 
+   8543194 | Onno Koreneef                        8574324 | Fadi el Kasah                       1/2 - 1/2 
+   8669551 | Reijn Aarts                          8670772 | Vigo Stam                           1/2 - 1/2 
+   8634010 | Sjoerd Loonen                        8490306 | Fin Delfgaauw                        1  -   0 
+   8618676 | Xander Klaassen                      8490306 | Fin Delfgaauw                       1/2 - 1/2 
+   8670772 | Vigo Stam                            8634010 | Sjoerd Loonen                        1  -   0 
+   8574324 | Fadi el Kasah                        8669551 | Reijn Aarts                         1/2 - 1/2 
+   8705785 | Aristides Buntara                    8543194 | Onno Koreneef                        1  -   0 
+   8543194 | Onno Koreneef                        8618676 | Xander Klaassen                     1/2 - 1/2 
+   8669551 | Reijn Aarts                          8705785 | Aristides Buntara                    1  -   0 
+   8634010 | Sjoerd Loonen                        8574324 | Fadi el Kasah                       1/2 - 1/2 
+   8490306 | Fin Delfgaauw                        8670772 | Vigo Stam                            0  -   1 
+   8618676 | Xander Klaassen                      8670772 | Vigo Stam                            0  -   1 
+   8574324 | Fadi el Kasah                        8490306 | Fin Delfgaauw                        0  -   1 
+   8705785 | Aristides Buntara                    8634010 | Sjoerd Loonen                        0  -   1 
+   8543194 | Onno Koreneef                        8669551 | Reijn Aarts                          0  -   1 
+   8669551 | Reijn Aarts                          8618676 | Xander Klaassen                      1  -   0 
+   8634010 | Sjoerd Loonen                        8543194 | Onno Koreneef                        1  -   0 
+   8490306 | Fin Delfgaauw                        8705785 | Aristides Buntara                   1/2 - 1/2 
+   8670772 | Vigo Stam                            8574324 | Fadi el Kasah                        1  -   0 
+   8618676 | Xander Klaassen                      8574324 | Fadi el Kasah                       1/2 - 1/2 
+   8705785 | Aristides Buntara                    8670772 | Vigo Stam                            1  -   0 
+   8543194 | Onno Koreneef                        8490306 | Fin Delfgaauw                       1/2 - 1/2 
+   8669551 | Reijn Aarts                          8634010 | Sjoerd Loonen                        1  -   0 
+   8634010 | Sjoerd Loonen                        8618676 | Xander Klaassen                      0  -   1 
+   8490306 | Fin Delfgaauw                        8669551 | Reijn Aarts                          0  -   1 
+   8670772 | Vigo Stam                            8543194 | Onno Koreneef                        0  -   1 
+   8574324 | Fadi el Kasah                        8705785 | Aristides Buntara                    0  -   1 
 Groep F : 
-   8809735 |     David de Koeijer   8650444 |        Teun Zaalmink 0  -   1 
-   8809757 |         Kailas Bense   8787449 |         Quintus Keij 0  -   1 
-   8783280 |         Einar Fokers   8809768 |            Max Zheng 0  -   1 
-   8787449 |         Quintus Keij   8783280 |         Einar Fokers 1  -   0 
-   8650444 |        Teun Zaalmink   8809757 |         Kailas Bense 1  -   0 
-   8697348 |       Istar Snijders   8809735 |     David de Koeijer 1  -   0 
-   8809757 |         Kailas Bense   8697348 |       Istar Snijders 0  -   1 
-   8783280 |         Einar Fokers   8650444 |        Teun Zaalmink 0  -   1 
-   8809768 |            Max Zheng   8787449 |         Quintus Keij 0  -   1 
-   8650444 |        Teun Zaalmink   8809768 |            Max Zheng 1  -   0 
-   8697348 |       Istar Snijders   8783280 |         Einar Fokers 0  -   1 
-   8809735 |     David de Koeijer   8809757 |         Kailas Bense 0  -   1 
-   8783280 |         Einar Fokers   8809735 |     David de Koeijer 1  -   0 
-   8809768 |            Max Zheng   8697348 |       Istar Snijders 0  -   1 
-   8787449 |         Quintus Keij   8650444 |        Teun Zaalmink 1  -   0 
-   8697348 |       Istar Snijders   8787449 |         Quintus Keij 1  -   0 
-   8809735 |     David de Koeijer   8809768 |            Max Zheng 1  -   0 
-   8809757 |         Kailas Bense   8783280 |         Einar Fokers1/2 - 1/2 
-   8809768 |            Max Zheng   8809757 |         Kailas Bense 0  -   1 
-   8787449 |         Quintus Keij   8809735 |     David de Koeijer 1  -   0 
-   8650444 |        Teun Zaalmink   8697348 |       Istar Snijders 1  -   0 
+   8695038 | Tonja Yastrebov *                    8524087 | Maikel Simon                         1  -   0 
+   8631359 | Jelle van Mullekom                   8663182 | Erik Smouter                        1/2 - 1/2 
+   8686447 | Raphael van Meegen                   8615860 | Fidel Issa                          1/2 - 1/2 
+   8664777 | Boaz Wierper                         8531149 | Chao Daniels                        1/2 - 1/2 
+   8695038 | Tonja Yastrebov *                    8531149 | Chao Daniels                        1/2 - 1/2 
+   8615860 | Fidel Issa                           8664777 | Boaz Wierper                        1/2 - 1/2 
+   8663182 | Erik Smouter                         8686447 | Raphael van Meegen                   1  -   0 
+   8524087 | Maikel Simon                         8631359 | Jelle van Mullekom                  1/2 - 1/2 
+   8631359 | Jelle van Mullekom                   8695038 | Tonja Yastrebov *                    1  -   0 
+   8686447 | Raphael van Meegen                   8524087 | Maikel Simon                         0  -   1 
+   8664777 | Boaz Wierper                         8663182 | Erik Smouter                         0  -   1 
+   8531149 | Chao Daniels                         8615860 | Fidel Issa                           1  -   0 
+   8695038 | Tonja Yastrebov *                    8615860 | Fidel Issa                           0  -   1 
+   8663182 | Erik Smouter                         8531149 | Chao Daniels                         0  -   1 
+   8524087 | Maikel Simon                         8664777 | Boaz Wierper                        1/2 - 1/2 
+   8631359 | Jelle van Mullekom                   8686447 | Raphael van Meegen                   1  -   0 
+   8686447 | Raphael van Meegen                   8695038 | Tonja Yastrebov *                    0  -   1 
+   8664777 | Boaz Wierper                         8631359 | Jelle van Mullekom                   0  -   1 
+   8531149 | Chao Daniels                         8524087 | Maikel Simon                         0  -   1 
+   8615860 | Fidel Issa                           8663182 | Erik Smouter                        1/2 - 1/2 
+   8695038 | Tonja Yastrebov *                    8663182 | Erik Smouter                         1  -   0 
+   8524087 | Maikel Simon                         8615860 | Fidel Issa                           1  -   0 
+   8631359 | Jelle van Mullekom                   8531149 | Chao Daniels                         1  -   0 
+   8686447 | Raphael van Meegen                   8664777 | Boaz Wierper                         0  -   1 
+   8664777 | Boaz Wierper                         8695038 | Tonja Yastrebov *                   1/2 - 1/2 
+   8531149 | Chao Daniels                         8686447 | Raphael van Meegen                   1  -   0 
+   8615860 | Fidel Issa                           8631359 | Jelle van Mullekom                  1/2 - 1/2 
+   8663182 | Erik Smouter                         8524087 | Maikel Simon                         0  -   1 
+Groep G : 
+   8589823 | Chris Kamperman                      8659651 | Tom Wegbrands                        1  -   0 
+   8515881 | Ilias Drysdale                       8492803 | Floris Ros                           0  -   1 
+   8705301 | Can Sleay                            8535329 | Yasin Gokoglan                       0  -   1 
+   8659178 | Niels van Wolfswinkel                8657242 | Aaron Lamers                         1  -   0 
+   8589823 | Chris Kamperman                      8657242 | Aaron Lamers                        1/2 - 1/2 
+   8535329 | Yasin Gokoglan                       8659178 | Niels van Wolfswinkel                1  -   0 
+   8492803 | Floris Ros                           8705301 | Can Sleay                           1/2 - 1/2 
+   8659651 | Tom Wegbrands                        8515881 | Ilias Drysdale                       0  -   1 
+   8515881 | Ilias Drysdale                       8589823 | Chris Kamperman                      1  -   0 
+   8705301 | Can Sleay                            8659651 | Tom Wegbrands                       1/2 - 1/2 
+   8659178 | Niels van Wolfswinkel                8492803 | Floris Ros                           0  -   1 
+   8657242 | Aaron Lamers                         8535329 | Yasin Gokoglan                       0  -   1 
+   8589823 | Chris Kamperman                      8535329 | Yasin Gokoglan                       1  -   0 
+   8492803 | Floris Ros                           8657242 | Aaron Lamers                        1/2 - 1/2 
+   8659651 | Tom Wegbrands                        8659178 | Niels van Wolfswinkel                1  -   0 
+   8515881 | Ilias Drysdale                       8705301 | Can Sleay                            0  -   1 
+   8705301 | Can Sleay                            8589823 | Chris Kamperman                      0  -   1 
+   8659178 | Niels van Wolfswinkel                8515881 | Ilias Drysdale                      1/2 - 1/2 
+   8657242 | Aaron Lamers                         8659651 | Tom Wegbrands                       1/2 - 1/2 
+   8535329 | Yasin Gokoglan                       8492803 | Floris Ros                           1  -   0 
+   8589823 | Chris Kamperman                      8492803 | Floris Ros                           0  -   1 
+   8659651 | Tom Wegbrands                        8535329 | Yasin Gokoglan                       0  -   1 
+   8515881 | Ilias Drysdale                       8657242 | Aaron Lamers                        1/2 - 1/2 
+   8705301 | Can Sleay                            8659178 | Niels van Wolfswinkel                1  -   0 
+   8659178 | Niels van Wolfswinkel                8589823 | Chris Kamperman                     1/2 - 1/2 
+   8657242 | Aaron Lamers                         8705301 | Can Sleay                            0  -   1 
+   8535329 | Yasin Gokoglan                       8515881 | Ilias Drysdale                       0  -   1 
+   8492803 | Floris Ros                           8659651 | Tom Wegbrands                        1  -   0 
+Groep H : 
+   8550234 | Roj van de Ruitenbeek                8631898 | Danh Nguyen                          1  -   0 
+   8560299 | Martin Smouter                       8647463 | �mit �zyilmaz                       1/2 - 1/2 
+   8690781 | Kamil Reinds                         8486654 | Noraly Luitjes *                     1  -   0 
+   8624880 | H�seyin Ersoy                        8579021 | Morris Doorn                        1/2 - 1/2 
+   8550234 | Roj van de Ruitenbeek                8579021 | Morris Doorn                         1  -   0 
+   8486654 | Noraly Luitjes *                     8624880 | H�seyin Ersoy                       1/2 - 1/2 
+   8647463 | �mit �zyilmaz                        8690781 | Kamil Reinds                         0  -   1 
+   8631898 | Danh Nguyen                          8560299 | Martin Smouter                       0  -   1 
+   8560299 | Martin Smouter                       8550234 | Roj van de Ruitenbeek                0  -   1 
+   8690781 | Kamil Reinds                         8631898 | Danh Nguyen                          1  -   0 
+   8624880 | H�seyin Ersoy                        8647463 | �mit �zyilmaz                       1/2 - 1/2 
+   8579021 | Morris Doorn                         8486654 | Noraly Luitjes *                     1  -   0 
+   8550234 | Roj van de Ruitenbeek                8486654 | Noraly Luitjes *                    1/2 - 1/2 
+   8647463 | �mit �zyilmaz                        8579021 | Morris Doorn                         1  -   0 
+   8631898 | Danh Nguyen                          8624880 | H�seyin Ersoy                       1/2 - 1/2 
+   8560299 | Martin Smouter                       8690781 | Kamil Reinds                         1  -   0 
+   8690781 | Kamil Reinds                         8550234 | Roj van de Ruitenbeek               1/2 - 1/2 
+   8624880 | H�seyin Ersoy                        8560299 | Martin Smouter                       1  -   0 
+   8579021 | Morris Doorn                         8631898 | Danh Nguyen                          0  -   1 
+   8486654 | Noraly Luitjes *                     8647463 | �mit �zyilmaz                        0  -   1 
+   8550234 | Roj van de Ruitenbeek                8647463 | �mit �zyilmaz                        0  -   1 
+   8631898 | Danh Nguyen                          8486654 | Noraly Luitjes *                     1  -   0 
+   8560299 | Martin Smouter                       8579021 | Morris Doorn                        1/2 - 1/2 
+   8690781 | Kamil Reinds                         8624880 | H�seyin Ersoy                        1  -   0 
+   8624880 | H�seyin Ersoy                        8550234 | Roj van de Ruitenbeek                0  -   1 
+   8579021 | Morris Doorn                         8690781 | Kamil Reinds                         0  -   1 
+   8486654 | Noraly Luitjes *                     8560299 | Martin Smouter                      1/2 - 1/2 
+   8647463 | �mit �zyilmaz                        8631898 | Danh Nguyen                          1  -   0 
 
-Aangemaakt met Indeling Interregionale Jeugd Schaak COmpetitie (IJSCO)
+Aangemaakt met Indeling Interregionale Jeugd Schaak COmpetitie (IJSCO) 0.3.0.0

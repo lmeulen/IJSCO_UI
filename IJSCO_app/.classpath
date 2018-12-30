@@ -14,5 +14,7 @@
 	<classpathentry kind="lib" path="C:/Users/Lars Dam/Documents/Repos/IJSCO_UI/IJSCO_app/lib/commons-csv-1.5.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Lars Dam/Downloads/commons-io-2.6-bin/commons-io-2.6/commons-io-2.6.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Lars Dam/Downloads/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lars Dam/Downloads/jdatepicker-1.3.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lars Dam/Downloads/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

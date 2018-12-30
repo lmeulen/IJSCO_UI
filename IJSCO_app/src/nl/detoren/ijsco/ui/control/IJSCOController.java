@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 
 import nl.detoren.ijsco.Configuratie;
 import nl.detoren.ijsco.data.Status;
+import nl.detoren.ijsco.data.Toernooi;
 
 public class IJSCOController {
 
@@ -33,6 +34,8 @@ public class IJSCOController {
 
     private static final String defaultInputfile = "uitslag.txt";
 
+	private static String appVersion = "0.3.0.0";
+	
     private Status status;
 
     protected IJSCOController() {
@@ -45,13 +48,21 @@ public class IJSCOController {
         }
         return instance;
     }
-    
+
+    public static String getAppVersion() {
+    	return appVersion;
+    }
+
     public static IJSCOController getI() {
     	return getInstance();
     }
 
     public static Configuratie c() {
     	return getInstance().status.config;
+    }
+
+    public static Toernooi t() {
+    	return getInstance().status.toernooi;
     }
 
     public Status getStatus() {
@@ -64,6 +75,10 @@ public class IJSCOController {
 
     public void setConfig(Configuratie _config) {
     	status.config = _config;
+    }
+
+    public void setToernooi(Toernooi _toernooi) {
+    	status.toernooi = _toernooi;
     }
 
 	/**
@@ -146,6 +161,9 @@ public class IJSCOController {
 			}
 			if ((status.config == null)) {
 				status.config = new Configuratie();
+			}
+			if ((status.toernooi == null)) {
+				status.toernooi = new Toernooi();
 			}
 		}
     	logger.log(Level.INFO, "Statusbestand ingelezen");

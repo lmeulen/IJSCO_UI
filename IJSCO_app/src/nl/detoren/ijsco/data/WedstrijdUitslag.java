@@ -24,13 +24,18 @@ import nl.detoren.ijsco.data.UitslagSpeler;
  */
 public class WedstrijdUitslag {
 
-	int id;
+	int wedstrijduitslagid;
+	String poule;
 	UitslagSpeler wit;
+	int startratingWit;
 	UitslagSpeler zwart;
+	int startratingZwart;
+	int ronde;
+	
 	/**
 	 * Toto / Swiss Master style 1 = wit wint, 2 = zwart wint, 3 = remise, etc
 	 */
-	int uitslag;
+	int resultaat;
 	boolean nietReglementair = true;
 	boolean adjourned = false;
 
@@ -51,14 +56,14 @@ public class WedstrijdUitslag {
 	}
 
 	public WedstrijdUitslag(int id, UitslagSpeler s1, UitslagSpeler s2, int uitslag) {
-		this.id = id;
+		this.wedstrijduitslagid = id;
 		if ((s1 != null) && (s2 != null)) {
 			setSpelers(s1, s2);
 		} else {
 			this.wit = s1;
 			this.zwart = s2;
 		}
-		this.uitslag = uitslag;
+		this.resultaat = uitslag;
 		this.nietReglementair = true;
 		this.adjourned = false;
 	}
@@ -69,11 +74,11 @@ public class WedstrijdUitslag {
 	}
 
 	public int getId() {
-		return id;
+		return wedstrijduitslagid;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.wedstrijduitslagid = id;
 	}
 
 	public UitslagSpeler getWit() {
@@ -84,6 +89,10 @@ public class WedstrijdUitslag {
 		this.wit = wit;
 	}
 
+	public void setstartratingWit(int startrating) {
+		this.startratingWit = startrating;
+	}
+
 	public UitslagSpeler getZwart() {
 		return zwart;
 	}
@@ -92,6 +101,9 @@ public class WedstrijdUitslag {
 		this.zwart = zwart;
 	}
 
+	public void setstartratingZwart(int startrating) {
+		this.startratingZwart = startrating;
+	}
 	public final void wisselSpelers() {
 		UitslagSpeler tmp = wit;
 		wit = zwart;
@@ -99,7 +111,23 @@ public class WedstrijdUitslag {
 	}
 
 	public int getUitslag() {
-		return uitslag;
+		return resultaat;
+	}
+
+	public void setPoule(String poule) {
+		this.poule = poule;
+	}
+
+	public String getPoule() {
+		return this.poule;
+	}
+
+	public void setRonde(int ronde) {
+		this.ronde = ronde;
+	}
+
+	public int getRonde() {
+		return this.ronde;
 	}
 
 	/**
@@ -107,7 +135,7 @@ public class WedstrijdUitslag {
 	 * @param Uitslag
 	 */
 	public void setUitslag(int Uitslag) {
-		this.uitslag = Uitslag;
+		this.resultaat = Uitslag;
 	}
 	
 	public boolean isNietReglementair() {
@@ -154,7 +182,7 @@ public class WedstrijdUitslag {
 			uitslag -= 7;
 			nietReglementair = false;
 		}
-		this.uitslag = (uitslag == 0 ? 2 : (uitslag == 1 ? 1 : (uitslag == 2 ? 3 : 0)));
+		this.resultaat = (uitslag == 0 ? 2 : (uitslag == 1 ? 1 : (uitslag == 2 ? 3 : 0)));
 	}
 
 	@Override
@@ -167,30 +195,30 @@ public class WedstrijdUitslag {
 		{
 			result = String.format("%1$36s vs %2$36s => ", "wit", "zwart");
 		}
-		switch (uitslag) {
+		switch (resultaat) {
 		case 0:
-			result += " 0  -   0";
+			result += "   0  -   0";
 			break;
 		case 1:
-			result += " 1  -   0";
+			result += "   1  -   0";
 			break;
 		case 2:
-			result += " 0  -   1";
+			result += "   0  -   1";
 			break;
 		case 3:
-			result += "1/2 - 1/2";
+			result += "  1/2 - 1/2";
 			break;
 		default:
-			result += "         ";
+			result += "           ";
 		}
-		if (!nietReglementair) result += "F";
-		else if (adjourned) result += "A";
+		if (!nietReglementair) result += " F";
+		else if (adjourned) result += " A";
 		else result += " ";
 		return result;
 	}
 
 	public boolean isUitslagBekend() {
-		return (uitslag != UNKNOWN);
+		return (resultaat != UNKNOWN);
 	}
 	
 }

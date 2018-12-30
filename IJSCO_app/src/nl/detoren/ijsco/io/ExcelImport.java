@@ -28,6 +28,8 @@ import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.microsoft.schemas.office.visio.x2012.main.SheetType;
+
 import nl.detoren.ijsco.data.GroepsUitslag;
 import nl.detoren.ijsco.data.GroepsUitslagen;
 import nl.detoren.ijsco.data.Speler;
@@ -37,6 +39,7 @@ import nl.detoren.ijsco.data.UitslagSpeler;
 import nl.detoren.ijsco.data.Wedstrijd;
 import nl.detoren.ijsco.data.WedstrijdUitslag;
 import nl.detoren.ijsco.ui.control.IJSCOController;
+import nl.detoren.ijsco.ui.util.Utils;
 
 public class ExcelImport implements ImportInterface {
 	
@@ -49,9 +52,17 @@ public class ExcelImport implements ImportInterface {
 			
             FileInputStream excelFile = new FileInputStream(file);
             Workbook workbook = new XSSFWorkbook(excelFile);
-
+            String versie = "onbekend";
+            Sheet sheet = workbook.getSheet("Configuratie");
+            try {
+            	versie = sheet.getRow(0).getCell(1).getStringCellValue();
+            }
+            catch (Exception ex) {
+            	logger.log(Level.INFO, "Indelings Excel versie ophalen mislukt");
+            }
+            logger.log(Level.INFO, "Indelings Excel is versie " + versie);
         	for(int i=0;i < workbook.getNumberOfSheets();i++){
-        		Sheet sheet = workbook.getSheetAt(i);
+        		sheet = workbook.getSheetAt(i);
         		if (sheet.getSheetName().startsWith("Groep ")) {
         			logger.log(Level.INFO, "Importeer uitslag van groep : " + sheet.getSheetName());
         			Row row = sheet.getRow(0);
@@ -78,13 +89,14 @@ public class ExcelImport implements ImportInterface {
                         			break;
         			    	}
         			  	}
-        			}	
+        			}
+        			logger.log(Level.INFO, "next");
         		}
             }
         	workbook.close();
 		}
 		catch (Exception ex){
-			logger.log(Level.SEVERE, "Exception! Internal error is " + ex.getMessage());
+			logger.log(Level.SEVERE, "Exception! Cause: " + ex.getCause() + ". Internal error is " + ex.getMessage() + ". Stracktrace: \r\n" + Utils.stackTraceToString(ex));
 		}
 		// Print resultaat;
 		logger.log(Level.INFO, groepen.toString());
@@ -92,48 +104,105 @@ public class ExcelImport implements ImportInterface {
 	}
 
 	private GroepsUitslag importeerGroep10(Sheet sheet) {
-		int groepsgrootte = 10;
+/*
+ * 		versie < 0.3
+ */ 		
+/*		int groepsgrootte = 10;
 		int rowidxbase = 17;
 		int columnuitslag = 19;
 		int columntotaal = 17;
 		int columnwedstrijdidwit = 47;	
 		int columnwedstrijdidzwart = 48;			
+*/
+/*
+ * 		versie 0.3
+ */
+		int groepsgrootte = 10;
+		int rowidxbase = 17;
+		int columnuitslag = 19;
+		int columntotaal = 17;
+		int columnwedstrijdidwit = 46;	
+		int columnwedstrijdidzwart = 47;			
 		GroepsUitslag groep = importeergroep(groepsgrootte, sheet, rowidxbase, columnuitslag, columntotaal, columnwedstrijdidwit, columnwedstrijdidzwart);
 		logger.log(Level.INFO, "Import groep 10 klaar");
 		return groep;		
 	}
 
 	private GroepsUitslag importeerGroep8(Sheet sheet) {
-		int groepsgrootte = 8;
+/*
+ * 		versie < 0.3
+ */ 		
+/*
+  		int groepsgrootte = 8;
 		int rowidxbase = 15;
 		int columnuitslag = 19;
 		int columntotaal = 17;
 		int columnwedstrijdidwit = 50;	
-		int columnwedstrijdidzwart = 51;			
+		int columnwedstrijdidzwart = 51;
+ */			
+/*
+ * 		versie 0.3
+ */
+
+		int groepsgrootte = 8;
+		int rowidxbase = 15;
+		int columnuitslag = 19;
+		int columntotaal = 17;
+		int columnwedstrijdidwit = 43;	
+		int columnwedstrijdidzwart = 44;
 		GroepsUitslag groep = importeergroep(groepsgrootte, sheet, rowidxbase, columnuitslag, columntotaal, columnwedstrijdidwit, columnwedstrijdidzwart);
 		logger.log(Level.INFO, "Import groep 8 klaar");
 		return groep;
 	}
 
 	private GroepsUitslag importeerGroep6(Sheet sheet) {
+/*
+ * 		versie < 0.3
+ */ 		
+ /* 	int groepsgrootte = 6;
+		int rowidxbase = 13;
+		int columnuitslag = 19;
+		int columntotaal = 17;
+		int columnwedstrijdidwit = 46;	
+		int columnwedstrijdidzwart = 47;	
+ */		
+		
+/*
+ * 		versie 0.3
+ */
 		int groepsgrootte = 6;
 		int rowidxbase = 13;
 		int columnuitslag = 19;
-		int columtotaal = 17;
-		int columnwedstrijdidwit = 46;	
-		int columnwedstrijdidzwart = 47;	
-		GroepsUitslag groep = importeergroep(groepsgrootte, sheet, rowidxbase, columnuitslag, columtotaal, columnwedstrijdidwit, columnwedstrijdidzwart);
+		int columntotaal = 17;
+		int columnwedstrijdidwit = 40;	
+		int columnwedstrijdidzwart = 41;	
+		GroepsUitslag groep = importeergroep(groepsgrootte, sheet, rowidxbase, columnuitslag, columntotaal, columnwedstrijdidwit, columnwedstrijdidzwart);
 		logger.log(Level.INFO, "Import groep 6 klaar");
 		return groep;
 	}
 
 	private GroepsUitslag importeerGroep4(Sheet sheet) {
-		int groepsgrootte = 4;
+/*
+ * 		versie < 0.3
+ */ 		
+/*
+ 		int groepsgrootte = 4;
 		int rowidxbase = 11;
 		int columnuitslag = 18;
 		int columtotaal = 16;
 		int columnwedstrijdidwit = 42;	
 		int columnwedstrijdidzwart = 43;	
+ */
+/*
+ * 		versie 0.3
+ */
+
+		int groepsgrootte = 4;
+		int rowidxbase = 11;
+		int columnuitslag = 18;
+		int columtotaal = 16;
+		int columnwedstrijdidwit = 36;	
+		int columnwedstrijdidzwart = 37;	
 		GroepsUitslag groep = importeergroep(groepsgrootte, sheet, rowidxbase, columnuitslag, columtotaal, columnwedstrijdidwit, columnwedstrijdidzwart);
 		logger.log(Level.INFO, "Import groep 4 klaar");
 		return groep;
@@ -251,6 +320,7 @@ public class ExcelImport implements ImportInterface {
 						Integer speleridwit; 
 						try {
 							speleridwit = cellIntValue(row.getCell(cWedstrijdIDWit));
+							if (speleridwit == null) throw new NullPointerException()	; 
 						} catch (Exception ex) {
 							logger.log(Level.WARNING, "Player number for white not found.");
 							speleridwit = 0;
@@ -259,6 +329,7 @@ public class ExcelImport implements ImportInterface {
 						Integer speleridzwart;
 						try {
 							speleridzwart = cellIntValue(row.getCell(cWedstrijdIDZwart));
+							if (speleridzwart == null) throw new NullPointerException()	;
 						} catch (Exception ex) {
 							logger.log(Level.WARNING, "Player number for black not found.");
 							speleridzwart = 0;
@@ -362,8 +433,12 @@ public class ExcelImport implements ImportInterface {
 						if (zwart.getNaam()!= null)
 							if (zwart.getNaam().equals("Bye")) bye = true;
 						if (!bye) {
+							wedstrijd.setPoule(sheet.getSheetName());
+							wedstrijd.setRonde(i+1);
 							wedstrijd.setWit(wit);
+							wedstrijd.setstartratingWit(wit.getStartrating());
 							wedstrijd.setZwart(zwart);
+							wedstrijd.setstartratingZwart(zwart.getStartrating());
 							try {
 								logger.log(Level.INFO, "Setting SpelerWit : " + wit.getNaam() + " - KNSBWit : " + wit.getKNSBnummer());
 								logger.log(Level.INFO, "Setting SpelerZwart : " + zwart.getNaam() + " - KNSBZwart : " + zwart.getKNSBnummer());
