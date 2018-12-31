@@ -1,5 +1,8 @@
 package nl.detoren.ijsco.data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class UitslagSpeler implements Comparable{
 
 	private int rang;
@@ -7,7 +10,7 @@ public class UitslagSpeler implements Comparable{
 	private String naam;
 	private int geboortejaar;
 	private String categorie;
-	private String vereniging;
+	private String[] vereniging;
 	private int punten; // punten is wedstrijdpunten * 10 
 	private int wp; // WP is WP *10
 	private int sb; // SB is SB * 100
@@ -25,7 +28,7 @@ public class UitslagSpeler implements Comparable{
 		deltarating = 0;
 		naam = speler.getNaam();
 		geboortejaar = 0;
-		vereniging = speler.getVereniging();
+		vereniging[0] = speler.getVereniging();
 	}
 
 	public UitslagSpeler() {
@@ -104,11 +107,19 @@ public class UitslagSpeler implements Comparable{
 	}
 
 	public String getVereniging() {
-		return vereniging;
+		if (vereniging == null) {
+			vereniging = new String[] { "" };
+		}
+		return vereniging[0];
 	}
 
 	public void setVereniging(String naamvereniging) {
-		vereniging = naamvereniging;
+		if (naamvereniging == null) {
+			return;
+		}
+		ArrayList<String> aL = new ArrayList<String>(Arrays.asList(vereniging));
+		aL.add(naamvereniging);
+		vereniging = (String[]) aL.toArray();
 	}
 
 	public int getGeboortejaar() {

@@ -433,7 +433,7 @@ deelnemersmenu.add(item);
 		public void actionPerformed(ActionEvent e) {
 			// Create a file chooser
 			SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
-			SAIM.sendAttachement();
+			SAIM.sendAttachement("Uitslagen.json");
 			hoofdPanel.repaint();
 		}
 	});
@@ -441,7 +441,35 @@ deelnemersmenu.add(item);
 	osbomenu.add(item);
 	menubar.add(osbomenu);	
 	
+	JMenu helpmenu = new JMenu("Help");
 
+	item = new JMenuItem("Verstuur logging");
+	item.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// Create a file chooser
+			SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
+			SAIM.sendAttachement("IJSCO_UI.log");
+			hoofdPanel.repaint();
+		}
+	});
+
+	helpmenu.add(item);
+	item = new JMenuItem("About");
+	item.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			AboutDialog ad = new AboutDialog(ms);
+					ad.setVisible(true);
+			hoofdPanel.repaint();
+		}
+	});
+
+	helpmenu.add(item);
+	menubar.add(helpmenu);	
+	
+
+	
 /*		JMenu indelingMenu = new JMenu("Indeling");
 		//item = new JMenuItem("Automatisch aan/uit");
 		item = new JMenuItem("N/A");

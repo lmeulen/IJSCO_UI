@@ -78,7 +78,7 @@ public class OutputUitslagen implements GroepenExportInterface{
 			writer.write(jsonString);
 			writer.close();
 			SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
-			SAIM.sendAttachement();
+			SAIM.sendAttachement("Uitslagen.json");
 			}
 		catch (Exception e)
 		{

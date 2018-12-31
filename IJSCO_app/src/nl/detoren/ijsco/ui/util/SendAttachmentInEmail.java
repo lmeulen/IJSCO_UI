@@ -27,7 +27,7 @@ public class SendAttachmentInEmail {
 
 	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
 
-	public void sendAttachement() {
+	public void sendAttachement(String attachement) {
       // Recipient's email ID needs to be mentioned.
       String to = "ijsco@osbo.nl";
 
@@ -82,10 +82,10 @@ public class SendAttachmentInEmail {
 
          // Part two is attachment
          messageBodyPart = new MimeBodyPart();
-         String filename = "Uitslagen.json";
-         DataSource source = new FileDataSource(filename);
+         //String filename = "Uitslagen.json";
+         DataSource source = new FileDataSource(attachement);
          messageBodyPart.setDataHandler(new DataHandler(source));
-         messageBodyPart.setFileName(filename);
+         messageBodyPart.setFileName(attachement);
          multipart.addBodyPart(messageBodyPart);
 
          // Send the complete message parts
