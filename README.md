@@ -12,4 +12,4 @@ Mogelijkheden:
 - Rating verwerking en verzending naar OSBO
 - En meer
 
-Voor informatie: Neem contact op met Leo (github/lmeulen) of Lars (github/oxygenius) of kom bij het Open Source team van de OSBO.
+Voor informatie: Neem contact op met Lars (github/oxygenius) of kom bij het Open Source team van de OSBO. Mail hiervoor naar ijsco(bij)osbo.nl
