@@ -623,6 +623,7 @@ deelnemersmenu.add(item);
 						break;
 					case "json":
 						tmp = (new OSBOLoader()).laadJSON("https://" + fqdn + page);
+						logger.log(Level.INFO, "OSBO list loaded from JSON");
 						break;
 					}
 					logger.log(Level.INFO, "Spelers van website http://" + fqdn + page + " opgehaald: " + tmp.size() + " spelers in lijst" );
@@ -640,7 +641,12 @@ deelnemersmenu.add(item);
 			}
 		status.OSBOSpelers = new HashMap<>();
 		for (Speler d : tmp) {
+			try {
 			status.OSBOSpelers.put(d.getKnsbnummer(), d);
+			}
+			catch (Exception ex) {
+				logger.log(Level.WARNING, "Problem in getting KNSBnummer");
+			}
 		}
 		indeler.controleerSpelers(status.deelnemers, status.OSBOSpelers);
 		JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit OSBO jeugdratinglijst");
@@ -1225,8 +1231,10 @@ deelnemersmenu.add(item);
 
 		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(0), 30);
 		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(1), 55);
-		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(2), 250);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(2), 170);
 		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(3), 40);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(4), 40);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(5), 30);
 		Utils.fixedComponentSize(scrollPane, 400, 580);
 		return panel;
 	}

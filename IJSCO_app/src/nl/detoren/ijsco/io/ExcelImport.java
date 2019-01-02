@@ -477,6 +477,10 @@ public class ExcelImport implements ImportInterface {
 			if (osbogegevens != null) {
 				s.setNaamKNSB(osbogegevens.getNaam());
 				s.setRatingIJSCO(osbogegevens.getRatingIJSCO());
+				s.setGeboortejaar(osbogegevens.getGeboortejaar());
+				s.setGeslacht(osbogegevens.getGeslacht());
+				s.setCategorie(osbogegevens.getCategorie());
+				s.setVereniging(osbogegevens.getVereniging());
 			}
 			update.add(s);
 		}

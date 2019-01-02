@@ -29,7 +29,7 @@ public class DeelnemersModel extends AbstractTableModel {
 	private JComponent component;
 	private Spelers deelnemers;
 
-	private String[] columnNames = { "Aanw", "Nr.", "Naam", "Rating" };
+	private String[] columnNames = { "Aanw", "Nr.", "Naam", "Rating", "Geboortejaar", "Geslacht" };
 
 	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
 
@@ -72,6 +72,10 @@ public class DeelnemersModel extends AbstractTableModel {
 				return speler.getNaam();
 			case 3:
 				return new Integer(speler.getRating());
+			case 4:
+				return new Integer(speler.getGeboortejaar());
+			case 5:
+				return new String(speler.getGeslacht());
 			default:
 				return "";
 			}
@@ -106,6 +110,10 @@ public class DeelnemersModel extends AbstractTableModel {
                 return String.class;
             case 3:
                 return Integer.class;
+            case 4:
+                return Integer.class;
+            case 5:
+                return String.class;
             default:
                 return String.class;
         }
@@ -125,6 +133,8 @@ public class DeelnemersModel extends AbstractTableModel {
 				tt += "<TR><TD>Rating handmatig</TD><TD>" + speler.getRatingHandmatig() + "</TD></TR>";
 				tt += "<TR><TD>Rating OSBO</TD><TD>" + speler.getRatingIJSCO() + "</TD></TR>";
 				tt += "<TR><TD>Rating KNSB</TD><TD>" + speler.getRatingKNSB() + "</TD></TR>";
+				tt += "<TR><TD>Geboortejaar</TD><TD>" + speler.getGeboortejaar() + "</TD></TR>";
+				tt += "<TR><TD>Geslacht</TD><TD>" + speler.getGeslacht() + "</TD></TR>";
 				tt += "</TD></TR>";
 				tt += "</TABLE>";
 			}

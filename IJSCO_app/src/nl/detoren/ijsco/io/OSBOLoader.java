@@ -162,10 +162,13 @@ public class OSBOLoader {
 				speler.setNaamKNSB(samengestelde_naam);
 				int g = Integer.parseInt((String) s.get("geboortejaar"));
 				speler.setGeboortejaar((int) g);
+				String geslacht = (String) s.get("geslacht");
+				logger.log(Level.INFO, "Geslacht van " + speler.getNaam() + " is " + geslacht);
+				speler.setGeslacht(geslacht);
 				long r = (long) jo.get("osborating");
 				speler.setRatingIJSCO((int) r);
 				speler.bepaalCategorie();
-				logger.log(Level.INFO, "test");
+				logger.log(Level.INFO, "Speler : " + speler.getNaam() + " heeft geboortejaar " + speler.getGeboortejaar());
 				spelers.add(speler);
 			}
 		}

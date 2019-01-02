@@ -33,6 +33,7 @@ public class Speler {
 	private String naamHandmatig;
 	private String vereniging; 
 	private int geboortejaar;
+	private String geslacht;
 	private String categorie;
 	private int ratingIJSCO;
 	private int ratingKNSB;
@@ -48,6 +49,7 @@ public class Speler {
 		this.naamHandmatig = null;
 		this.vereniging = null;
 		this.geboortejaar = -1;
+		this.geslacht = "";
 		this.ratingIJSCO = -1;
 		this.ratingKNSB = -1;
 		this.ratingHandmatig = -1;
@@ -62,6 +64,7 @@ public class Speler {
 		this.naamHandmatig = naam;
 		this.vereniging = null;
 		this.geboortejaar = -1;
+		this.geslacht = "";
 		this.ratingIJSCO = -1;
 		this.ratingKNSB = -1;
 		this.ratingHandmatig = -1;
@@ -76,6 +79,7 @@ public class Speler {
 		this.naamHandmatig = null;
 		this.vereniging = null;
 		this.geboortejaar = 1;
+		this.geslacht = "";
 		this.ratingIJSCO = -1;
 		this.ratingKNSB = -1;
 		this.ratingHandmatig = -1;
@@ -90,6 +94,7 @@ public class Speler {
 		this.naamHandmatig = null;
 		this.vereniging = vereniging;
 		this.geboortejaar = -1;
+		this.geslacht = "";
 		this.ratingIJSCO = ratingIJSCO;
 		this.ratingKNSB = ratingKNSB;
 		this.ratingHandmatig = -1;
@@ -108,6 +113,24 @@ public class Speler {
 		this.naamHandmatig = null;
 		this.vereniging = vereniging;
 		this.setGeboortejaar(geboortejaar);
+		this.geslacht = "";
+		this.setCategorie(categorie);
+		this.ratingIJSCO = ratingIJSCO;
+		this.ratingKNSB = ratingKNSB;
+		this.ratingHandmatig = -1;
+		this.aanwezig = true;
+		this.overruleNaam = false;
+		this.overruleRating = false;
+	}
+
+	public Speler(int knsbnummer, String naamKNSB, String vereniging, int geboortejaar, String geslacht, String categorie, int ratingIJSCO,
+			int ratingKNSB) {
+		this.knsbnummer = knsbnummer;
+		this.naamKNSB = naamKNSB;
+		this.naamHandmatig = null;
+		this.vereniging = vereniging;
+		this.setGeboortejaar(geboortejaar);
+		this.geslacht = geslacht;
 		this.setCategorie(categorie);
 		this.ratingIJSCO = ratingIJSCO;
 		this.ratingKNSB = ratingKNSB;
@@ -313,6 +336,14 @@ public class Speler {
 
 	public void setGeboortejaar(int geboortejaar) {
 		this.geboortejaar = geboortejaar;
+	}
+
+	public String getGeslacht() {
+		return geslacht;
+	}
+
+	public void setGeslacht(String geslacht) {
+		this.geslacht = geslacht;
 	}
 
 	public String getCategorie() {
