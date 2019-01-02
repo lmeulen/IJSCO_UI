@@ -52,13 +52,13 @@ public class BewerkSpelerDialoog extends JDialog {
         setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().add(createPanel());
-        setSize(300, 9 * 24);
+        setSize(300, 11 * 24);
         setLocationRelativeTo(frame);
     }
 
     private JPanel createPanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(9, 2));
+        panel.setLayout(new GridLayout(11, 2));
         //KNSB nummer
         panel.add(new JLabel("KNSB nummer"));
         final JTextField tfKNSBnr = new JTextField((new Integer(speler.getKnsbnummer())).toString());
@@ -73,6 +73,16 @@ public class BewerkSpelerDialoog extends JDialog {
         tfNaam2.setEditable(false);
         panel.add(tfNaam2);
 
+        // Geboortejaar
+        panel.add(new JLabel("Geboortejaar"));
+        final JTextField tfGeboortejaar = new JTextField((new Integer(speler.getGeboortejaar()).toString()));
+        panel.add(tfGeboortejaar);
+        
+        //Geslacht
+        panel.add(new JLabel("Geslacht"));
+        final JTextField tfGeslacht = new JTextField(speler.getGeslacht().toString());
+        panel.add(tfGeslacht);
+        
         // Rating
         panel.add(new JLabel("Rating"));
         final JTextField tfRating = new JTextField((new Integer(speler.getRatingHandmatig()).toString()));
@@ -106,6 +116,9 @@ public class BewerkSpelerDialoog extends JDialog {
                 speler.setRatingHandmatig(rating);
                 int knsb = Integer.parseInt(tfKNSBnr.getText());
                 speler.setKnsbnummer(knsb);
+                int geboortejaar = Integer.parseInt(tfGeboortejaar.getText());
+                speler.setGeboortejaar(geboortejaar);
+                speler.setGeslacht(tfGeslacht.getText());
                 speler.setOverruleNaam(tfOverruleNaam.isSelected());
                 speler.setOverruleRating(tfOverruleRating.isSelected());
                 setVisible(false);
