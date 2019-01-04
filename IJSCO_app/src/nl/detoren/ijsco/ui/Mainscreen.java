@@ -26,6 +26,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -58,17 +59,22 @@ import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.apache.commons.io.FilenameUtils;
 
+import com.google.gson.Gson;
+
 import nl.detoren.ijsco.Configuratie;
+import nl.detoren.ijsco.data.GroepsUitslag;
 import nl.detoren.ijsco.data.GroepsUitslagen;
 import nl.detoren.ijsco.data.Speler;
 import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.data.Status;
+import nl.detoren.ijsco.data.WedstrijdUitslag;
 import nl.detoren.ijsco.io.DeelnemersLader;
 import nl.detoren.ijsco.io.ExcelExport;
 import nl.detoren.ijsco.io.ExcelImport;
@@ -370,16 +376,19 @@ item.addActionListener(new ActionListener() {
 });
 deelnemersmenu.add(item);
 
-/*		item = new JMenuItem("Export Deelnemerslijst (N/A)");
+		item = new JMenuItem("Export Deelnemerslijst (JSON)");
 item.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 item.addActionListener(new ActionListener() {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// Create a file chooser
 		final JFileChooser fc = new JFileChooser();
+	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+	            "JSON", "json");
+	    fc.setFileFilter(filter);
 		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 		// In response to a button click:
-		int returnVal = fc.showOpenDialog(ms);
+		int returnVal = fc.showSaveDialog(ms);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
@@ -388,7 +397,7 @@ item.addActionListener(new ActionListener() {
 		hoofdPanel.repaint();
 	}
 });
-deelnemersmenu.add(item);*/
+deelnemersmenu.add(item);
 
 	menubar.add(deelnemersmenu);
 
@@ -732,7 +741,20 @@ deelnemersmenu.add(item);*/
 	}
 	
 	public void schrijfDeelnemers(String file) {
-		
+		try {
+			String bestandsnaam = "Deelnemers.json";
+			logger.log(Level.INFO, "Sla deelnemers op in bestand " + bestandsnaam);
+			Gson gson = new Gson();
+			String jsonString = gson.toJson(status.deelnemers);
+			// write converted json data to a file
+			FileWriter writer = new FileWriter(bestandsnaam);
+			writer.write(jsonString);
+			writer.close();
+		}
+		catch (Exception e)
+		{
+			logger.log(Level.SEVERE, "An " + e.getMessage() + " occured ");
+		}
 	}
 	
 	public void leesDeelnemers(String file) {
