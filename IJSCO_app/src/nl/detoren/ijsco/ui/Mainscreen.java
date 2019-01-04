@@ -388,8 +388,8 @@ item.addActionListener(new ActionListener() {
 		hoofdPanel.repaint();
 	}
 });
-deelnemersmenu.add(item);
-*/
+deelnemersmenu.add(item);*/
+
 	menubar.add(deelnemersmenu);
 
 	
