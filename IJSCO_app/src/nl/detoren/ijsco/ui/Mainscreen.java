@@ -93,7 +93,8 @@ public class Mainscreen extends JFrame {
 	private DeelnemersModel deelnemersModel;
 	private JTable schemaTabel;
 	private JPanel hoofdPanel;
-	private JTextField tfAanwezig;
+	private JLabel tfAanwezig;
+	private JLabel lbAanwezig;
 	private IJSCOController controller;
 
 	private JTextArea groepenText;
@@ -900,16 +901,16 @@ deelnemersmenu.add(item);
 //		});
 //		panel.add(bWis, new ExtendedGridConstraints(0, curRow++));
 //
-//		// Aantal spelers
-//		panel.add(new JLabel("Aantal spelers:"), new ExtendedGridConstraints(0, curRow));
-//		if (status.deelnemers != null) {
-//			tfAanwezig = new JTextField(Integer.toString(status.deelnemers.aantalAanwezig()), 10);
-//		} else {
-//			tfAanwezig = new JTextField(Integer.toString(0), 10);
-//		}
-//		tfAanwezig.setEditable(false);
-//		panel.add(tfAanwezig, new ExtendedGridConstraints(1, curRow++));
-//
+		// Aantal spelers
+/*		panel.add(new JLabel("Aantal spelers:"), new ExtendedGridConstraints(0, curRow));
+		if (status.deelnemers != null) {
+			tfAanwezig = new JTextField(Integer.toString(status.deelnemers.aantalAanwezig()), 10);
+		} else {
+			tfAanwezig = new JTextField(Integer.toString(0), 10);
+		}
+		tfAanwezig.setEditable(false);
+		panel.add(tfAanwezig, new ExtendedGridConstraints(1, curRow++));
+*///
 //
 //		// Aantal groepen
 //		JLabel label_4 = new JLabel("Aantal groepen");
@@ -1057,6 +1058,10 @@ deelnemersmenu.add(item);
 		//panel.setLayout(new GridLayout(1, 0));
 		panel.setLayout(new BorderLayout());
 			JPanel innerPanel = new JPanel();
+			JLabel lbAanwezig = new JLabel("Deelnemers: ");
+			innerPanel.add(lbAanwezig, BorderLayout.NORTH);
+			tfAanwezig = new JLabel(Integer.toString(status.deelnemers.aantalAanwezig()), 10);
+			innerPanel.add(tfAanwezig, BorderLayout.NORTH);
 			//innerPanel.setLayout(new GridLayout(1, 0));
 			innerPanel.add(new JLabel("Naam:"), BorderLayout.NORTH);
 			JTextField deelnemer = new JTextField(15);

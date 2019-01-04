@@ -144,7 +144,13 @@ public class ConfigurationDialog extends JDialog {
 		tfMinGroepen = new JTextField(Integer.toString(config.minGroepen), 10);
 		tfMinGroepen.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-					config.minGroepen = Utils.newIntegerValue(tfMinGroepen, config.minGroepen);
+				int temp= Utils.newIntegerValue(tfMinGroepen, config.minGroepen);
+				if (temp > 1) {
+					config.minGroepen = temp;
+				} else {
+					JOptionPane.showMessageDialog(null, "Een toernooi bestaat uit minimaal één groep.");
+					tfMinGroepen.setText(String.valueOf(config.minGroepen));
+				}
 			}
 		});
 		tabInstellingen.add(tfMinGroepen);
@@ -165,10 +171,10 @@ public class ConfigurationDialog extends JDialog {
 		tfMinSpelers.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				int temp= Utils.newIntegerValue(tfMinSpelers, config.minSpelers);
-				if ((temp & 1) == 0) {
+				if ((temp & 1) == 0 && temp != 0) {
 					config.minSpelers = temp;
 				} else {
-					JOptionPane.showMessageDialog(null, "Een groep bestaat uit een even aantal spelers.");
+					JOptionPane.showMessageDialog(null, "Een groep bestaat uit een even aantal spelers groter dan 1.");
 					tfMinSpelers.setText(String.valueOf(config.minSpelers));
 				}
 			}

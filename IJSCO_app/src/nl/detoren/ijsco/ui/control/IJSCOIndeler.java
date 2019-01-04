@@ -180,6 +180,7 @@ public class IJSCOIndeler {
 		Configuratie c = status.config;
 		int nSpelers = status.deelnemers.aantalAanwezig();
 		Schemas mogelijkheden = new Schemas();
+		if (c.minSpelers == 0) return mogelijkheden;
 		for (int n_m = c.minSpelers; n_m <= c.maxSpelers; n_m += 2) { // itereer of standaard groepsgrootte
 			for (int d_h = c.minDeltaSpelers; d_h <= c.maxDeltaSpelers; d_h += 2) { // itereer of delta (-) groepsgrootte bovenste groepen
 				for (int d_l = c.minDeltaSpelers; d_l <= c.maxDeltaSpelers; d_l += 2) { // itereer of delta (+) groepsgrootte onderste groepen
