@@ -26,7 +26,7 @@ public class SchemaModel extends AbstractTableModel {
 	private Schemas schemas;
 	private int selected;
 
-	private String[] columnNames = {"Schema"};
+	private String[] columnNames = {"Schema(s)"};
 
 	public SchemaModel(JComponent component, Schemas schemas) {
 		super();
