@@ -15,6 +15,7 @@ package nl.detoren.ijsco.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -179,7 +180,7 @@ public class Mainscreen extends JFrame {
 		//hoofdPanel.add(createInstellingenPanel(), new ExtendedWeightConstraints(1, 0, 300.0, 650.0));
 
 		// RECHSTMIDDEN: SCENARIOS
-		hoofdPanel.add(createPanelScenarios(), new ExtendedWeightConstraints(1, 0, 300.0, 650.0));
+		hoofdPanel.add(createPanelScenariosHolder(), new ExtendedWeightConstraints(1, 0, 300.0, 650.0));
 
 		// RECHTS: GROEPEN
 		hoofdPanel.add(createPanelGroepen(), new ExtendedWeightConstraints(2, 0, 450.0, 650.0));
@@ -799,10 +800,58 @@ deelnemersmenu.add(item);
 		return panel;
 	}
 
+	public JPanel createPanelScenariosHolder() {
+		JPanel panel = new JPanel();	
+		panel.setBackground(Color.RED);
+		panel.setLayout(new BorderLayout(0,	 0));
+	    panel.add(createPanelScenariosButtons(), BorderLayout.PAGE_START);
+	    panel.add(createPanelScenarios(), BorderLayout.CENTER);
+		return panel;
+	}
+
+	public JPanel createPanelScenariosButtons() {
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.RED);
+		panel.setLayout(new GridLayout(0,	 2));
+		JButton bSchemas = new JButton("1. Bepaal mogelijkheden");
+		bSchemas.setPreferredSize(new Dimension(40,40));
+		bSchemas.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				status.groepen = null;
+				bepaalSchemas();
+				schemaTabel.getSelectionModel().clearSelection();
+				groepenText.setText("");
+				panel.getParent().repaint();
+			}
+
+		});
+//		panel.add(bSchemas, new ExtendedGridConstraints(0, 0));
+		panel.add(bSchemas);
+		JButton bGroepen = new JButton("2. Bepaal groepen");
+		bGroepen.setPreferredSize(new Dimension(40,40));
+		bGroepen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if (schemaTabel != null) {
+					List<Integer> nobyeslist;
+					int row = schemaTabel.getSelectedRow();
+					nobyeslist =  IJSCOController.c().nobyes;
+					bepaalGroepen(row, Utils.toMask(nobyeslist));
+					new ExcelExport().exportGroepen(status.groepen);
+				}
+				panel.getParent().repaint();
+			}
+		});
+		//panel.add(bGroepen, new ExtendedGridConstraints(1, 1));
+		panel.add(bGroepen);
+		return panel;
+	}
+	
 	public JPanel createPanelScenarios() {
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.RED);
-		panel.setLayout(new GridLayout(1, 0));
+		panel.setLayout(new GridLayout(1,	 0));
 		schemaModel = new SchemaModel(panel, status.schemas);
 		schemaTabel = new JTable(schemaModel) {
 			@Override
@@ -830,38 +879,8 @@ deelnemersmenu.add(item);
 		});
 		JScrollPane scrollpane = new JScrollPane();
 		scrollpane.setViewportView(schemaTabel);
-		JButton bSchemas = new JButton("1. Bepaal mogelijkheden");
-		bSchemas.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				status.groepen = null;
-				bepaalSchemas();
-				schemaTabel.getSelectionModel().clearSelection();
-				groepenText.setText("");
-				panel.getParent().repaint();
-			}
-
-		});
-//		panel.add(bSchemas, new ExtendedGridConstraints(0, 0));
-		panel.add(bSchemas);
 		//panel.add(scrollpane, new ExtendedGridConstraints(0, 2));
 		panel.add(scrollpane);
-		JButton bGroepen = new JButton("2. Bepaal groepen");
-		bGroepen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				if (schemaTabel != null) {
-					List<Integer> nobyeslist;
-					int row = schemaTabel.getSelectedRow();
-					nobyeslist =  IJSCOController.c().nobyes;
-					bepaalGroepen(row, Utils.toMask(nobyeslist));
-					new ExcelExport().exportGroepen(status.groepen);
-				}
-				panel.getParent().repaint();
-			}
-		});
-		//panel.add(bGroepen, new ExtendedGridConstraints(1, 1));
-		panel.add(bGroepen);
 		return panel;
 	}
 
