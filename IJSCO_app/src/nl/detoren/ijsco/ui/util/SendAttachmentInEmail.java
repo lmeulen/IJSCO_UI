@@ -32,20 +32,28 @@ public class SendAttachmentInEmail {
       String to = "ijsco@osbo.nl";
 
       // Sender's email ID needs to be mentioned
-      String from = "ijsco.osbo@gmail.com";
+      //String from = "ijsco.osbo@gmail.com";
+      String from = "osbojeugd@schaakrating.nl";
 
-      final String username = "ijsco.osbo@gmail.com";//change accordingly
-      final String password = "vmyoSP3s0BNKCmYAB33k";//change accordingly
+      //final String username = "ijsco.osbo@gmail.com";//change accordingly
+      final String username = "osbojeugd@schaakrating.nl";//change accordingly
+      //final String password = "vmyoSP3s0BNKCmYAB33k";//change accordingly
+      final String password = "GXyVm0gaEuIlEUhBOlKs";//change accordingly
 
       // Assuming you are sending email through relay.jangosmtp.net
-      String host = "smtp.gmail.com";
+      //String host = "smtp.gmail.com";
+      String host = "mail.mijndomein.nl";
 
       Properties props = new Properties();
       props.put("mail.smtp.auth", "true");
-      props.put("mail.smtp.starttls.enable", "true");
       props.put("mail.smtp.host", host);
-      props.put("mail.smtp.port", "587");
-
+      // STARTTLS Factory
+      //props.put("mail.smtp.starttls.enable", "true");
+      //props.put("mail.smtp.port", "587");
+      // SSL Factory 
+      props.put("mail.smtp.port", "465");
+      props.put("mail.smtp.socketFactory.class", 
+              "javax.net.ssl.SSLSocketFactory"); 
       // Get the Session object.
       Session session = Session.getInstance(props,
          new javax.mail.Authenticator() {
