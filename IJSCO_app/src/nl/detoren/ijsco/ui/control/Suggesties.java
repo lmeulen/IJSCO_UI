@@ -247,10 +247,10 @@ public class Suggesties {
 
 		windowX = window.getX() + textComp.getX() + 5;
 		if (suggestionsPanel.getHeight() > suggestionsWindow.getMinimumSize().height) {
-			windowY = window.getY() + textComp.getY() + textComp.getHeight()	+ suggestionsWindow.getMinimumSize().height;
+			windowY = window.getY() + textComp.getY() + textComp.getHeight()	+ suggestionsWindow.getMinimumSize().height + 25;
 		} else {
 			windowY = window.getY() + textComp.getY() + textComp.getHeight()
-					+ suggestionsWindow.getHeight();
+					+ suggestionsWindow.getHeight() + 25;
 		}
 		// show the pop up
 		suggestionsWindow.setLocation(windowX, windowY);

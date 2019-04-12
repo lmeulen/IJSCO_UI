@@ -103,6 +103,7 @@ public class Mainscreen extends JFrame {
 	private JLabel tfAanwezig;
 	private JLabel lbAanwezig;
 	private IJSCOController controller;
+	private Suggesties suggesties;
 
 	private JTextArea groepenText;
 
@@ -184,7 +185,7 @@ public class Mainscreen extends JFrame {
 
 		// RECHTS: GROEPEN
 		hoofdPanel.add(createPanelGroepen(), new ExtendedWeightConstraints(2, 0, 450.0, 650.0));
-
+		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) {
 				new StatusIO().write(status);
@@ -284,7 +285,9 @@ public class Mainscreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				//actieNieuweSpeler(null, null);
 				leeslijstOnline("www.osbo.nl", "/jeugd/currentratings.json");
+				suggesties.setDictionary(setSuggesties());
 				hoofdPanel.repaint();
+				
 			}
 		});
 		spelermenu.add(item);
@@ -296,6 +299,7 @@ public class Mainscreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				//actieNieuweSpeler(null, null);
 				leeslijstOnline("www.osbo.nl", "/jeugd/jrating.htm");
+				suggesties.setDictionary(setSuggesties());
 				hoofdPanel.repaint();
 			}
 		});
@@ -316,11 +320,23 @@ public class Mainscreen extends JFrame {
 					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
 					leesOSBOlijstBestand(file.getAbsolutePath());
 				}
+				suggesties.setDictionary(setSuggesties());
 				hoofdPanel.repaint();
 			}
 		});
 		spelermenu.add(item);
 
+		item = new JMenuItem("Spelerslijst wissen");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				status.OSBOSpelers = new HashMap<>();
+				suggesties.setDictionary(setSuggesties());
+				hoofdPanel.repaint();
+			}
+		});
+		spelermenu.add(item);
+		
 /*		item = new JMenuItem("Groslijst CSV inlezen (Bestand) N/A");
 		item.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
@@ -1106,15 +1122,10 @@ deelnemersmenu.add(item);
 			//innerPanel.setLayout(new GridLayout(1, 0));
 			innerPanel.add(new JLabel("Naam:"), BorderLayout.NORTH);
 			JTextField deelnemer = new JTextField(15);
-			ArrayList<String> words = new ArrayList<>();
-			if (status.OSBOSpelers != null) {
-				for (Speler s : status.OSBOSpelers.values()) {
-					words.add(s.getNaam().trim());
-					words.add(Integer.toString(s.getKnsbnummer()));
-				}
-			}
-			@SuppressWarnings("unused")
-			Suggesties suggesties = new Suggesties(deelnemer, this, words, 2);
+			ArrayList<String> words = setSuggesties();
+			//@SuppressWarnings("unused")
+			this.suggesties = new Suggesties(deelnemer, this, words, 2);
+
 			innerPanel.add(deelnemer, BorderLayout.NORTH);
 			deelnemer.addActionListener(new ActionListener() {
 				@Override
@@ -1285,6 +1296,17 @@ deelnemersmenu.add(item);
 		return panel;
 	}
 
+	protected ArrayList<String> setSuggesties() {
+		ArrayList<String> words = new ArrayList<>();
+		if (status.OSBOSpelers != null) {
+			for (Speler s : status.OSBOSpelers.values()) {
+				words.add(s.getNaam().trim());
+				words.add(Integer.toString(s.getKnsbnummer()));
+			}
+		}
+		return words;
+	}
+	
 	protected void actieVoegSpelerToe(String trim) {
 		int knsbnr = 0;
 		try {
