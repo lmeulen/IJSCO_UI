@@ -25,40 +25,122 @@ import nl.detoren.ijsco.ui.control.IJSCOController;
 
 public class SendAttachmentInEmail {
 
+	private String _to;
+	private String _from;
+	private String _host;
+	private String _username;
+	private String _password;
+	Properties _props = new Properties();
+	private String _subject;
+	private String _bodyHeader;
+	private String _bodyText;
+	private String _bodyFooter;
+    // Create a multipart message
+    Multipart _multipart = new MimeMultipart();
+
+    // Create the message part
+    BodyPart messageBodyPart = new MimeBodyPart();
+
 	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
 
-	public void sendAttachement(String attachement) {
-      // Recipient's email ID needs to be mentioned.
-      String to = "ijsco@osbo.nl";
+	public SendAttachmentInEmail() {	
 
-      // Sender's email ID needs to be mentioned
-      //String from = "ijsco.osbo@gmail.com";
-      String from = "osbojeugd@schaakrating.nl";
+	    // Recipient's email ID needs to be mentioned.
+	    _to = "ijsco@osbo.nl";
+	    // Sender's email ID needs to be mentioned
+	    //String from = "ijsco.osbo@gmail.com";
+	    _from = "osbojeugd@schaakrating.nl";
 
-      //final String username = "ijsco.osbo@gmail.com";//change accordingly
-      final String username = "osbojeugd@schaakrating.nl";//change accordingly
-      //final String password = "vmyoSP3s0BNKCmYAB33k";//change accordingly
-      final String password = "GXyVm0gaEuIlEUhBOlKs";//change accordingly
+	    // Assuming you are sending email through relay.jangosmtp.net
+	    //String host = "smtp.gmail.com";
+	    _host = "mail.mijndomein.nl";
+	    //final String username = "ijsco.osbo@gmail.com";//change accordingly
+	    _username = "osbojeugd@schaakrating.nl";//change accordingly
+	    //final String password = "vmyoSP3s0BNKCmYAB33k";//change accordingly
+	    _password = "GXyVm0gaEuIlEUhBOlKs";//change accordingly
+	    
+	    // Properties
+		_props.put("mail.smtp.auth", "true");
+		_props.put("mail.smtp.host", _host);
+		// STARTTLS Factory
+		//props.put("mail.smtp.starttls.enable", "true");
+		//props.put("mail.smtp.port", "587");
+		// SSL Factory 
+		_props.put("mail.smtp.port", "465");
+		_props.put("mail.smtp.socketFactory.class", 
+            "javax.net.ssl.SSLSocketFactory");
+		_subject = "";
+	}
 
-      // Assuming you are sending email through relay.jangosmtp.net
-      //String host = "smtp.gmail.com";
-      String host = "mail.mijndomein.nl";
+	public boolean setSubject(String subject) {
+		try {
+			_subject = subject;
+		}
+		catch (Exception ex)
+		{
+			logger.log(Level.WARNING, "Problem while setting subject", ex);
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean setBodyHeader (String bodyHeader) {
+	try {
+		_bodyHeader = bodyHeader;
+	}
+	catch (Exception ex) {
+		logger.log(Level.WARNING, "Problem while setting body header", ex);
+		return false;
+	}
+	return true;
+	}
 
-      Properties props = new Properties();
-      props.put("mail.smtp.auth", "true");
-      props.put("mail.smtp.host", host);
-      // STARTTLS Factory
-      //props.put("mail.smtp.starttls.enable", "true");
-      //props.put("mail.smtp.port", "587");
-      // SSL Factory 
-      props.put("mail.smtp.port", "465");
-      props.put("mail.smtp.socketFactory.class", 
-              "javax.net.ssl.SSLSocketFactory"); 
+	public boolean setBodyText (String bodyText) {
+	try {
+		_bodyText = bodyText;
+	}
+	catch (Exception ex) {
+		logger.log(Level.WARNING, "Problem while setting body text", ex);
+		return false;
+	}
+	return true;
+	}
+
+	public boolean setBodyFooter (String bodyFooter) {
+	try {
+		_bodyFooter = bodyFooter;
+	}
+	catch (Exception ex) {
+		logger.log(Level.WARNING, "Problem while setting body footer", ex);
+		return false;
+	}
+	return true;
+	}
+
+	public boolean addAttachement(String attachement) {
+		try {
+	         // Part two is attachment
+	         messageBodyPart = new MimeBodyPart();
+	         //String filename = "Uitslagen.json";
+	         DataSource source = new FileDataSource(attachement);
+	         messageBodyPart.setDataHandler(new DataHandler(source));
+	         messageBodyPart.setFileName(attachement);
+	         this._multipart.addBodyPart(messageBodyPart);
+		}
+		catch (Exception ex) {
+			logger.log(Level.WARNING, "Problem while adding attachment", ex);
+			return false;
+		}
+		return true;
+	}
+	
+	public void send() {
+
       // Get the Session object.
-      Session session = Session.getInstance(props,
+      Session session = Session.getInstance(_props,
          new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-               return new PasswordAuthentication(username, password);
+               return new PasswordAuthentication(_username, _password);
             }
          });
 
@@ -67,37 +149,25 @@ public class SendAttachmentInEmail {
          Message message = new MimeMessage(session);
 
          // Set From: header field of the header.
-         message.setFrom(new InternetAddress(from));
+         message.setFrom(new InternetAddress(_from));
 
          // Set To: header field of the header.
          message.setRecipients(Message.RecipientType.TO,
-            InternetAddress.parse(to));
+            InternetAddress.parse(_to));
 
          // Set Subject: header field
-         message.setSubject("IJSCO Uitslag van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
+         message.setSubject(_subject);
 
          // Create the message part
          BodyPart messageBodyPart = new MimeBodyPart();
-
          // Now set the actual message
-         messageBodyPart.setText("Beste IJSCO uitslagverwerker,\r\n\r\nHierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
-
-         // Create a multipart message
-         Multipart multipart = new MimeMultipart();
+         messageBodyPart.setText(_bodyHeader + "\r\n\r\n" + _bodyText + "\r\n\r\n" + _bodyFooter);
 
          // Set text message part
-         multipart.addBodyPart(messageBodyPart);
-
-         // Part two is attachment
-         messageBodyPart = new MimeBodyPart();
-         //String filename = "Uitslagen.json";
-         DataSource source = new FileDataSource(attachement);
-         messageBodyPart.setDataHandler(new DataHandler(source));
-         messageBodyPart.setFileName(attachement);
-         multipart.addBodyPart(messageBodyPart);
+         _multipart.addBodyPart(messageBodyPart);
 
          // Send the complete message parts
-         message.setContent(multipart);
+         message.setContent(_multipart);
 
          // Send message
          Transport.send(message);
@@ -106,7 +176,7 @@ public class SendAttachmentInEmail {
       } catch (MessagingException e)
       {
     	  logger.log(Level.SEVERE, "Probleem met verzenden Email. Message: " + e.getMessage() + ". Cause: " + e.getCause() + ".");
-    	  JOptionPane.showMessageDialog(null, "Versturen van uitslagen naar OSBO mislukt. Probeer later het menu OSBO handmatig opnieuw.");
+    	  JOptionPane.showMessageDialog(null, "Versturen van uitslagen naar " + _to + "  mislukt. Probeer later in het menu OSBO -> handmatig versturen opnieuw.");
       }
    }
 }

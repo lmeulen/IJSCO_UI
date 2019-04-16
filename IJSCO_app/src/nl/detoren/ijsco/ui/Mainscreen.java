@@ -460,7 +460,16 @@ deelnemersmenu.add(item);
 		public void actionPerformed(ActionEvent e) {
 			// Create a file chooser
 			SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
-			SAIM.sendAttachement("Uitslagen.json");
+			SAIM.setSubject("IJSCO Uitslag bestanden van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
+			SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
+			SAIM.setBodyText("Hierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
+			SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
+			SAIM.addAttachement("Uitslagen.json");
+			SAIM.addAttachement("Uitslagen.txt");
+			SAIM.addAttachement("Einduitslagen.txt");
+			SAIM.addAttachement("Indeling resultaat.xlsm");
+			SAIM.addAttachement("status.json");
+			SAIM.send();
 			hoofdPanel.repaint();
 		}
 	});
@@ -476,7 +485,12 @@ deelnemersmenu.add(item);
 		public void actionPerformed(ActionEvent e) {
 			// Create a file chooser
 			SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
-			SAIM.sendAttachement("IJSCO_UI.log");
+			SAIM.setSubject("Logbestand van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
+			SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
+			SAIM.setBodyText("Hierbij het logbestand van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
+			SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
+			SAIM.addAttachement("IJSCO_UI.log");
+			SAIM.send();
 			hoofdPanel.repaint();
 		}
 	});

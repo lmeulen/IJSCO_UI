@@ -78,7 +78,16 @@ public class OutputUitslagen implements GroepenExportInterface{
 			writer.write(jsonString);
 			writer.close();
 			SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
-			SAIM.sendAttachement("Uitslagen.json");
+			SAIM.setSubject("IJSCO Uitslag bestanden van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
+			SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
+			SAIM.setBodyText("Hierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
+			SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
+			SAIM.addAttachement("Uitslagen.json");
+			SAIM.addAttachement("Uitslagen.txt");
+			SAIM.addAttachement("Einduitslagen.txt");
+			SAIM.addAttachement("Indeling resultaat.xlsm");
+			SAIM.addAttachement("status.json");
+			SAIM.send();
 			}
 		catch (Exception e)
 		{
