@@ -1401,9 +1401,13 @@ deelnemersmenu.add(item);
 		logger.log(Level.INFO, "Bepaal groepen voor schema " + status.schema);
 		if (status.schema != null) {
 			status.groepen = indeler.bepaalGroep(status.schema, status.deelnemers, nobyesmask);
+			if (status.groepen != null) {
 			System.out.println(status.groepen.getDescription());
 			groepenText.setText(status.groepen.getDescription());
 			groepenText.setCaretPosition(0);
+			} else {
+				JOptionPane.showMessageDialog(null, "Er is iets fout gegaan. Het geselecteerde schema levert toch geen goede groepsindeling op. \n\rPas de instellingen aan of neem contact op met de ontwikkelaar.");
+			}			
 		} else {
 			JOptionPane.showMessageDialog(null, "Geen schema geselecteerd om te gebruiken. \n\rBepaal eerst de mogelijkheden en selecteer er ��n.");
 		}

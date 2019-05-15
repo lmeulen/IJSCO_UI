@@ -124,6 +124,9 @@ public class IJSCOIndeler {
 	 * @param groepen aantal groepen
 	 * @param grootte int[] met groepsgrootte per groep
 	 * @param byes aantal byes
+	 * @var max 2^groepen om binair mask te berekenen
+	 * @var mask binair mask = maximaal mask - nobyesmask
+	 * @var aantalbyes aantal byes in current mask i 
 	 * @return lijst met mogelijke groepsindelingen
 	 */
 	private ArrayList<Groepen> mogelijkeGroepen(Spelers spelers, int groepen, int[] grootte, int byes, int nobyesmask) {
@@ -133,7 +136,8 @@ public class IJSCOIndeler {
 		int mask = max - 1 - nobyesmask;
 		for (int i = 0; i < max; i++) {
 			int j = i & mask; 
-			if (Integer.bitCount(reversebits(j)) == byes) {
+			int aantalbyes = Integer.bitCount(reversebits(j));
+			if (aantalbyes == byes) {
 				Groepen maakGroepen = maakGroepen(spelers, groepen, grootte, j);
 				result.add(maakGroepen);				
 			}
@@ -143,7 +147,7 @@ public class IJSCOIndeler {
 
 	/**
 	 * Maak groepen, rekening houdende met de vastgestelde bye
-	 *
+	 
 	 * @param deelnemers Deelnemers te verdelen over de groepen
 	 * @param nGroepen Het aantal te maken groepen
 	 * @param grootte Het aantal spelers in een groep
@@ -196,7 +200,9 @@ public class IJSCOIndeler {
 								if ((n_hoog >= c.minSpelers) && (n_laag <= c.maxSpelers)
 										&& (groepen.length >= c.minGroepen) && (groepen.length <= c.maxGroepen)
 										&& (byes >= c.minToegestaneByes) && (byes <= c.maxToegestaneByes)) {
-									mogelijkheden.add(new Schema(groepen.length, byes, groepen));
+									if (byes <= groepen.length) {
+										mogelijkheden.add(new Schema(groepen.length, byes, groepen));
+									}
 								}
 							}
 						}
