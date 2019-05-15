@@ -29,7 +29,7 @@ public class DeelnemersModel extends AbstractTableModel {
 	private JComponent component;
 	private Spelers deelnemers;
 
-	private String[] columnNames = { "Aanw", "Nr.", "Naam", "Rating", "Geboortejaar", "Geslacht" };
+	private String[] columnNames = { "Aanw", "Nr.", "Achternaam", "Voornaam", "Tussenvoegsel", "Rating", "Geboortejaar", "Geslacht" };
 
 	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
 
@@ -69,12 +69,16 @@ public class DeelnemersModel extends AbstractTableModel {
 			case 1:
 				return new Integer(speler.getKnsbnummer());
 			case 2:
-				return speler.getNaam();
+				return speler.getAchternaam();
 			case 3:
-				return new Integer(speler.getRating());
+				return speler.getVoornaam();
 			case 4:
-				return new Integer(speler.getGeboortejaar());
+				return speler.getTussenvoegsel();
 			case 5:
+				return new Integer(speler.getRating());
+			case 6:
+				return new Integer(speler.getGeboortejaar());
+			case 7:
 				return new String(speler.getGeslacht());
 			default:
 				return "";
@@ -109,10 +113,14 @@ public class DeelnemersModel extends AbstractTableModel {
             case 2:
                 return String.class;
             case 3:
-                return Integer.class;
+                return String.class;
             case 4:
-                return Integer.class;
+                return String.class;
             case 5:
+                return Integer.class;
+            case 6:
+                return Integer.class;
+            case 7:
                 return String.class;
             default:
                 return String.class;
@@ -128,8 +136,8 @@ public class DeelnemersModel extends AbstractTableModel {
 				tt += speler.toString();
 				tt += "</TD></TR>";
 				tt += "<TR><TD>KNSB</TD><TD>" + speler.getKnsbnummer() + "</TD></TR>";
-				tt += "<TR><TD>Naam handmatig</TD><TD>" + speler.getNaamHandmatig() + "</TD></TR>";
-				tt += "<TR><TD>Naam OSBK</TD><TD>" + speler.getNaamKNSB() + "</TD></TR>";
+				tt += "<TR><TD>Achternaam handmatig</TD><TD>" + speler.getAchternaamHandmatig() + "</TD></TR>";
+				tt += "<TR><TD>Achternaam KNSB</TD><TD>" + speler.getAchternaamKNSB() + "</TD></TR>";
 				tt += "<TR><TD>Rating handmatig</TD><TD>" + speler.getRatingHandmatig() + "</TD></TR>";
 				tt += "<TR><TD>Rating OSBO</TD><TD>" + speler.getRatingIJSCO() + "</TD></TR>";
 				tt += "<TR><TD>Rating KNSB</TD><TD>" + speler.getRatingKNSB() + "</TD></TR>";

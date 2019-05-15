@@ -159,7 +159,8 @@ public class OSBOLoader {
 				String samengestelde_naam = voornaam;
 				if (tussenvoegsel != null && !tussenvoegsel.trim().isEmpty()) samengestelde_naam += " " + tussenvoegsel;
 				if (achternaam != null && !achternaam.trim().isEmpty()) samengestelde_naam += " " + achternaam;
-				speler.setNaamKNSB(samengestelde_naam);
+				//speler.setNaamKNSB(samengestelde_naam);
+				speler.setNaamKNSB(voornaam, tussenvoegsel, achternaam);
 				int g = Integer.parseInt((String) s.get("geboortejaar"));
 				speler.setGeboortejaar((int) g);
 				String geslacht = (String) s.get("geslacht");

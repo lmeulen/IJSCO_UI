@@ -30,7 +30,15 @@ public class Speler {
     //region Properties
 	private int knsbnummer;
 	private String naamKNSB;
+	private String voornaamKNSB;
+	private String achternaamKNSB;
+	private String tussenvoegselKNSB;
+	private String voorlettersKNSB;
 	private String naamHandmatig;
+	private String voornaamHandmatig;
+	private String achternaamHandmatig;
+	private String tussenvoegselHandmatig;
+	private String voorlettersHandmatig;
 	private String vereniging; 
 	private int geboortejaar;
 	private String geslacht;
@@ -46,7 +54,15 @@ public class Speler {
 	public Speler() {
 		this.knsbnummer = 0;
 		this.naamKNSB = null;
+		this.voornaamKNSB = null;
+		this.achternaamKNSB = null;
+		this.tussenvoegselKNSB = null;
+		this.voorlettersKNSB = null;
 		this.naamHandmatig = null;
+		this.voornaamHandmatig = null;
+		this.achternaamHandmatig = null;
+		this.tussenvoegselHandmatig = null;
+		this.voorlettersHandmatig = null;
 		this.vereniging = null;
 		this.geboortejaar = -1;
 		this.geslacht = "";
@@ -60,8 +76,39 @@ public class Speler {
 
 	public Speler(String naam) {
 		this.knsbnummer = 0;
-		this.naamKNSB = null; 
+		this.naamKNSB = null;
+		this.voornaamKNSB = null;
+		this.achternaamKNSB = null;
+		this.tussenvoegselKNSB = null;
+		this.voorlettersKNSB = null;
 		this.naamHandmatig = naam;
+		this.voornaamHandmatig = null;
+		this.achternaamHandmatig = null;
+		this.tussenvoegselHandmatig = null;
+		this.voorlettersHandmatig = null;
+		this.vereniging = null;
+		this.geboortejaar = -1;
+		this.geslacht = "";
+		this.ratingIJSCO = -1;
+		this.ratingKNSB = -1;
+		this.ratingHandmatig = -1;
+		this.aanwezig = true;
+		this.overruleNaam = false;
+		this.overruleRating = false;
+	}
+
+	public Speler(String voornaam, String voorletters, String tussenvoegsel, String achternaam) {
+		this.knsbnummer = 0;
+		this.naamKNSB = null;
+		this.voornaamKNSB = null;
+		this.achternaamKNSB = null;
+		this.tussenvoegselKNSB = null;
+		this.voorlettersKNSB = null;
+		this.naamHandmatig = null;
+		this.voornaamHandmatig = voornaam;
+		this.achternaamHandmatig = achternaam;
+		this.tussenvoegselHandmatig = tussenvoegsel;
+		this.voorlettersHandmatig = voorletters;
 		this.vereniging = null;
 		this.geboortejaar = -1;
 		this.geslacht = "";
@@ -76,7 +123,15 @@ public class Speler {
 	public Speler(int knsbnummer) {
 		this.knsbnummer = knsbnummer;
 		this.naamKNSB = null;
+		this.voornaamKNSB = null;
+		this.achternaamKNSB = null;
+		this.tussenvoegselKNSB = null;
+		this.voorlettersKNSB = null;
 		this.naamHandmatig = null;
+		this.voornaamHandmatig = null;
+		this.achternaamHandmatig = null;
+		this.tussenvoegselHandmatig = null;
+		this.voorlettersHandmatig = null;
 		this.vereniging = null;
 		this.geboortejaar = 1;
 		this.geslacht = "";
@@ -91,7 +146,15 @@ public class Speler {
 	public Speler(int knsbnummer, String naamKNSB, String vereniging, int ratingIJSCO, int ratingKNSB) {
 		this.knsbnummer = knsbnummer;
 		this.naamKNSB = naamKNSB;
+		this.voornaamKNSB = null;
+		this.achternaamKNSB = null;
+		this.tussenvoegselKNSB = null;
+		this.voorlettersKNSB = null;
 		this.naamHandmatig = null;
+		this.voornaamHandmatig = null;
+		this.achternaamHandmatig = null;
+		this.tussenvoegselHandmatig = null;
+		this.voorlettersHandmatig = null;
 		this.vereniging = vereniging;
 		this.geboortejaar = -1;
 		this.geslacht = "";
@@ -110,7 +173,15 @@ public class Speler {
 			int ratingKNSB) {
 		this.knsbnummer = knsbnummer;
 		this.naamKNSB = naamKNSB;
+		this.voornaamKNSB = null;
+		this.achternaamKNSB = null;
+		this.tussenvoegselKNSB = null;
+		this.voorlettersKNSB = null;
 		this.naamHandmatig = null;
+		this.voornaamHandmatig = null;
+		this.achternaamHandmatig = null;
+		this.tussenvoegselHandmatig = null;
+		this.voorlettersHandmatig = null;
 		this.vereniging = vereniging;
 		this.setGeboortejaar(geboortejaar);
 		this.geslacht = "";
@@ -127,7 +198,15 @@ public class Speler {
 			int ratingKNSB) {
 		this.knsbnummer = knsbnummer;
 		this.naamKNSB = naamKNSB;
+		this.voornaamKNSB = null;
+		this.achternaamKNSB = null;
+		this.tussenvoegselKNSB = null;
+		this.voorlettersKNSB = null;
 		this.naamHandmatig = null;
+		this.voornaamHandmatig = null;
+		this.achternaamHandmatig = null;
+		this.tussenvoegselHandmatig = null;
+		this.voorlettersHandmatig = null;
 		this.vereniging = vereniging;
 		this.setGeboortejaar(geboortejaar);
 		this.geslacht = geslacht;
@@ -160,6 +239,22 @@ public class Speler {
 		}
 	}
 
+	public String getAchternaamHandmatig() {
+		return achternaamHandmatig;
+	}
+
+	public String getVoornaamHandmatig() {
+		return voornaamHandmatig;
+	}
+
+	public String getVoorlettersHandmatig() {
+		return voorlettersHandmatig;
+	}
+
+	public String getTussenvoegselHandmatig() {
+		return tussenvoegselHandmatig;
+	}
+
 	/**
 	 * Geef naam van de speler. Prioriteit: 1. Naam KNSB 2. Handmatig ingestelde
 	 * naam 3. "???"
@@ -168,13 +263,61 @@ public class Speler {
 	 */
 	public String getNaam() {
 		if (overruleNaam) {
-			return (naamHandmatig != null ? naamHandmatig : "");
-		} else if (naamKNSB != null && naamKNSB.length() > 0) {
-			return naamKNSB;
-		} else if (naamHandmatig != null && naamHandmatig.length() > 0) {
-			return naamHandmatig;
+			return (getNaamHandmatig() != null ? getNaamHandmatig() : "");
+		} else if (getNaamKNSB() != null && getNaamKNSB().length() > 0) {
+			return getNaamKNSB();
+		} else if (getNaamHandmatig() != null && getNaamHandmatig().length() > 0) {
+			return getNaamHandmatig();
 		} else {
 			return "???";
+		}
+	}
+
+	public String getAchternaam() {
+		if (overruleNaam) {
+			return (getAchternaamHandmatig() != null ? getAchternaamHandmatig() : "");
+		} else if (getAchternaamKNSB() != null && getAchternaamKNSB().length() > 0) {
+			return getAchternaamKNSB();
+		} else if (getAchternaamHandmatig() != null && getAchternaamHandmatig().length() > 0) {
+			return getAchternaamHandmatig();
+		} else {
+			return "???";
+		}
+	}
+
+	public String getVoornaam() {
+		if (overruleNaam) {
+			return (getVoornaamHandmatig() != null ? getVoornaamHandmatig() : "");
+		} else if (getVoornaamKNSB() != null && getVoornaamKNSB().length() > 0) {
+			return getVoornaamKNSB();
+		} else if (getVoornaamHandmatig() != null && getVoornaamHandmatig().length() > 0) {
+			return getVoornaamHandmatig();
+		} else {
+			return "???";
+		}
+	}
+
+	public String getVoorletters() {
+		if (overruleNaam) {
+			return (getVoorlettersHandmatig() != null ? getVoorlettersHandmatig() : "");
+		} else if (getVoorlettersKNSB() != null && getVoorlettersKNSB().length() > 0) {
+			return getVoorlettersKNSB();
+		} else if (getVoorlettersHandmatig() != null && getVoorlettersHandmatig().length() > 0) {
+			return getVoorlettersHandmatig();
+		} else {
+			return "";
+		}
+	}
+
+	public String getTussenvoegsel() {
+		if (overruleNaam) {
+			return (getTussenvoegselHandmatig() != null ? getTussenvoegselHandmatig() : "");
+		} else if (getTussenvoegselKNSB() != null && getTussenvoegselKNSB().length() > 0) {
+			return getTussenvoegselKNSB();
+		} else if (getTussenvoegselHandmatig() != null && getTussenvoegselHandmatig().length() > 0) {
+			return getTussenvoegselHandmatig();
+		} else {
+			return "";
 		}
 	}
 
@@ -195,20 +338,63 @@ public class Speler {
 		}
 	}
 
+	public String getAchternaamKNSB() {
+		return achternaamKNSB;
+	}
+
+	public String getVoornaamKNSB() {
+		return voornaamKNSB;
+	}
+
+	public String getVoorlettersKNSB() {
+		return voorlettersKNSB;
+	}
+
+	public String getTussenvoegselKNSB() {
+		return tussenvoegselKNSB;
+	}
+
 	public String getNaamKNSB() {
-		return naamKNSB;
+		String samengestelde_naam = voornaamKNSB;
+		if (tussenvoegselKNSB != null && !tussenvoegselKNSB.trim().isEmpty()) samengestelde_naam += " " + tussenvoegselKNSB;
+		if (achternaamKNSB != null && !achternaamKNSB.trim().isEmpty()) samengestelde_naam += " " + achternaamKNSB;
+		return samengestelde_naam;
 	}
 
 	public void setNaamKNSB(String naam) {
 		this.naamKNSB = naam;
 	}
 
+	public void setNaamKNSB(String voornaam, String tussenvoegsel, String achternaam) {
+		this.voornaamKNSB = voornaam;
+		this.tussenvoegselKNSB = tussenvoegsel;
+		this.achternaamKNSB = achternaam;
+	}
+
+	public void setNaamKNSB(String voornaam, String voorletters, String tussenvoegsel, String achternaam) {
+		this.voornaamKNSB = voornaam;
+		this.voorlettersKNSB = voorletters;
+		this.tussenvoegselKNSB = tussenvoegsel;
+		this.achternaamKNSB = achternaam;
+	}
+
 	public String getNaamHandmatig() {
-		return naamHandmatig;
+		String samengestelde_naam = voornaamHandmatig;
+		if (tussenvoegselHandmatig != null && !tussenvoegselHandmatig.trim().isEmpty()) samengestelde_naam += " " + tussenvoegselHandmatig;
+		if (achternaamHandmatig != null && !achternaamHandmatig.trim().isEmpty()) samengestelde_naam += " " + achternaamHandmatig;
+		return samengestelde_naam;
 	}
 
 	public void setNaamHandmatig(String naamHandmatig) {
 		this.naamHandmatig = naamHandmatig;
+	}
+
+	public void setNaamHandmatig(String voornaam, String voorletters, String tussenvoegsel, String achternaam) {
+		//this.naamHandmatig = naamHandmatig;
+		this.voornaamHandmatig = voornaam;
+		this.voorlettersHandmatig = voorletters;
+		this.tussenvoegselHandmatig = tussenvoegsel;
+		this.achternaamHandmatig = achternaam;
 	}
 
 	public String getVereniging() {

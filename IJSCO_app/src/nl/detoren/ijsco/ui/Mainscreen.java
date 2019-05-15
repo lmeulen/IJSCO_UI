@@ -18,6 +18,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -174,14 +175,15 @@ public class Mainscreen extends JFrame {
 		//hoofdPanel.setLayout(new GridLayout(1, 4, 0, 0));
 		hoofdPanel.setLayout(new GridLayout(1, 3, 0, 0));
 		//hoofdPanel.setLayout(new GridBagLayout());
+		
 
 		// LINKS: Deelnemers
-		hoofdPanel.add(createDeelnemersPanel(), new ExtendedWeightConstraints(0, 0, 450.0, 650.0));
+		hoofdPanel.add(createDeelnemersPanel(), new ExtendedWeightConstraints(0, 0, 500.0, 650.0));
 		// LINKSMIDDEN: INSTELLINGEN EN CONTROL
 		//hoofdPanel.add(createInstellingenPanel(), new ExtendedWeightConstraints(1, 0, 300.0, 650.0));
 
 		// RECHSTMIDDEN: SCENARIOS
-		hoofdPanel.add(createPanelScenariosHolder(), new ExtendedWeightConstraints(1, 0, 300.0, 650.0));
+		hoofdPanel.add(createPanelScenariosHolder(), new ExtendedWeightConstraints(1, 0, 250.0, 650.0));
 
 		// RECHTS: GROEPEN
 		hoofdPanel.add(createPanelGroepen(), new ExtendedWeightConstraints(2, 0, 450.0, 650.0));
@@ -437,7 +439,8 @@ deelnemersmenu.add(item);
 				status.groepenuitslagen = (GroepsUitslagen) new ExcelImport().importeerUitslagen(file);
 				OutputUitslagen ou = new OutputUitslagen();
 				ou.exportuitslagen(status.groepenuitslagen);
-				IJSCOController.t().wisUitslagen();
+				//IJSCOController.t().wisUitslagen();
+				IJSCOController.t().wisPoules();
 				ou.exportJSON(status.groepenuitslagen);
 				GroepsUitslagen verwerkteUitslag = new Uitslagverwerker().verwerkUitslag(status.groepenuitslagen);
 				logger.log(Level.INFO, verwerkteUitslag.ToString());
@@ -1302,10 +1305,12 @@ deelnemersmenu.add(item);
 
 		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(0), 30);
 		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(1), 55);
-		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(2), 170);
-		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(3), 40);
-		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(4), 40);
-		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(5), 30);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(2), 115);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(3), 75);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(4), 35);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(5), 35);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(6), 35);
+		Utils.fixedColumSize(deelnemersTabel.getColumnModel().getColumn(7), 20);
 		Utils.fixedComponentSize(scrollPane, 400, 580);
 		return panel;
 	}

@@ -5,30 +5,34 @@ import java.util.Arrays;
 
 public class UitslagSpeler implements Comparable{
 
-	private int rang;
-	private int uitslagspelerid;
-	private String naam;
-	private int geboortejaar;
-	private String categorie;
-	private String[] vereniging;
-	private int punten; // punten is wedstrijdpunten * 10 
-	private int wp; // WP is WP *10
-	private int sb; // SB is SB * 100
-	private int knsbnummer;
-	private int startrating;
-	private int deltarating;
+	private int _rang;
+	private int _uitslagspelerid;
+	private String _naam;
+	private String _voornaam;
+	private String _voorletters;
+	private String _tussenvoegsel;
+	private String _achternaam;
+	private int _geboortejaar;
+	private String _categorie;
+	private String[] _vereniging;
+	private int _punten; // punten is wedstrijdpunten * 10 
+	private int _wp; // WP is WP *10
+	private int _sb; // SB is SB * 100
+	private int _knsbnummer;
+	private int _startrating;
+	private int _deltarating;
 	
 	
 	public UitslagSpeler(Speler speler) {
-		rang=0;
-		punten = 0;
-		wp = 0;
-		sb = 0 ;
-		startrating = 0;
-		deltarating = 0;
-		naam = speler.getNaam();
-		geboortejaar = 0;
-		vereniging[0] = speler.getVereniging();
+		_rang=0;
+		_punten = 0;
+		_wp = 0;
+		_sb = 0 ;
+		_startrating = 0;
+		_deltarating = 0;
+		_naam = speler.getNaam();
+		_geboortejaar = 0;
+		_vereniging[0] = speler.getVereniging();
 	}
 
 	public UitslagSpeler() {
@@ -36,111 +40,143 @@ public class UitslagSpeler implements Comparable{
 	}
 
 	public void setRang (int rang) {
-		this.rang = rang;
+		this._rang = rang;
 	}
 	
 	public int getRang() {
-		return rang;
+		return _rang;
 	}
 
 	public void setId (int id) {
-		this.uitslagspelerid = id;
+		this._uitslagspelerid = id;
 	}
 	
 	public int getId() {
-		return uitslagspelerid;
+		return _uitslagspelerid;
 	}
 
 	public void setStartrating (int startrating) {
-		this.startrating = startrating;
+		this._startrating = startrating;
 	}
 	
 	public int getStartrating() {
-		return startrating;
+		return _startrating;
 	}
 
 	public void setDeltarating (int deltarating) {
-		this.deltarating = deltarating;
+		this._deltarating = deltarating;
 	}
 
 	public int getDeltarating() {
-		return deltarating;
+		return _deltarating;
 	}
 
 	public int getPunten() {
-		return punten;
+		return _punten;
 	}
 
 	public void setPunten(int punten) {
-		this.punten = punten;
+		this._punten = punten;
 	}
 
 	public int getWP() {
-		return wp;
+		return _wp;
 	}
 
 	public void setWP(int wp) {
-		this.wp = wp;
+		this._wp = wp;
 	}
 
 	public int getSB() {
-		return sb;
+		return _sb;
 	}
 
 	public void setSB(int sb) {
-		this.sb = sb;
+		this._sb = sb;
 	}
 	public String getNaam() {
-		return naam;
+		return _naam;
+	}
+
+	public String getVoornaam() {
+		return _voornaam;
+	}
+
+	public String setVoorletters() {
+		return _voorletters;
+	}
+
+	public String getTussenvoegsel() {
+		return _tussenvoegsel;
+	}
+
+	public String getAchternaam() {
+		return _achternaam;
 	}
 
 	public void setKNSBnummer (int knsbnummer) {
-		this.knsbnummer = knsbnummer;
+		this._knsbnummer = knsbnummer;
 	}
 	
 	public int getKNSBnummer() {
-		return knsbnummer;
+		return _knsbnummer;
 	}
 
-	public void setNaam(String spelersnaam) {
-		naam = spelersnaam;
+	public void setNaam(String naam) {
+		_naam = naam;
+	}
+
+	public void setVoornaam(String voornaam) {
+		_voornaam = voornaam;
+	}
+
+	public void setVoorletters(String voorletters) {
+		_voorletters = voorletters;
+	}
+
+	public void setTussenvoegsel(String tussenvoegsel) {
+		_tussenvoegsel = tussenvoegsel;
+	}
+
+	public void setAchternaam(String achternaam) {
+		_achternaam = achternaam;
 	}
 
 	public String getVereniging() {
-		if (vereniging == null) {
-			vereniging = new String[] { "" };
+		if (_vereniging == null) {
+			_vereniging = new String[] { "" };
 		}
-		return vereniging[0];
+		return _vereniging[0];
 	}
 
 	public void setVereniging(String naamvereniging) {
 		if (naamvereniging == null) {
 			return;
 		}
-		ArrayList<String> aL = new ArrayList<String>(Arrays.asList(vereniging));
+		ArrayList<String> aL = new ArrayList<String>(Arrays.asList(_vereniging));
 		aL.add(naamvereniging);
-		vereniging = (String[]) aL.toArray();
+		_vereniging = (String[]) aL.toArray();
 	}
 
 	public int getGeboortejaar() {
-		return geboortejaar;
+		return _geboortejaar;
 	}
 
 	public void setGeboortejaar(int jaar) {
-		geboortejaar = jaar;
+		_geboortejaar = jaar;
 	}
 
 	public String getCategorie() {
-		return categorie;
+		return _categorie;
 	}
 
 	public void setCategorie(String categorie) {
-		this.categorie = categorie;
+		this._categorie = categorie;
 	}
 
 	public String toFormattedString() {
 			String result = "";
-			result += String.format("%1$10d | %2$-34s", knsbnummer, this.getNaam());
+			result += String.format("%1$10d | %2$-34s", _knsbnummer, this.getNaam());
 //			result += String.format("%1$10d | %2$34s | %3$6d | %4$6d | %5$6d | %6$6d | %7$6d", knsbnummer, this.getNaam(), this.getVereniging(), this.getGeboortejaar(), this.getPunten()/10, this.getSB()/100, this.getStartrating());
 //			result += String.format("%1 10d | %2$20s | %3 6d", knsbnummer, this.getNaam(), this.getStartrating());
 			return result;

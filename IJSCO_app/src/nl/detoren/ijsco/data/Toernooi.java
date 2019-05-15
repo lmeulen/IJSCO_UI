@@ -20,7 +20,8 @@ public class Toernooi {
 	
 	private String _plaats;
 	
-	private List<WedstrijdUitslag> _uitslagen = new ArrayList<WedstrijdUitslag>();
+	//private List<WedstrijdUitslag> _uitslagen = new ArrayList<WedstrijdUitslag>();
+	private List<GroepsUitslag> _poules = new ArrayList<GroepsUitslag>();
 
 	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
 	
@@ -85,15 +86,21 @@ public class Toernooi {
 		_plaats = plaats;
 	}
 
-	public void wisUitslagen() {
-		_uitslagen.clear();
+//	public void wisUitslagen() {
+//		_uitslagen.clear();
+//	}
+
+	public void wisPoules() {
+		_poules.clear();
 	}
+//	public void addUitslag(WedstrijdUitslag uitslag) {
+//		logger.log(Level.INFO, "resultaat = " + uitslag.resultaat);
+//		_uitslagen.add(uitslag);
+//		logger.log(Level.INFO, "resultaat = " + _uitslagen.get(_uitslagen.size()-1).resultaat);
+//	 }
 	
-	public void addUitslag(WedstrijdUitslag uitslag) {
-		logger.log(Level.INFO, "resultaat = " + uitslag.resultaat);
-		_uitslagen.add(uitslag);
-		logger.log(Level.INFO, "resultaat = " + _uitslagen.get(_uitslagen.size()-1).resultaat);
-		
+	public void addPoule(GroepsUitslag poule) {
+		_poules.add(poule);
 	}
 
 //endregion setters

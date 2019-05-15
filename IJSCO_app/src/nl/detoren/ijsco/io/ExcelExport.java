@@ -148,11 +148,15 @@ public class ExcelExport implements ExportInterface {
 			outFile.close();
 			// And open it in the system editor
 			Desktop.getDesktop().open(outputFile);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			logger.log(Level.SEVERE, "Fout bij maken indeling excel : " + e.getMessage());
 			
 		}
-	}
+		catch (Exception e) {
+			logger.log(Level.SEVERE, "Fout bij correct indelen van excel : " + e.getMessage());
+			}
+		}
 
 	/**
 	 * Update a single cell in the Excel Sheet. The cell is specified by its row

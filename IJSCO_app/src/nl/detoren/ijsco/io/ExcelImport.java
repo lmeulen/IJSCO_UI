@@ -280,11 +280,11 @@ public class ExcelImport implements ImportInterface {
 			}
 			s.setId(id);
 			s.setRang(rang);
+			s.setKNSBnummer(knsbnummer);
 			s.setNaam(naam);
 			s.setPunten(punten);
 			//s.setWP(wp);
 			s.setSB(sb);
-			s.setKNSBnummer(knsbnummer);
 			s.setStartrating(startrating);
 			//logger.log(Level.INFO, s.toFormattedString());
 			for (Speler osbo :OSBOSpelers.values()) {
@@ -301,6 +301,10 @@ public class ExcelImport implements ImportInterface {
 					logger.log(Level.WARNING, "Exception in finding geboortejaar " + geboortejaar + " in OSBO list");
 				}
 				if (knsbnummer == osboknsbnummer) {
+					s.setVoornaam(osbo.getVoornaam());
+					s.setVoorletters(osbo.getVoorletters());
+					s.setTussenvoegsel(osbo.getTussenvoegsel());
+					s.setAchternaam(osbo.getAchternaam());
 					s.setVereniging(osbo.getVereniging());
 					s.setGeboortejaar(osbo.getGeboortejaar());
 					s.setCategorie(osbo.getCategorie());
@@ -314,7 +318,13 @@ public class ExcelImport implements ImportInterface {
 				int uitslagcode;
 				row = sheet.getRow(rIdxbase+(i*(3+(groepsgrootte-2)/2))+j);
 				if (row != null) {
-					uitslagcode = cellIntValue(row.getCell(cUitslag));
+					try {
+						uitslagcode = cellIntValue(row.getCell(cUitslag));
+					}
+					catch (Exception e) {
+						logger.log(Level.WARNING, "No result found in Excel.");
+						uitslagcode = -1;
+					}
 					if (uitslagcode>=0 && uitslagcode <10) {
 						WedstrijdUitslag wedstrijd = new WedstrijdUitslag();
 						Integer speleridwit; 

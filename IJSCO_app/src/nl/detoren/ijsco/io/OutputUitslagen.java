@@ -66,11 +66,11 @@ public class OutputUitslagen implements GroepenExportInterface{
 		try {
 			String bestandsnaam = "Uitslagen.json";
 			logger.log(Level.INFO, "Sla uitslag.json op in bestand " + bestandsnaam);
-			for (GroepsUitslag g : groepenuitslagen) { 
-				for (WedstrijdUitslag u : g.getWedstrijden()) {
-				 toernooi.addUitslag(u);
-				}
-			}
+			for (GroepsUitslag g : groepenuitslagen) {
+				toernooi.addPoule(g);
+				/*
+				 * for (WedstrijdUitslag u : g.getWedstrijden()) { toernooi.addUitslag(u); }
+				 */			}
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(toernooi);
 			// write converted json data to a file
