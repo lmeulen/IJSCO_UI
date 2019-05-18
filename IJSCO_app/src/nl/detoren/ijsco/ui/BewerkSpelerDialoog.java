@@ -52,22 +52,36 @@ public class BewerkSpelerDialoog extends JDialog {
         setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().add(createPanel());
-        setSize(300, 11 * 24);
+        setSize(300, 13 * 24);
         setLocationRelativeTo(frame);
     }
 
     private JPanel createPanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(11, 2));
+        panel.setLayout(new GridLayout(13, 2));
         //KNSB nummer
         panel.add(new JLabel("KNSB nummer"));
         final JTextField tfKNSBnr = new JTextField((new Integer(speler.getKnsbnummer())).toString());
         if (speler.getKnsbnummer() > 8000000) tfKNSBnr.setEditable(false);
         panel.add(tfKNSBnr);
         //Naam handmatig
-        panel.add(new JLabel("Naam"));
-        final JTextField tfNaam = new JTextField(speler.getNaamHandmatig());
-        panel.add(tfNaam);
+        //panel.add(new JLabel("Naam"));
+        //final JTextField tfNaam = new JTextField(speler.getNaamHandmatig());
+        //panel.add(tfNaam);
+        //Voornaam handmatig
+        panel.add(new JLabel("Voornaam"));
+        final JTextField tfVoornaam = new JTextField(speler.getVoornaamHandmatig());
+        panel.add(tfVoornaam);
+        //Tussenvoegsel handmatig
+        panel.add(new JLabel("Tussenvoegsel"));
+        final JTextField tfTussenvoegsel = new JTextField(speler.getTussenvoegselHandmatig());
+        panel.add(tfTussenvoegsel);
+        //Achternaam handmatig
+        panel.add(new JLabel("Achternaam"));
+        final JTextField tfAchternaam = new JTextField(speler.getAchternaamHandmatig());
+        panel.add(tfAchternaam);
+        
+        
         panel.add(new JLabel("Naam (KNSB)"));
         final JTextField tfNaam2 = new JTextField(speler.getNaamKNSB());
         tfNaam2.setEditable(false);
@@ -111,7 +125,10 @@ public class BewerkSpelerDialoog extends JDialog {
 
             @Override
             public void actionPerformed(ActionEvent event) {
-                speler.setNaamHandmatig(tfNaam.getText());
+                //speler.setNaamHandmatig(tfNaam.getText());
+                speler.setVoornaamHandmatig(tfVoornaam.getText());
+                speler.setTussenvoegselHandmatig(tfTussenvoegsel.getText());
+                speler.setAchternaamHandmatig(tfAchternaam.getText());
                 int rating = Integer.parseInt(tfRating.getText());
                 speler.setRatingHandmatig(rating);
                 int knsb = Integer.parseInt(tfKNSBnr.getText());

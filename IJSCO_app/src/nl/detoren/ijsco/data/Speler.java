@@ -378,6 +378,18 @@ public class Speler {
 		this.achternaamKNSB = achternaam;
 	}
 
+	public void setVoornaamKNSB(String naam) {
+		this.voornaamKNSB = naam;
+	}
+
+	public void setAchternaamKNSB(String naam) {
+		this.achternaamKNSB = naam;
+	}
+
+	public void setTussenvoegselKNSB(String naam) {
+		this.tussenvoegselKNSB = naam;
+	}
+
 	public String getNaamHandmatig() {
 		String samengestelde_naam = voornaamHandmatig;
 		if (tussenvoegselHandmatig != null && !tussenvoegselHandmatig.trim().isEmpty()) samengestelde_naam += " " + tussenvoegselHandmatig;
@@ -397,6 +409,18 @@ public class Speler {
 		this.achternaamHandmatig = achternaam;
 	}
 
+	public void setVoornaamHandmatig(String naam) {
+		this.voornaamHandmatig = naam;
+	}
+
+	public void setAchternaamHandmatig(String naam) {
+		this.achternaamHandmatig = naam;
+	}
+
+	public void setTussenvoegselHandmatig(String naam) {
+		this.tussenvoegselHandmatig = naam;
+	}
+	
 	public String getVereniging() {
 		return vereniging;
 	}

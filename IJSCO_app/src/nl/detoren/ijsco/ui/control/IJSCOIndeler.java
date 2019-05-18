@@ -50,7 +50,11 @@ public class IJSCOIndeler {
 				} else {
 					Speler osbogegevens = osbolijst.get(s.getKnsbnummer());
 					if (osbogegevens != null) {
-						s.setNaamKNSB(osbogegevens.getNaam());
+
+						s.setNaamKNSB(osbogegevens.getNaamKNSB());
+						s.setVoornaamKNSB(osbogegevens.getVoornaamKNSB());
+						s.setAchternaamKNSB(osbogegevens.getAchternaamKNSB());
+						s.setTussenvoegselKNSB(osbogegevens.getTussenvoegselKNSB());
 						s.setRatingIJSCO(osbogegevens.getRatingIJSCO());
 						s.setGeboortejaar(osbogegevens.getGeboortejaar());
 						s.setGeslacht(osbogegevens.getGeslacht());

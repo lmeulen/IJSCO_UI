@@ -161,6 +161,9 @@ public class Mainscreen extends JFrame {
 		if (status.config==null) {
 			status.config = new Configuratie();
 		}
+
+		indeler.controleerSpelers(status.deelnemers, status.OSBOSpelers);
+		
 		//leesOSBOlijst();
 		addMenubar();
 		// Frame

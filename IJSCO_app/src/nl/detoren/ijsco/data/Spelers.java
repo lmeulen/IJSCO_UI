@@ -205,4 +205,10 @@ public class Spelers implements Collection<Speler> {
 		}
 		return result;
 	}
+
+	public void checkdeelnemers(Spelers osbolijst) {
+		//Controleer of er wijzigingen zijn in de opzet van deelnemers
+		//Vult de (nieuwe) velden op basis van OSBOlijst 
+		
+	}
 }
