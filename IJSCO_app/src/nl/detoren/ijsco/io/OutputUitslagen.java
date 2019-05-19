@@ -68,7 +68,7 @@ public class OutputUitslagen implements GroepenExportInterface{
 			logger.log(Level.INFO, "Sla uitslag.json op in bestand " + bestandsnaam);
 			for (GroepsUitslag g : groepenuitslagen) { 
 				for (WedstrijdUitslag u : g.getWedstrijden()) {
-				 toernooi.addUitslag(u);
+				 toernooi.addUitslag(u);	
 				}
 			}
 			Gson gson = new Gson();
@@ -77,17 +77,6 @@ public class OutputUitslagen implements GroepenExportInterface{
 			FileWriter writer = new FileWriter(bestandsnaam);
 			writer.write(jsonString);
 			writer.close();
-			SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
-			SAIM.setSubject("IJSCO Uitslag bestanden van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
-			SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
-			SAIM.setBodyText("Hierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
-			SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
-			SAIM.addAttachement("Uitslagen.json");
-			SAIM.addAttachement("Uitslagen.txt");
-			SAIM.addAttachement("Einduitslagen.txt");
-			SAIM.addAttachement("Indeling resultaat.xlsm");
-			SAIM.addAttachement("status.json");
-			SAIM.send();
 			}
 		catch (Exception e)
 		{
