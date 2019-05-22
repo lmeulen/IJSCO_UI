@@ -175,6 +175,7 @@ public class SendAttachmentInEmail {
  
       } catch (MessagingException e)
       {
+
     	  logger.log(Level.SEVERE, "Probleem met verzenden Email. Message: " + e.getMessage() + ". Cause: " + e.getCause() + ".");
     	  JOptionPane.showMessageDialog(null, "Versturen van uitslagen naar " + _to + "  mislukt. Probeer later in het menu OSBO -> handmatig versturen opnieuw.");
       }

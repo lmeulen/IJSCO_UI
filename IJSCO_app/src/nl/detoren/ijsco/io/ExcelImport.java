@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -84,6 +86,12 @@ public class ExcelImport implements ImportInterface {
                 				case 10:
                 					groepen.Add(importeerGroep10(sheet));
                 					break;
+                				case 12:
+                					groepen.Add(importeerGroep12(sheet));
+                					break;
+                				case 14:
+                					groepen.Add(importeerGroep14(sheet));
+                					break;
                 				default:
                         			logger.log(Level.WARNING, "Uitslagen verwerken voor groepsgrootte " + groepsgrootte + " niet ondersteund!");
                         			break;
@@ -102,6 +110,57 @@ public class ExcelImport implements ImportInterface {
 		logger.log(Level.INFO, groepen.toString());
 		return groepen;
 	}
+
+	private GroepsUitslag importeerGroep14(Sheet sheet) {
+/*
+ * 		versie < 0.3
+ */ 		
+/*		int groepsgrootte = ?;
+		int rowidxbase = ?;
+		int columnuitslag = ?;
+		int columntotaal = ?;
+		int columnwedstrijdidwit = ?;	
+		int columnwedstrijdidzwart = ?;			
+*/
+/*
+ * 		versie 0.3
+ */
+		int groepsgrootte = 14;
+		int rowidxbase = 20; // Rij waar Ronde 1 start
+		int columnuitslag = 23; // Uitslag kolom
+		int columntotaal = 21; // Totaalpunten kolom
+		int columnwedstrijdidwit = 50; // Witwedstrijd kolom (berekening)
+		int columnwedstrijdidzwart = 51; // Zwartwedstrijd kolom (berekening)
+		GroepsUitslag groep = importeergroep(groepsgrootte, sheet, rowidxbase, columnuitslag, columntotaal, columnwedstrijdidwit, columnwedstrijdidzwart);
+		logger.log(Level.INFO, "Import groep 14 klaar");
+		return groep;		
+	}
+
+	private GroepsUitslag importeerGroep12(Sheet sheet) {
+/*
+ * 		versie < 0.3
+ */ 		
+/*		int groepsgrootte = 12;
+		int rowidxbase = ?;
+		int columnuitslag = ?;
+		int columntotaal = ?;
+		int columnwedstrijdidwit = ?;	
+		int columnwedstrijdidzwart = ?;			
+*/
+/*
+ * 		versie 0.3
+ */
+		int groepsgrootte = 12;
+		int rowidxbase = 18; // Rij waar Ronde 1 start
+		int columnuitslag = 21; // Uitslag kolom
+		int columntotaal = 19; // Totaalpunten kolom
+		int columnwedstrijdidwit = 46; // Witwedstrijd kolom (berekening)
+		int columnwedstrijdidzwart = 47; // Zwartwedstrijd kolom (berekening)
+		GroepsUitslag groep = importeergroep(groepsgrootte, sheet, rowidxbase, columnuitslag, columntotaal, columnwedstrijdidwit, columnwedstrijdidzwart);
+		logger.log(Level.INFO, "Import groep 12 klaar");
+		return groep;		
+	}
+
 
 	private GroepsUitslag importeerGroep10(Sheet sheet) {
 /*

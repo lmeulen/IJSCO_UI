@@ -449,6 +449,24 @@ deelnemersmenu.add(item);
 				logger.log(Level.INFO, verwerkteUitslag.ToString());
 				new OutputUitslagen().exporteindresultaten(verwerkteUitslag);
 				JOptionPane.showMessageDialog(null, "Uitslagen geimporteerd en bestanden aangemaakt.");
+				try {
+					SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
+					SAIM.setSubject("IJSCO Uitslag bestanden van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
+					SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
+					SAIM.setBodyText("Hierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
+					SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
+					SAIM.addAttachement("Uitslagen.json");
+					SAIM.addAttachement("Uitslagen.txt");
+					SAIM.addAttachement("Eindresultaten.txt");
+					SAIM.addAttachement("Indeling resultaat.xlsm");
+					SAIM.addAttachement("status.json");
+					SAIM.send();
+					JOptionPane.showMessageDialog(null, "Uitslagen succesvol verstuurd naar OSBO.");
+				}
+				catch (Exception ex) {
+					logger.log(Level.SEVERE, "An " + ex.getMessage() + " occured ");
+				}
+
 			}	
 			hoofdPanel.repaint();
 		}
@@ -472,7 +490,7 @@ deelnemersmenu.add(item);
 			SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
 			SAIM.addAttachement("Uitslagen.json");
 			SAIM.addAttachement("Uitslagen.txt");
-			SAIM.addAttachement("Einduitslagen.txt");
+//			SAIM.addAttachement("Einduitslagen.txt");
 			SAIM.addAttachement("Indeling resultaat.xlsm");
 			SAIM.addAttachement("status.json");
 			SAIM.send();
