@@ -15,6 +15,7 @@ package nl.detoren.ijsco.io;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -114,13 +115,41 @@ public class OSBOLoader {
 		    }
 	  }
 
+	  public static JSONArray readJsonFromFile(String bestandsnaam) throws IOException {
+		    try {
+		    	FileReader reader = new FileReader(bestandsnaam);
+	            BufferedReader rd = new BufferedReader(reader);
+		      String jsonText = readAll(rd);
+		      //JSONObject json = new JSONObject(jsonText);
+		      Object o = JSONValue.parse(jsonText);
+		      JSONArray json = (JSONArray) o; 
+		      return json;
+		    } finally {
+		    }
+	  }
+
 	public Spelers laadJSON(String url) {
 		Spelers spelers = null;
 		try {
 			JSONArray json = readJsonFromUrl(url);
 			spelers = parseJSON(json);
 			
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
+			logger.log(Level.WARNING, "Error loading OSBO spelers " + e.getMessage());
+			System.out.println("Error loading OSBO spelers " + e.getMessage());
+		}
+		return spelers;
+	}
+	
+	public Spelers laadJSONfromFile(String bestandsnaam) {
+		Spelers spelers = null;
+		try {
+			JSONArray json = readJsonFromFile(bestandsnaam);
+			spelers = parseJSON(json);
+			
+		}
+		catch (Exception e) {
 			logger.log(Level.WARNING, "Error loading OSBO spelers " + e.getMessage());
 			System.out.println("Error loading OSBO spelers " + e.getMessage());
 		}
