@@ -740,7 +740,17 @@ deelnemersmenu.add(item);
 	public void leesOSBOlijstBestand(String filepath) {
 		Spelers tmp = null;
 		try {
-			tmp = (new OSBOLoader()).laadBestand(filepath);
+			String ext = FilenameUtils.getExtension(filepath);
+			switch (ext) {
+			case "html":
+			case "htm":
+				tmp = (new OSBOLoader()).laadBestand(filepath);
+				break;
+			case "json":
+				tmp = (new OSBOLoader()).laadJSONfromFile(filepath);
+				logger.log(Level.INFO, "OSBO list loaded from JSON file");
+				break;
+			}
 			if (tmp != null) {
 				logger.log(Level.INFO, "OSBO ingelezen : " + tmp.size() + " spelers in lijst" );
 			} else {
