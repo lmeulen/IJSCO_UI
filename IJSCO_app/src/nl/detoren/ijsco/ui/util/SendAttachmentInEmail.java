@@ -1,5 +1,6 @@
 package nl.detoren.ijsco.ui.util;
 
+import java.io.File;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -121,7 +122,9 @@ public class SendAttachmentInEmail {
 		try {
 	         // Part two is attachment
 	         messageBodyPart = new MimeBodyPart();
-	         //String filename = "Uitslagen.json";
+	         //String filename = "Uitslagen.json";`
+	         File f = new File(attachement);
+	         if (!f.exists() || f.isDirectory()) return false;
 	         DataSource source = new FileDataSource(attachement);
 	         messageBodyPart.setDataHandler(new DataHandler(source));
 	         messageBodyPart.setFileName(attachement);
