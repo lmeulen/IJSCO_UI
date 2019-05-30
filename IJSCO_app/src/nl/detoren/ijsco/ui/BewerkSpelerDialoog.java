@@ -125,6 +125,7 @@ public class BewerkSpelerDialoog extends JDialog {
 
             @Override
             public void actionPerformed(ActionEvent event) {
+            	int geboortejaar;
                 //speler.setNaamHandmatig(tfNaam.getText());
                 speler.setVoornaamHandmatig(tfVoornaam.getText());
                 speler.setTussenvoegselHandmatig(tfTussenvoegsel.getText());
@@ -133,7 +134,13 @@ public class BewerkSpelerDialoog extends JDialog {
                 speler.setRatingHandmatig(rating);
                 int knsb = Integer.parseInt(tfKNSBnr.getText());
                 speler.setKnsbnummer(knsb);
-                int geboortejaar = Integer.parseInt(tfGeboortejaar.getText());
+                try
+                {
+                	 geboortejaar = Integer.parseInt(tfGeboortejaar.getText());
+                }
+                catch (Exception ex) {
+                	geboortejaar = 0;
+                }
                 speler.setGeboortejaar(geboortejaar);
                 speler.setGeslacht(tfGeslacht.getText());
                 speler.setOverruleNaam(tfOverruleNaam.isSelected());
