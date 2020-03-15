@@ -53,6 +53,7 @@ public class OutputUitslagen implements GroepenExportInterface{
 			for (GroepsUitslag g : groepenuitslagen) { 
 				result += g.wedstrijdentoString() + ls;
 			}
+			result += ls;
 			FileWriter writer = new FileWriter(bestandsnaam);
 			writer.write(result);
 			writer.write(ls + "Aangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
@@ -89,8 +90,11 @@ public class OutputUitslagen implements GroepenExportInterface{
 			String bestandsnaam = "Eindresultaten.txt";
 			logger.log(Level.INFO, "Sla eindresultaat op in bestand " + bestandsnaam);
 			String result = "";
+			result += toernooi.toString();
+			result += "De rating berekening is een indicatie op basis van mogelijk beperkte informatie; hieraan kunnen dan ook geen rechten worden ontleend.";
 			result += ls + "-----------------------------" + ls + ls;
 			result += groepenuitslagen.ToString();
+			result += ls;
 			FileWriter writer = new FileWriter(bestandsnaam);
 			writer.write(result);
 			writer.write(ls + "Aangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
