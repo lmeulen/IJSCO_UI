@@ -34,7 +34,7 @@ public class IJSCOController {
 
     private static final String defaultInputfile = "uitslag.txt";
 
-	private static String appVersion = "0.3.1.10";
+	private static String appVersion = "0.3.1.11";
 	
     private Status status;
 
