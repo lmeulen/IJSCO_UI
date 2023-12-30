@@ -284,7 +284,7 @@ public class Mainscreen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//actieNieuweSpeler(null, null);
-				leeslijstOnline("www.osbo.nl", "/jeugd/currentratings.json");
+				leeslijstOnline("oud.osbo.nl", "/jeugd/currentratings.json");
 				suggesties.setDictionary(setSuggesties());
 				hoofdPanel.repaint();
 				
@@ -298,7 +298,7 @@ public class Mainscreen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//actieNieuweSpeler(null, null);
-				leeslijstOnline("www.osbo.nl", "/jeugd/jrating.htm");
+				leeslijstOnline("oud.osbo.nl", "/jeugd/jrating.htm");
 				suggesties.setDictionary(setSuggesties());
 				hoofdPanel.repaint();
 			}
@@ -478,15 +478,20 @@ deelnemersmenu.add(item);
 		public void actionPerformed(ActionEvent e) {
 			// Create a file chooser
 			SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
-			SAIM.setSubject("IJSCO Uitslag bestanden van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
-			SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
-			SAIM.setBodyText("Hierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
-			SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
-			SAIM.addAttachement("Uitslagen.json");
-			SAIM.addAttachement("Uitslagen.txt");
-//			SAIM.addAttachement("Einduitslagen.txt");
-			SAIM.addAttachement("Indeling resultaat.xlsm");
-			SAIM.addAttachement("status.json");
+			try {
+				SAIM.setSubject("IJSCO Uitslag bestanden van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
+				SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
+				SAIM.setBodyText("Hierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
+				SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
+				SAIM.addAttachement("Uitslagen.json");
+				SAIM.addAttachement("Uitslagen.txt");
+//				SAIM.addAttachement("Einduitslagen.txt");
+				SAIM.addAttachement("Indeling resultaat.xlsm");
+				SAIM.addAttachement("status.json");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			SAIM.send();
 			hoofdPanel.repaint();
 		}
@@ -507,7 +512,12 @@ deelnemersmenu.add(item);
 			SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
 			SAIM.setBodyText("Hierbij het logbestand van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
 			SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
-			SAIM.addAttachement("IJSCO_UI.log");
+			try {
+				SAIM.addAttachement("IJSCO_UI.log");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			SAIM.send();
 			hoofdPanel.repaint();
 		}

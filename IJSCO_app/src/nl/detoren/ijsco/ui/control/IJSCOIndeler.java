@@ -188,7 +188,8 @@ public class IJSCOIndeler {
 		for (int n_m = c.minSpelers; n_m <= c.maxSpelers; n_m += 2) { // itereer of standaard groepsgrootte
 			for (int d_h = c.minDeltaSpelers; d_h <= c.maxDeltaSpelers; d_h += 2) { // itereer of delta (-) groepsgrootte bovenste groepen
 				for (int d_l = c.minDeltaSpelers; d_l <= c.maxDeltaSpelers; d_l += 2) { // itereer of delta (+) groepsgrootte onderste groepen
-					int n_hoog = n_m - d_h; // aantal spelers in bovenste groepen
+					//int n_hoog = n_m - d_h; // aantal spelers in bovenste groepen
+					int n_hoog = n_m; // aantal spelers in bovenste groepen
 					int n_laag = n_m + d_l; // aantal spelers in onderste groepen
 					for (int i = c.minAfwijkendeGroepen; i <= c.maxAfwijkendeGroepen; i++) { // itereer over aantal (1..2) aan te passen hoogste groepen
 						for (int j = c.minAfwijkendeGroepen; j <= c.maxAfwijkendeGroepen; j++) { // itereer over aantal (1..3) aan te passen onderste groepen

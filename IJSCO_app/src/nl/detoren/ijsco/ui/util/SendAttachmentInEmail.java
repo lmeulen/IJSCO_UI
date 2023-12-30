@@ -1,23 +1,39 @@
 package nl.detoren.ijsco.ui.util;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+//import javax.activation.DataHandler;
+//import javax.activation.DataSource;
+//import javax.activation.FileDataSource;
+import org.eclipse.angus.activation.*;
+
+import jakarta.mail.Authenticator;
+import jakarta.mail.BodyPart;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+//import javax.mail.BodyPart;
+//import javax.mail.Message;
+//import javax.mail.MessagingException;
+//import javax.mail.Multipart;
+//import javax.mail.PasswordAuthentication;
+//import javax.mail.Session;
+//import javax.mail.Transport;
+//import javax.mail.internet.InternetAddress;
+//import javax.mail.internet.MimeBodyPart;
+//import javax.mail.internet.MimeMessage;
+//import javax.mail.internet.MimeMultipart;
 import javax.swing.JOptionPane;
 
 import nl.detoren.ijsco.ui.Mainscreen;
@@ -117,33 +133,35 @@ public class SendAttachmentInEmail {
 	return true;
 	}
 
-	public boolean addAttachement(String attachement) {
-		try {
-	         // Part two is attachment
-	         messageBodyPart = new MimeBodyPart();
-	         //String filename = "Uitslagen.json";
-	         DataSource source = new FileDataSource(attachement);
-	         messageBodyPart.setDataHandler(new DataHandler(source));
-	         messageBodyPart.setFileName(attachement);
-	         this._multipart.addBodyPart(messageBodyPart);
-		}
-		catch (Exception ex) {
-			logger.log(Level.WARNING, "Problem while adding attachment", ex);
-			return false;
-		}
+	public boolean addAttachement(String attachement) throws Exception {
+	    // Part two is attachment
+	         // adds attachments
+	         if (attachement != null ) {
+                 MimeBodyPart attachPart = new MimeBodyPart();
+  
+	                 try {
+	                     attachPart.attachFile(attachement);
+	                 }
+	                 catch (Exception ex) {
+	                	 logger.log(Level.WARNING, "Problem while adding attachment - IOException", ex);
+	                     throw ex;
+	                 }
+	                 this._multipart.addBodyPart(attachPart);
+	         }
 		return true;
 	}
 	
 	public void send() {
 
-      // Get the Session object.
-      Session session = Session.getInstance(_props,
-         new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-               return new PasswordAuthentication(_username, _password);
+		// creates a new session with an authenticator
+        Authenticator auth = new Authenticator() {
+            public PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(_username, _password);
             }
-         });
+        };		
 
+        Session session = Session.getInstance(_props, auth);
+                
       try {
          // Create a default MimeMessage object.
          Message message = new MimeMessage(session);
