@@ -47,21 +47,24 @@ public class DeelnemersLader {
 		// Lees het volledige bestand in naar een String array
 			String[] stringArr = leesBestand(bestandsnaam);
 			for (String regel : stringArr) {
-				List<String> items = Arrays.asList(regel.split(";"));
+//				List<String> items = Arrays.asList(regel.split(";"));
+				String[] items = regel.split(";");    // use comma as separator 
 				Speler s = new Speler();
-				item = items.get(0);
+				item = items[0];
 				s.setKnsbnummer(item);
 				item = "";
-				if (items.size() > 1) {
-					item = items.get(1);
+				if (items.length > 1) {
+					item = items[1];
 					s.setNaamHandmatig(item);
 				} else {
 					s.setNaamHandmatig("-");
 				}
 				item = "";
-				if (items.size() > 2) {
-						item = items.get(2);
-						s.setRatingHandmatig(item);
+				if (items.length > 2) {
+					item = items[2];
+					s.setRatingHandmatig(item);
+					System.out.println("Rating handmatig opgegeven in CSV. Overrulerating is geactiveerd voor speler " + s.getNaamHandmatig());					
+					s.setOverruleRating(true);
 				} else {
 					s.setRatingHandmatig(-1);
 				}

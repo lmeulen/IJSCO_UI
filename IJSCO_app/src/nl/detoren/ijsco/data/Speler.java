@@ -16,8 +16,12 @@ package nl.detoren.ijsco.data;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import nl.detoren.ijsco.ui.control.IJSCOController;
 
@@ -42,7 +46,13 @@ public class Speler {
 	private boolean overruleNaam;
 	private boolean overruleRating;
 	//endregion Properties
-
+	
+    public static String makeStringnumeric(String str) {
+    	String str2 = str.replaceAll("\\P{Digit}", "");
+		System.out.println(str2);
+    	return str2;
+   	}
+	
 	public Speler() {
 		this.knsbnummer = 0;
 		this.naamKNSB = null;
@@ -188,9 +198,11 @@ public class Speler {
 
 	public void setKnsbnummer(String knsbnummer) {
 		try{
-			this.knsbnummer = Integer.parseInt(knsbnummer);
+			String knsbnummernumeric = makeStringnumeric(knsbnummer);
+			this.knsbnummer = Integer.parseInt(knsbnummernumeric);
 		}
 		catch (Exception e) {
+			logger.log(Level.WARNING, "Could not parse knsbnummer string to integer.");
 			this.knsbnummer = -1;
 		}
 	}

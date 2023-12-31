@@ -839,7 +839,8 @@ deelnemersmenu.add(item);
 			}
 			for (Speler s : tmp) {
 				deelnemersModel.add(s);
-				status.deelnemers.add(s);
+				// Niet nog een keer toevoegen?
+				// status.deelnemers.add(s);
 			}
 			deelnemersModel.fireTableDataChanged();
 			JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit bestand");
