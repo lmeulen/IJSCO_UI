@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -278,6 +279,27 @@ public class Mainscreen extends JFrame {
 		
 		JMenu spelermenu = new JMenu("Spelersdatabase");
 
+		item = new JMenuItem("KNSB CSV lijst ophalen (Online)");
+		item.setAccelerator(KeyStroke.getKeyStroke('K', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//actieNieuweSpeler(null, null);
+				LocalDate today = LocalDate.now();
+				// First try latest from this month
+				LocalDate juistedatum = today;				
+				// Otherwise last month would be an option
+				//LocalDate juistedatum = today.minusMonths(1);
+				int month = juistedatum.getMonth().getValue();
+				int year = juistedatum.getYear();
+				leeslijstOnline("schaakbond.nl", "/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/JEUGD.zip");
+				suggesties.setDictionary(setSuggesties());
+				hoofdPanel.repaint();
+				
+			}
+		});
+		spelermenu.add(item);
+				
 		item = new JMenuItem("OSBO JSON lijst ophalen (Online)");
 		item.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
@@ -694,6 +716,10 @@ deelnemersmenu.add(item);
 						tmp = (new OSBOLoader()).laadJSON("https://" + fqdn + page);
 						logger.log(Level.INFO, "OSBO list loaded from JSON");
 						break;
+					case "zip":
+						tmp = (new OSBOLoader()).laadKNSBJeugdOnline_CSVinZIP("https://" + fqdn + page);
+						logger.log(Level.INFO, "KNSB JeugdOnline CSV in ZIP loaded");
+						break;						
 					}
 					logger.log(Level.INFO, "Spelers van website http://" + fqdn + page + " opgehaald: " + tmp.size() + " spelers in lijst" );
 				} else {
@@ -825,30 +851,33 @@ deelnemersmenu.add(item);
 			logger.log(Level.SEVERE, "An " + e.getMessage() + " occured ");
 		}
 	}
-	
+		
 	public void leesDeelnemers(String file) {
 		Spelers tmp = new DeelnemersLader().importeerSpelers(file);
 		if (status.OSBOSpelers != null) {
-			indeler.controleerSpelers(tmp, status.OSBOSpelers);
-			logger.log(Level.INFO, "Deelnemers ingelezen : " + tmp.size() + " spelers in lijst" );
-			try {
-				deelnemersModel.wis();
-			} 
-			catch (Exception ex) {
-				logger.log(Level.INFO, "DeelnemersModel kan niet gewist worden : " + ex.getMessage() + "");				
+			int reply = JOptionPane.showConfirmDialog(null, "Geen spelers ingelezen uit bestand. Weet u zeker dat u wilt doorgaan?", "Geen deelnemersdatabase aanwezig", JOptionPane.YES_NO_OPTION);
+			if (reply == JOptionPane.YES_OPTION) {
+				indeler.controleerSpelers(tmp, status.OSBOSpelers);
+				logger.log(Level.INFO, "Deelnemers ingelezen : " + tmp.size() + " spelers in lijst" );
+				try {
+					deelnemersModel.wis();
+				} 
+				catch (Exception ex) {
+					logger.log(Level.INFO, "DeelnemersModel kan niet gewist worden : " + ex.getMessage() + "");				
+				}
+				for (Speler s : tmp) {
+					deelnemersModel.add(s);
+					// Niet nog een keer toevoegen?
+					// status.deelnemers.add(s);
+				}
+				deelnemersModel.fireTableDataChanged();
+				JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit bestand");
 			}
-			for (Speler s : tmp) {
-				deelnemersModel.add(s);
-				// Niet nog een keer toevoegen?
-				// status.deelnemers.add(s);
+			else {
+				JOptionPane.showMessageDialog(null, "Geen spelers ingelezen uit bestand. OSBO lijst moet eerst gelezen worden.");
 			}
-			deelnemersModel.fireTableDataChanged();
-			JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit bestand");
+			logger.log(Level.INFO, "Deelnemers inlezen uit bestand afgerond." );
 		}
-		else {
-			JOptionPane.showMessageDialog(null, "Geen spelers ingelezen uit bestand. OSBO lijst moet eerst gelezen worden.");
-		}
-		logger.log(Level.INFO, "Deelnemers inlezen uit bestand afgerond." );
 	}
 
 	public JPanel createPanelGroepen() {

@@ -27,15 +27,15 @@ import nl.detoren.ijsco.ui.control.IJSCOController;
 
 public class Speler {
 
-	//region Static
-    private final static Logger logger = Logger.getLogger(IJSCOController.class.getName());
-	//endregion 
+	// region Static
+	private final static Logger logger = Logger.getLogger(IJSCOController.class.getName());
+	// endregion
 
-    //region Properties
+	// region Properties
 	private int knsbnummer;
 	private String naamKNSB;
 	private String naamHandmatig;
-	private String vereniging; 
+	private String vereniging;
 	private int geboortejaar;
 	private String geslacht;
 	private String categorie;
@@ -45,14 +45,14 @@ public class Speler {
 	private boolean aanwezig;
 	private boolean overruleNaam;
 	private boolean overruleRating;
-	//endregion Properties
-	
-    public static String makeStringnumeric(String str) {
-    	String str2 = str.replaceAll("\\P{Digit}", "");
-		System.out.println(str2);
-    	return str2;
-   	}
-	
+	// endregion Properties
+
+	public static String makeStringnumeric(String str) {
+		String str2 = str.replaceAll("\\P{Digit}", "");
+//		System.out.println(str2);
+		return str2;
+	}
+
 	public Speler() {
 		this.knsbnummer = 0;
 		this.naamKNSB = null;
@@ -70,7 +70,7 @@ public class Speler {
 
 	public Speler(String naam) {
 		this.knsbnummer = 0;
-		this.naamKNSB = null; 
+		this.naamKNSB = null;
 		this.naamHandmatig = naam;
 		this.vereniging = null;
 		this.geboortejaar = -1;
@@ -97,7 +97,7 @@ public class Speler {
 		this.overruleNaam = false;
 		this.overruleRating = false;
 	}
-	
+
 	public Speler(int knsbnummer, String naamKNSB, String vereniging, int ratingIJSCO, int ratingKNSB) {
 		this.knsbnummer = knsbnummer;
 		this.naamKNSB = naamKNSB;
@@ -116,8 +116,8 @@ public class Speler {
 	public Speler(Speler speler) {
 	}
 
-	public Speler(int knsbnummer, String naamKNSB, String vereniging, int geboortejaar, String categorie, int ratingIJSCO,
-			int ratingKNSB) {
+	public Speler(int knsbnummer, String naamKNSB, String vereniging, int geboortejaar, String categorie,
+			int ratingIJSCO, int ratingKNSB) {
 		this.knsbnummer = knsbnummer;
 		this.naamKNSB = naamKNSB;
 		this.naamHandmatig = null;
@@ -133,8 +133,8 @@ public class Speler {
 		this.overruleRating = false;
 	}
 
-	public Speler(int knsbnummer, String naamKNSB, String vereniging, int geboortejaar, String geslacht, String categorie, int ratingIJSCO,
-			int ratingKNSB) {
+	public Speler(int knsbnummer, String naamKNSB, String vereniging, int geboortejaar, String geslacht,
+			String categorie, int ratingIJSCO, int ratingKNSB) {
 		this.knsbnummer = knsbnummer;
 		this.naamKNSB = naamKNSB;
 		this.naamHandmatig = null;
@@ -151,8 +151,8 @@ public class Speler {
 	}
 
 	/**
-	 * Geef rating van de speler. Prioriteit in rating: 1. IJSCO rating 2.
-	 * Handmatig ingestelde rating 3. KNSB rating 4. 100
+	 * Geef rating van de speler. Prioriteit in rating: 1. IJSCO rating 2. Handmatig
+	 * ingestelde rating 3. KNSB rating 4. 100
 	 *
 	 * @return Rating van de speler
 	 */
@@ -197,11 +197,10 @@ public class Speler {
 	}
 
 	public void setKnsbnummer(String knsbnummer) {
-		try{
+		try {
 			String knsbnummernumeric = makeStringnumeric(knsbnummer);
 			this.knsbnummer = Integer.parseInt(knsbnummernumeric);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.log(Level.WARNING, "Could not parse knsbnummer string to integer.");
 			this.knsbnummer = -1;
 		}
@@ -247,6 +246,14 @@ public class Speler {
 		this.ratingKNSB = ratingKNSB;
 	}
 
+	public void setRatingKNSB(String ratingKNSB) {
+		try {
+			this.ratingKNSB = Integer.parseInt(makeStringnumeric(ratingKNSB));
+		} catch (Exception e){
+			this.ratingKNSB = -1;
+		}
+	}
+
 	public int getRatingHandmatig() {
 		return ratingHandmatig;
 	}
@@ -258,9 +265,7 @@ public class Speler {
 	public void setRatingHandmatig(String ratingHandmatig) {
 		try {
 			this.ratingHandmatig = Integer.parseInt(ratingHandmatig);
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			this.ratingHandmatig = -1;
 		}
 	}
@@ -278,18 +283,18 @@ public class Speler {
 		ratingHandmatig = -1;
 	}
 
-    /**
-     * Wordt dezelfde speler gerepresenteerd door het andere object?
-     * @param speler
-     * @return
-     */
-    public boolean gelijkAan(Speler speler) {
-        return (this.getNaam().equals(speler.getNaam())
+	/**
+	 * Wordt dezelfde speler gerepresenteerd door het andere object?
+	 * 
+	 * @param speler
+	 * @return
+	 */
+	public boolean gelijkAan(Speler speler) {
+		return (this.getNaam().equals(speler.getNaam())
 //                && this.getInitialen().equals(speler.getInitialen())
 //                && this.getGroep() == speler.getGroep()
-        		&& this.getNaamKNSB() == speler.getNaamKNSB()
-                && this.getKnsbnummer() == speler.getKnsbnummer());
-    }
+				&& this.getNaamKNSB() == speler.getNaamKNSB() && this.getKnsbnummer() == speler.getKnsbnummer());
+	}
 
 	public String toStringComplete() {
 		String result = "";
@@ -310,8 +315,7 @@ public class Speler {
 		String result = "";
 		try {
 			result += String.format("%1$10s | %2$34s | %3$6s", knsbnummer, this.getNaam(), this.getRating());
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			logger.log(Level.WARNING, "Speler toFormattedString problem");
 		}
 //		result += String.format("%1 10d | %2$20s | %3 6d", knsbnummer, this.getNaam(), this.getRating());
@@ -350,12 +354,57 @@ public class Speler {
 		this.geboortejaar = geboortejaar;
 	}
 
+	public void setGeboortejaar(String geboortejaar) {
+		this.geboortejaar = Integer.parseInt(makeStringnumeric(geboortejaar));		
+	}
+
 	public String getGeslacht() {
 		return geslacht;
 	}
 
 	public void setGeslacht(String geslacht) {
-		this.geslacht = geslacht;
+		// Trying to get this straight...\
+		switch (geslacht.toUpperCase()) {
+		case "W" :
+			this.geslacht = "V";
+			break;
+		case "V" :
+			this.geslacht = "V";
+			break;
+		case "VROUW" :
+			this.geslacht = "V";
+			break;
+		case "MEID" :
+			this.geslacht = "V";
+			break;			
+		case "FEMALE" :
+			this.geslacht = "V";
+			break;			
+		case "MEISJE" :
+			this.geslacht = "V";
+			break;
+		case "M" :
+			this.geslacht = "M";
+			break;
+		case "MAN" :
+			this.geslacht = "M";
+			break;
+		case "J" :
+			this.geslacht = "M";
+			break;
+		case "JONGEN" :
+			this.geslacht = "M";
+			break;
+		case "MALE" :
+			this.geslacht = "M";
+			break;
+		// Mogelijk tricky!
+//		case "" :
+//			this.geslacht = "M";
+//			break;
+		default:
+			this.geslacht = geslacht;
+		}		
 	}
 
 	public String getCategorie() {
@@ -370,7 +419,7 @@ public class Speler {
 		if (this.geboortejaar != -1) {
 			Calendar calendar = new GregorianCalendar();
 			calendar.setTime(new Date());
-			int catnr = calendar.get(Calendar.YEAR) - this.geboortejaar; 
+			int catnr = calendar.get(Calendar.YEAR) - this.geboortejaar;
 			switch (catnr) {
 			case 1:
 			case 2:
@@ -406,7 +455,7 @@ public class Speler {
 			case 18:
 			case 19:
 			case 20:
-				this.setCategorie("A");	
+				this.setCategorie("A");
 				break;
 			}
 		}

@@ -18,12 +18,26 @@ package nl.detoren.ijsco.ui.util;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.JTextField;
 import javax.swing.table.TableColumn;
@@ -271,4 +285,114 @@ public class Utils {
 	    }
 	    return sb.toString();
 	}
-}
+
+	   public static void unzipFolder(Path source, Path target) throws IOException {
+
+	        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(source.toFile()))) {
+
+	            // list files in zip
+	            ZipEntry zipEntry = zis.getNextEntry();
+
+	            while (zipEntry != null) {
+
+	                boolean isDirectory = false;
+	                // example 1.1
+	                // some zip stored files and folders separately
+	                // e.g data/
+	                //     data/folder/
+	                //     data/folder/file.txt
+	                if (zipEntry.getName().endsWith(File.separator)) {
+	                    isDirectory = true;
+	                }
+
+	                Path newPath = zipSlipProtect(zipEntry, target);
+
+	                if (isDirectory) {
+	                    Files.createDirectories(newPath);
+	                } else {
+
+	                    // example 1.2
+	                    // some zip stored file path only, need create parent directories
+	                    // e.g data/folder/file.txt
+	                    if (newPath.getParent() != null) {
+	                        if (Files.notExists(newPath.getParent())) {
+	                            Files.createDirectories(newPath.getParent());
+	                        }
+	                    }
+
+	                    // copy files, nio
+	                    Files.copy(zis, newPath, StandardCopyOption.REPLACE_EXISTING);
+
+	                    // copy files, classic
+	                    /*try (FileOutputStream fos = new FileOutputStream(newPath.toFile())) {
+	                        byte[] buffer = new byte[1024];
+	                        int len;
+	                        while ((len = zis.read(buffer)) > 0) {
+	                            fos.write(buffer, 0, len);
+	                        }
+	                    }*/
+	                }
+
+	                zipEntry = zis.getNextEntry();
+
+	            }
+	            zis.closeEntry();
+
+	        }
+
+	    }
+
+	    // protect zip slip attack
+	    public static Path zipSlipProtect(ZipEntry zipEntry, Path targetDir)
+	        throws IOException {
+
+	        // test zip slip vulnerability
+	        // Path targetDirResolved = targetDir.resolve("../../" + zipEntry.getName());
+
+	        Path targetDirResolved = targetDir.resolve(zipEntry.getName());
+
+	        // make sure normalized file still has targetDir as its prefix
+	        // else throws exception
+	        Path normalizePath = targetDirResolved.normalize();
+	        if (!normalizePath.startsWith(targetDir)) {
+	            throw new IOException("Bad zip entry: " + zipEntry.getName());
+	        }
+
+	        return normalizePath;
+	    }
+
+	    public static void downloadUsingNIO(String urlStr, String file) throws IOException {
+	        URL url = new URL(urlStr);
+	        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+	        FileOutputStream fos = new FileOutputStream(file);
+	        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+	        fos.close();
+	        rbc.close();
+	    }	    
+	    
+	    public static void downloadUsingBufferedInputStream(String urlStr, String file) throws IOException
+	    {
+	        // add user agent 
+	        URLConnection urlConnection = new URL(urlStr).openConnection();
+	        urlConnection.addRequestProperty("User-Agent", "Mozilla");
+	        urlConnection.setReadTimeout(5000);
+	        urlConnection.setConnectTimeout(5000);
+            // opens input stream from the HTTP connection
+            
+	        try (BufferedInputStream in = new BufferedInputStream(urlConnection.getInputStream());
+	        		  FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+	        		    byte dataBuffer[] = new byte[1024];
+	        		    int bytesRead;
+	        		    while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+	        		        fileOutputStream.write(dataBuffer, 0, bytesRead);
+	        		    }
+	        	} catch (IOException e) {
+	        		    // handle exception
+	    	            System.out.println("Problem with downloading");
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+	        	}
+            System.out.println("Download complete.");
+	    	}
+	    }
+	    

@@ -15,6 +15,7 @@ package nl.detoren.ijsco.io;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,12 +23,20 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystemException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -46,6 +55,7 @@ import org.jsoup.select.Elements;
 import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.ui.Mainscreen;
 import nl.detoren.ijsco.data.Speler;
+import nl.detoren.ijsco.ui.util.Utils;
 
 /**
  * Laad bekende OSBO spelers in, dit kan automatisch vanaf de website van de
@@ -72,6 +82,7 @@ public class OSBOLoader {
 		}
 		return null;
 	}
+	
 	public Spelers laadWebsite(String url) {
 		try {
 			//Document doc = Jsoup.connect("http://osbo.nl/jeugd/jrating.htm").get();
@@ -169,6 +180,76 @@ public class OSBOLoader {
 	     //TODO
 	 }
 	return null;
+	}
+
+	public Spelers laadKNSBJeugdOnline_CSVinZIP(String url) {
+		String databaseLocation = "database";
+		String excelBestand = "JEUGD.CSV";
+        try {
+        	System.out.println("Working Directory = " + System.getProperty("user.dir"));
+//			Utils.downloadUsingNIO(url, "latestknsbjeugd.zip");
+        	Utils.downloadUsingBufferedInputStream(url, "latestknsbjeugd.zip");
+        	} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Path source = Paths.get("latestknsbjeugd.zip");
+		    Path destination = Paths.get(databaseLocation);
+		    String password = "password";
+
+		    // Create directory database if not existing
+		    if (!Files.exists(destination)) {
+	            
+	            try {
+					Files.createDirectory(destination);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            System.out.println("Directory created");
+	        } else {
+	            
+	            System.out.println("Directory already exists");
+	        }
+		    
+		    // Extract Database
+	        try {
+	            Utils.unzipFolder(source, destination);
+	            System.out.println("Database unpack done");
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	        
+		 File csvData = new File(databaseLocation + "/" + excelBestand);
+		 CSVParser parser = null;
+		try {
+			parser = CSVParser.parse(csvData, java.nio.charset.Charset.defaultCharset(), CSVFormat.RFC4180.withHeader().withDelimiter(';'));
+//			parser = CSVParser.parse(csvData, java.nio.charset.Charset.defaultCharset(), CSVFormat.DEFAULT);
+		} catch (FileSystemException ex) {
+			 logger.log(Level.SEVERE, "Not able to open " + excelBestand + " in directory " + databaseLocation + "because of " + ex.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 Spelers spelers = new Spelers();
+		 try {
+			 for (CSVRecord csvRecord : parser) {
+			     //TODO Controleren of veld leeg is.
+				 Speler speler = new Speler();
+				 speler.setKnsbnummer(csvRecord.get(0));
+				 speler.setNaamKNSB(csvRecord.get(1));
+				 speler.setRatingKNSB(csvRecord.get(4));			 
+				 speler.setGeboortejaar(csvRecord.get(6));
+				 speler.setGeslacht(csvRecord.get(7));			 
+				 logger.log(Level.INFO, "Speler : " + speler.getNaam() + " heeft geboortejaar " + speler.getGeboortejaar() + " en een rating van " + speler.getRating());
+				 spelers.add(speler);
+				}
+		 } catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();			 
+		 }
+		return spelers;
 	}
 
 	private Spelers parseJSON(JSONArray json) {
