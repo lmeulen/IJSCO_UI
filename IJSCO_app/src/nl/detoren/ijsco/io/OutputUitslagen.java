@@ -34,7 +34,7 @@ public class OutputUitslagen implements GroepenExportInterface{
 			}
 			FileWriter writer = new FileWriter(bestandsnaam);
 			writer.write(result);
-			writer.write(ls + "Aangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
+			writer.write(ls + "Aangemaakt met " + IJSCOController.getAppTitle() + " " + IJSCOController.getAppVersion());
 			writer.close();
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "An " + e.getMessage() + " occured ");
@@ -56,7 +56,7 @@ public class OutputUitslagen implements GroepenExportInterface{
 			result += ls;
 			FileWriter writer = new FileWriter(bestandsnaam);
 			writer.write(result);
-			writer.write(ls + "Aangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
+			writer.write(ls + "Aangemaakt met " + IJSCOController.getAppTitle() + " " + IJSCOController.getAppVersion());
 			writer.close();
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "An " + e.getMessage() + " occured ");
@@ -97,7 +97,7 @@ public class OutputUitslagen implements GroepenExportInterface{
 			result += ls;
 			FileWriter writer = new FileWriter(bestandsnaam);
 			writer.write(result);
-			writer.write(ls + "Aangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
+			writer.write(ls + "Aangemaakt met " + IJSCOController.getAppTitle() + " " + IJSCOController.getAppVersion());
 			writer.close();
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "An " + e.getMessage() + " occured ");

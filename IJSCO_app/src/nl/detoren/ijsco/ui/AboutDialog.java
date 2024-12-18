@@ -26,9 +26,9 @@ public class AboutDialog extends JDialog {
 	
 	//FIXME: is there a way to extract from project??
 	private static final String versionString = IJSCOController.getAppVersion();
-	private static final String nameString = IJSCOController.c().appTitle;
+	private static final String nameString = IJSCOController.getAppTitle();
 	private static final String aboutString = 
-			IJSCOController.c().appTitle + " is het indelingsprogramma voor de regionale jeugschaakcompetitie van de OSBO. " +
+			IJSCOController.getAppTitle() + " is het indelingsprogramma voor de regionale jeugschaakcompetitie van de OSBO. " +
 			"Deze software maakt het mogelijk op basis van de actuele lijst van IJSCO spelers snel en eenvoudig een indeling " +
 			"te maken. Deze applicatie maakt een spreadsheet aan (Excel of Open Source variant). Hierin kunnen (alleen) de " +
 			"uitslagen worden ingevoerd. Vervolgens kan deze na afoopt in de applicatie worden geimporteerd en verwerkt. " +

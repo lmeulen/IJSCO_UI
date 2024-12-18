@@ -34,7 +34,11 @@ public class IJSCOController {
 
     private static final String defaultInputfile = "uitslag.txt";
 
-	private static String appVersion = "0.3.2.3";
+	private static String appTitle = "Indeling Interregionale Jeugd Schaak COmpetitie (IJSCO)";
+
+	private static String appVersion = "0.3.2.4";
+	
+	private static String apiKey = "DIw3nDOIuw3DIUtysiougw8v8fDrFe";
 	
     private Status status;
 
@@ -47,6 +51,10 @@ public class IJSCOController {
             instance = new IJSCOController();
         }
         return instance;
+    }
+
+    public static String getAppTitle() {
+    	return appTitle;
     }
 
     public static String getAppVersion() {
