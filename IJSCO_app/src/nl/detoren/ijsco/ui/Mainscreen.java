@@ -938,7 +938,8 @@ deelnemersmenu.add(item);
 	public void leesDeelnemers(String file) {
 		Spelers tmp = new DeelnemersLader().importeerSpelers(file);
 		if (status.OSBOSpelers != null) {
-			int reply = JOptionPane.showConfirmDialog(null, "Geen spelers ingelezen uit bestand. Weet u zeker dat u wilt doorgaan?", "Geen deelnemersdatabase aanwezig", JOptionPane.YES_NO_OPTION);
+			//int reply = JOptionPane.showConfirmDialog(null, "Weet u zeker dat u wilt doorgaan?", "Weet u het zeker?", JOptionPane.YES_NO_OPTION);
+			int reply = JOptionPane.YES_OPTION;
 			if (reply == JOptionPane.YES_OPTION) {
 				indeler.controleerSpelers(tmp, status.OSBOSpelers);
 				logger.log(Level.INFO, "Deelnemers ingelezen : " + tmp.size() + " spelers in lijst" );
@@ -957,7 +958,7 @@ deelnemersmenu.add(item);
 				JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit bestand");
 			}
 			else {
-				JOptionPane.showMessageDialog(null, "Geen spelers ingelezen uit bestand. OSBO lijst moet eerst gelezen worden.");
+				JOptionPane.showMessageDialog(null, "Geen spelers ingelezen uit bestand. KNSB ratinglijst moet eerst gelezen worden.");
 			}
 			logger.log(Level.INFO, "Deelnemers inlezen uit bestand afgerond." );
 		}

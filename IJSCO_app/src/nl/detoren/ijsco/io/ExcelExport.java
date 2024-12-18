@@ -20,8 +20,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +50,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import nl.detoren.ijsco.data.Groep;
 import nl.detoren.ijsco.data.Groepen;
 import nl.detoren.ijsco.data.Speler;
+import nl.detoren.ijsco.data.SpelerIndeling;
 
 public class ExcelExport implements ExportInterface {
 
@@ -54,6 +58,7 @@ public class ExcelExport implements ExportInterface {
 
 	public void exportGroepen(Groepen groepen) {
 	    String password= "abcd";
+	    List<SpelerIndeling> spelers = new ArrayList<SpelerIndeling>();
 		try {
 			if (groepen == null) return;
 			// sheetindx geeft index in Excel template op basis van groepsgrootte. -1: geen sheet voor groepsgrootte 
@@ -77,6 +82,10 @@ public class ExcelExport implements ExportInterface {
             my_style.setFillBackgroundColor(my_background);
 			XSSFSheet sheet2 = workbook.getSheet("Groepsindeling");
 			XSSFSheet sheet3 = workbook.getSheet("Deelnemerslijst");
+			XSSFSheet sheet4 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Deelnemerslijst (naam)");
+			XSSFSheet sheet5 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Deelnemerslijst (rating)");
+			updateCell(sheet4, 0, 0, "(Voorlopige) deelnemerslijst op Naam");
+			updateCell(sheet5, 0, 0, "(Voorlopige) deelnemerslijst op Rating");
 			updateCell(sheet3, sheet3row, 0, "Naam", style1);
 			updateCell(sheet3, sheet3row, 1, "KNSB nr", style1);
 			updateCell(sheet3, sheet3row, 2, "rating", style1);
@@ -94,13 +103,15 @@ public class ExcelExport implements ExportInterface {
 				updateCell(sheet2, sheet2row, 3, "rating", style1);
 				sheet2row++;
 				for (int i = 0; i < groep.getGrootte(); i++) {
+					SpelerIndeling si = new SpelerIndeling(groep.getSpeler(i), groep.getNaam(), "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(2) + (4+i), "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(3) + (4+i), "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(5) + (4+i));
+					spelers.add(si);
 					updateCell(sheet, 3 + i, 2, groep.getSpeler(i).getNaam());
 					updateCell(sheet, 3 + i, 3, groep.getSpeler(i).getKnsbnummer());
 					updateCell(sheet, 3 + i, 5, groep.getSpeler(i).getRating());
 					updateCell(sheet2, sheet2row, 0, i+1);
 					updateCell(sheet2, sheet2row, 1, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(2) + (4+i), true);
-					updateCell(sheet2, sheet2row, 2,  "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(3) + (4+i), true);
-					updateCell(sheet2, sheet2row, 3,  "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(5) + (4+i), true);
+					updateCell(sheet2, sheet2row, 2, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(3) + (4+i), true);
+					updateCell(sheet2, sheet2row, 3, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(5) + (4+i), true);
 					if (groep.getSpeler(i).getNaam() != "Bye") {
 						updateCell(sheet3, sheet3row, 0, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(2) + (4+i), true);
 						updateCell(sheet3, sheet3row, 1, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(3) + (4+i), true);
@@ -123,10 +134,42 @@ public class ExcelExport implements ExportInterface {
 			    sheet.protectSheet(password);
 				sheet.enableLocking();
 			}
-			XSSFSheet sheet4 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Deelnemerslijst (naam)");
-			sortSheet(sheet4, 1,3, 62);
+			//XSSFSheet sheet4 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Deelnemerslijst (naam)");
+			//XSSFSheet sheet4 = workbook.createSheet();
+		    Collections.sort(spelers, SpelerIndeling.NaamComparator);
+			int sheet4row = 2;
+			updateCell(sheet4, sheet4row, 0, "Naam", style1);
+			updateCell(sheet4, sheet4row, 1, "KNSB nr", style1);
+			updateCell(sheet4, sheet4row, 2, "rating", style1);
+			updateCell(sheet4, sheet4row, 3, "groep", style1);
+			sheet4row++;
+			for (SpelerIndeling si : spelers) {
+				if (si.getSpeler().getNaam() != "Bye") {
+					updateCell(sheet4, sheet4row, 0, si.getcr1(), true);
+					updateCell(sheet4, sheet4row, 1, si.getcr2(), true);
+					updateCell(sheet4, sheet4row, 2, si.getcr3(), true);
+					updateCell(sheet4, sheet4row, 3, si.getGroep());
+					sheet4row++;
+				}
+			}
+		    Collections.sort(spelers, SpelerIndeling.RatingComparator);
+			int sheet5row = 2;
+			updateCell(sheet5, sheet5row, 0, "Naam", style1);
+			updateCell(sheet5, sheet5row, 1, "KNSB nr", style1);
+			updateCell(sheet5, sheet5row, 2, "rating", style1);
+			updateCell(sheet5, sheet5row, 3, "groep", style1);
+			sheet5row++;
+			for (SpelerIndeling si : spelers) {
+				if (si.getSpeler().getNaam() != "Bye") {
+					updateCell(sheet5, sheet5row, 0, si.getcr1(), true);
+					updateCell(sheet5, sheet5row, 1, si.getcr2(), true);
+					updateCell(sheet5, sheet5row, 2, si.getcr3(), true);
+					updateCell(sheet5, sheet5row, 3, si.getGroep());
+					sheet5row++;
+				}
+			}
+					
 			//XSSFSheet sheet5 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Deelnemerslijst (rating)");
-			//sortSheet(sheet5, 1,4);
 			sheet2.protectSheet(password);
 			sheet3.protectSheet(password);
 			sheet4.protectSheet(password);
@@ -135,7 +178,6 @@ public class ExcelExport implements ExportInterface {
 			for (int i = 0; i < 6; i++) {
 				workbook.removeSheetAt(0);
 			}
-			
 			// Close input file
 			file.close();
 			// Store Excel to new file
@@ -216,14 +258,35 @@ public class ExcelExport implements ExportInterface {
 		}
 		return cell;
 	}
-	
+
+	/**
+	 * Sorts (A-Z) rows by String column
+	 * @param fromsheet - sheet to sort from
+	 * @param rosheet - sheet to sort to
+	 * @param column - String column to sort by
+	 * @param rowStart - sorting from this row down
+	 */
+
+	private void sortSheet(XSSFSheet sheetfrom, XSSFSheet sheetto, int column, int rowStart, int rowEnd) {
+		logger.log(Level.INFO, "sorting sheet: " + sheetfrom.getSheetName() + " into new sheet:" + sheetto.getSheetName());
+		/**
+		 * Loop over rows in sheet
+		 */
+		for (Row row : sheetfrom) {
+            if (row.getRowNum()>=rowStart && row.getRowNum()<=rowEnd) {
+            	
+            	
+            }
+		}
+			
+	}
 	/**
 	 * Sorts (A-Z) rows by String column
 	 * @param sheet - sheet to sort
 	 * @param column - String column to sort by
 	 * @param rowStart - sorting from this row down
 	 */
-
+		
 	private void sortSheet(XSSFSheet sheet, int column, int rowStart, int rowEnd) {
     	try {
 		FormulaEvaluator evaluator = sheet.getWorkbook().getCreationHelper().createFormulaEvaluator();
@@ -234,11 +297,17 @@ public class ExcelExport implements ExportInterface {
 	        sorting = false;
 	        for (Row row : sheet) {
 	            // skip if this row is before first to sort
-	            if (row.getRowNum()<rowStart) continue;
+	            if (row.getRowNum()<rowStart) {
+	            	sorting = true;
+	            	continue;
+	            }
 	            // end if this is last row
 	            if (rowEnd==row.getRowNum()) break;
 	            Row row2 = sheet.getRow(row.getRowNum()+1);
-	            if (row2 == null) continue;
+	            if (row2 == null) {
+	            	sorting = true;
+	            	continue;	            
+	            }
 	            int rownum1 = row.getRowNum();
 	            int rownum2 = row2.getRowNum();
 	            CellValue firstValue;

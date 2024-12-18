@@ -50,9 +50,11 @@ public class DeelnemersLader {
 //				List<String> items = Arrays.asList(regel.split(";"));
 				String[] items = regel.split(";");    // use comma as separator 
 				Speler s = new Speler();
-				item = items[0];
-				s.setKnsbnummer(item);
-				item = "";
+				if (items.length >0) {
+					item = items[0];
+					s.setKnsbnummer(item);
+					item = "";
+				}
 				if (items.length > 1) {
 					item = items[1];
 					s.setNaamHandmatig(item);
