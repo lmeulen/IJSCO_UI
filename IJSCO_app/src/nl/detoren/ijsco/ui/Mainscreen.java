@@ -294,8 +294,7 @@ public class Mainscreen extends JFrame {
 				//LocalDate juistedatum = today.minusMonths(1);
 				int month = juistedatum.getMonth().getValue();
 				int year = juistedatum.getYear();
-				// JEUGD vervangen door RAPID leeslijstOnline("schaakbond.nl", "/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/JEUGD.zip");
-				
+				// JEUGD vervangen door RAPID leeslijstOnline("schaakbond.nl", "/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/JEUGD.zip");			
 				// Wanneer fout gebruik een archiefbestand
 				if (!leeslijstOnline("schaakbond.nl", "/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/RAPID.zip")) {
 					logger.log(Level.WARNING, "Failed latest file from KNSB " + "https://schaakbond.nl/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/RAPID.zip.");
@@ -310,35 +309,51 @@ public class Mainscreen extends JFrame {
 			}
 		});
 		spelermenu.add(item);
-				
-		item = new JMenuItem("OSBO JSON lijst ophalen (Online)");
-		item.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//actieNieuweSpeler(null, null);
-				leeslijstOnline("oud.osbo.nl", "/jeugd/currentratings.json");
-				suggesties.setDictionary(setSuggesties());
-				hoofdPanel.repaint();
-				
-			}
-		});
-		spelermenu.add(item);
-
-		item = new JMenuItem("OSBO htmllijst ophalen !verouderd! (Online)");
-		item.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//actieNieuweSpeler(null, null);
-				leeslijstOnline("oud.osbo.nl", "/jeugd/jrating.htm");
-				suggesties.setDictionary(setSuggesties());
-				hoofdPanel.repaint();
-			}
-		});
-		spelermenu.add(item);
-
-		item = new JMenuItem("OSBO/IJSCO compatible lijst inlezen (Bestand)");
+			
+		// Deprecated
+		/*
+		 * item = new JMenuItem("OSBO JSON lijst ophalen (Online)");
+		 * item.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit.getDefaultToolkit
+		 * ().getMenuShortcutKeyMask())); item.addActionListener(new ActionListener() {
+		 * 
+		 * @Override public void actionPerformed(ActionEvent e) {
+		 * //actieNieuweSpeler(null, null); leeslijstOnline("oud.osbo.nl",
+		 * "/jeugd/currentratings.json"); suggesties.setDictionary(setSuggesties());
+		 * hoofdPanel.repaint();
+		 * 
+		 * } }); spelermenu.add(item);
+		 */
+		
+		// Deprecated
+		/*
+		 * item = new JMenuItem("OSBO htmllijst ophalen !verouderd! (Online)");
+		 * item.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit
+		 * ().getMenuShortcutKeyMask())); item.addActionListener(new ActionListener() {
+		 * 
+		 * @Override public void actionPerformed(ActionEvent e) {
+		 * //actieNieuweSpeler(null, null); leeslijstOnline("oud.osbo.nl",
+		 * "/jeugd/jrating.htm"); suggesties.setDictionary(setSuggesties());
+		 * hoofdPanel.repaint(); } }); spelermenu.add(item);
+		 */
+		
+		// Deprecated
+		/*
+		 * item = new JMenuItem("OSBO/IJSCO compatible lijst inlezen (Bestand)");
+		 * item.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit.getDefaultToolkit
+		 * ().getMenuShortcutKeyMask())); item.addActionListener(new ActionListener() {
+		 * 
+		 * @Override public void actionPerformed(ActionEvent e) { // Create a file
+		 * chooser final JFileChooser fc = new JFileChooser();
+		 * fc.setCurrentDirectory(new File(System.getProperty("user.dir"))); // In
+		 * response to a button click: int returnVal = fc.showOpenDialog(ms); if
+		 * (returnVal == JFileChooser.APPROVE_OPTION) { File file =
+		 * fc.getSelectedFile(); logger.log(Level.INFO, "Opening: " +
+		 * file.getAbsolutePath() + "."); leesOSBOlijstBestand(file.getAbsolutePath());
+		 * } suggesties.setDictionary(setSuggesties()); hoofdPanel.repaint(); } });
+		 * spelermenu.add(item);
+		 */
+		
+		item = new JMenuItem("KNSB compatible downloadlijst (vanaf 01-2023) inlezen (Bestand)");
 		item.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
@@ -351,7 +366,7 @@ public class Mainscreen extends JFrame {
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
 					logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
-					leesOSBOlijstBestand(file.getAbsolutePath());
+					leeslijstBestand(file.getAbsolutePath());
 				}
 				suggesties.setDictionary(setSuggesties());
 				hoofdPanel.repaint();
@@ -722,8 +737,6 @@ deelnemersmenu.add(item);
 		dialoog.setVisible(true);		
 	}
 	
-	
-	
 	public Boolean leeslijstOnline(String fqdn, String page) {
 		Spelers tmp = null;
 			InetAddress ip = null;
@@ -776,10 +789,14 @@ deelnemersmenu.add(item);
 			    ShowWarning("Fout opgetreden bij online inlezen lijst van " + fqdn);
 			    return false;
 			}
+			if (VerwerkSpelers(tmp)) return true; else return false;
+	}
+
+	public Boolean VerwerkSpelers(Spelers tmp){
 		status.OSBOSpelers = new HashMap<>();
 		for (Speler d : tmp) {
 			try {
-			status.OSBOSpelers.put(d.getKnsbnummer(), d);
+				status.OSBOSpelers.put(d.getKnsbnummer(), d);
 			}
 			catch (Exception ex) {
 				logger.log(Level.WARNING, "Problem in getting KNSBnummer");
@@ -789,7 +806,7 @@ deelnemersmenu.add(item);
 		JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit OSBO jeugdratinglijst");
 		return true;
 	}
-
+	
 	public void ShowWarning(String warning) {
 /*		JPanel p = new JPanel(new BorderLayout());
 		DefaultTableModel tableModel = new DefaultTableModel();
@@ -808,8 +825,31 @@ deelnemersmenu.add(item);
 	    if (option == 0) {
 	    	return;
 	    }
-
 	}
+	
+	public Boolean leeslijstBestand(String filepath) {
+		Spelers tmp = null;
+		try {
+			String ext = FilenameUtils.getExtension(filepath);
+			switch (ext) {
+				case "zip":
+					// add user agent 
+					try {
+						tmp = (new OSBOLoader()).laadKNSBRAPIDOffline_CSVinZIP(filepath);
+						logger.log(Level.INFO, "KNSB RapidOffline CSV in ZIP loaded");
+					}
+					catch (Exception e){
+						return false;
+					}
+			break;
+			}
+		}
+		catch (Exception e)
+		{
+		}
+		if (VerwerkSpelers(tmp)) return true; else return false;
+	}
+	
 	public void leesOSBOlijstBestand(String filepath) {
 		Spelers tmp = null;
 		try {

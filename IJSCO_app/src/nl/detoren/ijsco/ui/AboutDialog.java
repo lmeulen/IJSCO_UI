@@ -31,7 +31,7 @@ public class AboutDialog extends JDialog {
 			IJSCOController.getAppTitle() + " is het indelingsprogramma voor de regionale jeugschaakcompetitie van de OSBO. " +
 			"Deze software maakt het mogelijk op basis van de actuele lijst van IJSCO spelers snel en eenvoudig een indeling " +
 			"te maken. Deze applicatie maakt een spreadsheet aan (Excel of Open Source variant). Hierin kunnen (alleen) de " +
-			"uitslagen worden ingevoerd. Vervolgens kan deze na afoopt in de applicatie worden geimporteerd en verwerkt. " +
+			"uitslagen worden ingevoerd. Vervolgens kan deze na afloop in de applicatie worden geimporteerd en verwerkt. " +
 			"De applicatie maakt dan enkele uitslag bestanden aan die b.v. voor de website gebruikt kunnen worden.";
 	
 	public  AboutDialog(JFrame parent) {

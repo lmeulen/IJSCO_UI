@@ -308,7 +308,7 @@ public class OSBOLoader {
 			parser = CSVParser.parse(csvData, java.nio.charset.Charset.defaultCharset(), CSVFormat.RFC4180.withHeader().withDelimiter(';'));
 //			parser = CSVParser.parse(csvData, java.nio.charset.Charset.defaultCharset(), CSVFormat.DEFAULT);
 		} catch (FileSystemException ex) {
-			 logger.log(Level.SEVERE, "Not able to open " + excelBestand + " in directory " + databaseLocation + "because of " + ex.getMessage());
+			 logger.log(Level.SEVERE, "Not able to open " + csvData.getName() + " in directory " + databaseLocation + " because of " + ex.getMessage());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -333,6 +333,77 @@ public class OSBOLoader {
 		return spelers;
 	}
 
+	public Spelers laadKNSBRAPIDOffline_CSVinZIP(String filepath) {
+		String databaseLocation = "database";
+		String excelBestand = "RAPID.CSV";
+		Path source = Paths.get(filepath);
+		    Path destination = Paths.get(databaseLocation);
+		    String password = "password";
+
+		    // Create directory database if not existing
+		    if (!Files.exists(destination)) {
+	            
+	            try {
+					Files.createDirectory(destination);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            System.out.println("Directory created");
+	        } else {
+	            
+	            System.out.println("Directory already exists");
+	        }
+		    
+		    // Extract Database
+	        try {
+	            Utils.unzipFolder(source, destination);
+	            System.out.println("Database unpack done");
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	        
+		File csvData = new File(databaseLocation + "/" + excelBestand);
+		if (!csvData.exists()) {
+			logger.log(Level.SEVERE, "CSV file " + excelBestand + " in directory " + databaseLocation + "does not exists!");
+			LocalDate today = LocalDate.now();
+			LocalDate juistedatum = today;	
+			int month = juistedatum.getMonth().getValue();
+			int year = juistedatum.getYear();
+			csvData = new File(databaseLocation + "/" + year + "-" + String.format("%02d", month ) + "-" + excelBestand);
+		}
+		CSVParser parser = null;
+		try {
+			parser = CSVParser.parse(csvData, java.nio.charset.Charset.defaultCharset(), CSVFormat.RFC4180.withHeader().withDelimiter(';'));
+//			parser = CSVParser.parse(csvData, java.nio.charset.Charset.defaultCharset(), CSVFormat.DEFAULT);
+		} catch (FileSystemException ex) {
+			 logger.log(Level.SEVERE, "Not able to open " + csvData.getName() + " in directory " + databaseLocation + " because of " + ex.getMessage());
+		} catch (IOException e) {
+			 logger.log(Level.SEVERE, "Not able to open " + csvData.getName() + " in directory " + databaseLocation + " because of " + e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 Spelers spelers = new Spelers();
+		 try {
+			 for (CSVRecord csvRecord : parser) {
+			     //TODO Controleren of veld leeg is.
+				 Speler speler = new Speler();
+				 speler.setKnsbnummer(csvRecord.get(0));
+				 speler.setNaamKNSB(csvRecord.get(1));
+				 speler.setRatingKNSB(csvRecord.get(4));			 
+				 speler.setGeboortejaar(csvRecord.get(6));
+				 speler.setGeslacht(csvRecord.get(7));			 
+				 logger.log(Level.INFO, "Speler : " + speler.getNaam() + " heeft geboortejaar " + speler.getGeboortejaar() + " en een rating van " + speler.getRating());
+				 spelers.add(speler);
+				}
+		 } catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();			 
+		 }
+		 
+		return spelers;
+	}
+	
 	private Spelers parseJSON(JSONArray json) {
 		Spelers spelers = new Spelers();
 		for (Object l : json){

@@ -36,7 +36,7 @@ public class IJSCOController {
 
 	private static String appTitle = "Indeling Interregionale Jeugd Schaak COmpetitie (IJSCO)";
 
-	private static String appVersion = "0.3.2.4";
+	private static String appVersion = "0.3.2.5";
 	
 	private static String apiKey = "DIw3nDOIuw3DIUtysiougw8v8fDrFe";
 	
