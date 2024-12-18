@@ -394,5 +394,26 @@ public class Utils {
 	        	}
             System.out.println("Download complete.");
 	    	}
+
+	    public static void checkdownloadURL(String urlStr, String file) throws IOException
+	    {
+	        // add user agent 
+	        URLConnection urlConnection = new URL(urlStr).openConnection();
+	        urlConnection.addRequestProperty("User-Agent", "Mozilla");
+	        urlConnection.setReadTimeout(5000);
+	        urlConnection.setConnectTimeout(5000);
+            // opens input stream from the HTTP connection
+            
+	        try (BufferedInputStream in = new BufferedInputStream(urlConnection.getInputStream());
+	        		  FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+	        		    byte dataBuffer[] = new byte[1024];
+	        		    int bytesRead;
+	        		    while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+	        		        fileOutputStream.write(dataBuffer, 0, bytesRead);
+	        		    }
+	        } catch (IOException e) {
+						throw e;
+	        }
 	    }
+}
 	    

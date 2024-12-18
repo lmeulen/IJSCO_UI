@@ -29,6 +29,8 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.net.InetAddress;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -147,7 +149,7 @@ public class Mainscreen extends JFrame {
     	logger.log(Level.INFO, "IJSCO-UI version " + IJSCOController.getAppVersion());
     	logger.log(Level.INFO, "Opstarten controller");
         IJSCOController.getInstance().start();
-		setTitle(IJSCOController.c().appTitle + " - versie " + IJSCOController.getAppVersion());
+		setTitle(IJSCOController.getAppTitle() + " - versie " + IJSCOController.getAppVersion());
 		indeler = new IJSCOIndeler();
 		status = IJSCOController.getI().getStatus();
 /*		status = new StatusIO().read("status.json");
@@ -166,7 +168,7 @@ public class Mainscreen extends JFrame {
 		// Frame
 		setBounds(25, 25, 1300, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle(IJSCOController.c().appTitle + " - versie " + IJSCOController.getAppVersion());
+		setTitle(IJSCOController.getAppTitle() + " - versie " + IJSCOController.getAppVersion());
 		getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
 
 		// Frame - Hoofdpanel
@@ -292,7 +294,16 @@ public class Mainscreen extends JFrame {
 				//LocalDate juistedatum = today.minusMonths(1);
 				int month = juistedatum.getMonth().getValue();
 				int year = juistedatum.getYear();
-				leeslijstOnline("schaakbond.nl", "/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/JEUGD.zip");
+				// JEUGD vervangen door RAPID leeslijstOnline("schaakbond.nl", "/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/JEUGD.zip");
+				
+				// Wanneer fout gebruik een archiefbestand
+				if (!leeslijstOnline("schaakbond.nl", "/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/RAPID.zip")) {
+					logger.log(Level.WARNING, "Failed latest file from KNSB " + "https://schaakbond.nl/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/RAPID.zip.");
+					logger.log(Level.WARNING, "Now relying on archivefile from KNSB " + "schaakbond.nl/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/" + year + "-" + String.format("%02d", month ) + "/RAPID.zip.");
+					if (!leeslijstOnline("schaakbond.nl", "/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/" + year + "-" + String.format("%02d", month ) + "-RAPID.zip")) {
+						logger.log(Level.WARNING, "Failed archivefile from KNSB " + "schaakbond.nl/wp-content/uploads/" + year + "/" + String.format("%02d", month ) + "/" + year + "-" + String.format("%02d", month ) + "-RAPID.zip.");						
+					};
+				}
 				suggesties.setDictionary(setSuggesties());
 				hoofdPanel.repaint();
 				
@@ -469,7 +480,7 @@ deelnemersmenu.add(item);
 					SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
 					SAIM.setSubject("IJSCO Uitslag bestanden van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
 					SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
-					SAIM.setBodyText("Hierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
+					SAIM.setBodyText("Hierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.getAppTitle() + " " + IJSCOController.getAppVersion());
 					SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
 					SAIM.addAttachement("Uitslagen.json");
 					SAIM.addAttachement("Uitslagen.txt");
@@ -503,7 +514,7 @@ deelnemersmenu.add(item);
 			try {
 				SAIM.setSubject("IJSCO Uitslag bestanden van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
 				SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
-				SAIM.setBodyText("Hierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
+				SAIM.setBodyText("Hierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.getAppTitle() + " " + IJSCOController.getAppVersion());
 				SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
 				SAIM.addAttachement("Uitslagen.json");
 				SAIM.addAttachement("Uitslagen.txt");
@@ -532,7 +543,7 @@ deelnemersmenu.add(item);
 			SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
 			SAIM.setSubject("Logbestand van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
 			SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
-			SAIM.setBodyText("Hierbij het logbestand van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.c().appTitle + " " + IJSCOController.getAppVersion());
+			SAIM.setBodyText("Hierbij het logbestand van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.getAppTitle() + " " + IJSCOController.getAppVersion());
 			SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
 			try {
 				SAIM.addAttachement("IJSCO_UI.log");
@@ -544,8 +555,30 @@ deelnemersmenu.add(item);
 			hoofdPanel.repaint();
 		}
 	});
-
 	helpmenu.add(item);
+
+	item = new JMenuItem("Request private API Key.");
+	item.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			AboutDialog ad = new AboutDialog(ms);
+					ad.setVisible(true);
+			hoofdPanel.repaint();
+		}
+	});
+	helpmenu.add(item);
+
+	item = new JMenuItem("Enter activated private API Key.");
+	item.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			AboutDialog ad = new AboutDialog(ms);
+					ad.setVisible(true);
+			hoofdPanel.repaint();
+		}
+	});
+	helpmenu.add(item);
+	
 	item = new JMenuItem("About");
 	item.addActionListener(new ActionListener() {
 		@Override
@@ -691,7 +724,7 @@ deelnemersmenu.add(item);
 	
 	
 	
-	public void leeslijstOnline(String fqdn, String page) {
+	public Boolean leeslijstOnline(String fqdn, String page) {
 		Spelers tmp = null;
 			InetAddress ip = null;
 			try {
@@ -700,7 +733,7 @@ deelnemersmenu.add(item);
 				// TODO Auto-generated catch block
 				logger.log(Level.WARNING, "Unknown host: " + fqdn );
 			    ShowWarning("Unknown host: " + fqdn);
-			    return;
+			    return false;
 			}
 			try {
 				//if ((ip != null) && ip.isReachable(5000)) {	
@@ -717,22 +750,31 @@ deelnemersmenu.add(item);
 						logger.log(Level.INFO, "OSBO list loaded from JSON");
 						break;
 					case "zip":
-						tmp = (new OSBOLoader()).laadKNSBJeugdOnline_CSVinZIP("https://" + fqdn + page);
-						logger.log(Level.INFO, "KNSB JeugdOnline CSV in ZIP loaded");
+				        // add user agent 
+						try {
+				        	Utils.checkdownloadURL("https://" + fqdn + page, "latestknsbrapid.zip");
+							logger.log(Level.INFO, "Download Failed!");
+						}
+						catch (Exception e){
+							return false;
+						}
+						//tmp = (new OSBOLoader()).laadKNSBJeugdOnline_CSVinZIP("https://" + fqdn + page);
+						tmp = (new OSBOLoader()).laadKNSBRAPIDOnline_CSVinZIP("https://" + fqdn + page);
+						logger.log(Level.INFO, "KNSB RapidOnline CSV in ZIP loaded");
 						break;						
 					}
 					logger.log(Level.INFO, "Spelers van website http://" + fqdn + page + " opgehaald: " + tmp.size() + " spelers in lijst" );
 				} else {
 					logger.log(Level.WARNING, "Host " + fqdn +  " not reachable or problem with parsing");
 				    ShowWarning("Host " + fqdn + "not reachable or problem with parsing");
-				    return;
+				    return false;
 				}
 			//} catch (IOException e) {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
 			    ShowWarning("Fout opgetreden bij online inlezen lijst van " + fqdn);
-			    return;
+			    return false;
 			}
 		status.OSBOSpelers = new HashMap<>();
 		for (Speler d : tmp) {
@@ -745,6 +787,7 @@ deelnemersmenu.add(item);
 		}
 		indeler.controleerSpelers(status.deelnemers, status.OSBOSpelers);
 		JOptionPane.showMessageDialog(null, tmp.size() + " spelers ingelezen uit OSBO jeugdratinglijst");
+		return true;
 	}
 
 	public void ShowWarning(String warning) {

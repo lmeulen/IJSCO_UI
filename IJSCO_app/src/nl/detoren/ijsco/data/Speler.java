@@ -159,12 +159,12 @@ public class Speler {
 	public int getRating() {
 		if (overruleRating) {
 			return ratingHandmatig;
+		} else if (ratingKNSB > 0) {
+			return ratingKNSB;
 		} else if (ratingIJSCO > 0) {
 			return ratingIJSCO;
 		} else if (ratingHandmatig > 0) {
 			return ratingHandmatig;
-		} else if (ratingKNSB > 0) {
-			return ratingKNSB;
 		} else {
 			return -1;
 		}
@@ -355,7 +355,13 @@ public class Speler {
 	}
 
 	public void setGeboortejaar(String geboortejaar) {
-		this.geboortejaar = Integer.parseInt(makeStringnumeric(geboortejaar));		
+		try {
+			this.geboortejaar = Integer.parseInt(makeStringnumeric(geboortejaar));		
+		}
+		catch (Exception e) {
+			this.geboortejaar = 0;
+		}
+		
 	}
 
 	public String getGeslacht() {
