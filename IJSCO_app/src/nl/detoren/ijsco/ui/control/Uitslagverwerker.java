@@ -57,12 +57,14 @@ import nl.detoren.ijsco.data.WedstrijdUitslag;
 				for (Speler speler : groep.getSpelers()) {
 					logger.log(Level.INFO, "Verwerk uitslag voor speler " + speler.getNaam());
 					if (speler.getNaamHandmatig() != null) { 
+						logger.log(Level.INFO, "NaamHandmatig " + speler.getNaamHandmatig());
 						if (!speler.getNaamHandmatig().equals("Bye")) { 
 							UitslagSpeler update = updateSpeler(speler, groep);
 							uitslag.addSpeler(update);
 							uitslag.setAantal(uitslag.getAantal() - 1);
 						}
 					} else {
+						logger.log(Level.INFO, "NaamHandmatig is null");
 						UitslagSpeler update = updateSpeler(speler, groep);
 						uitslag.addSpeler(update);
 					}
@@ -89,6 +91,7 @@ import nl.detoren.ijsco.data.WedstrijdUitslag;
 			int aantalremise = 0;
 			int puntenbij = 0; // puntenbij is 10 * bordpunten ivm halve punten
 			int ratingbij = 0;
+			logger.log(Level.INFO, "UpdateSpeler aangeroepen. Aantal wedstrijden voor speler " + speler.getNaam() + " is " + spelerWedstrijden.size());
 			for (Wedstrijd w : spelerWedstrijden) {
 				//logger.log(Level.INFO, "    Wedstrijd :" + w.toString());
 				int resultaat = -1; // onbekend
@@ -152,7 +155,7 @@ import nl.detoren.ijsco.data.WedstrijdUitslag;
 				}
 			}
 			// check is rating will not drop below 100
-			logger.log(Level.INFO, "new rating would be : " + updateSpeler.getStartrating() + ratingbij);
+			logger.log(Level.INFO, "new rating would be : " + (updateSpeler.getStartrating() + ratingbij));
 			logger.log(Level.INFO, "100 - newrating : " + (100 - (updateSpeler.getStartrating() + ratingbij)));
 			logger.log(Level.INFO, "max(100 - newrating, 0) : " + Math.max(0, (100 - (updateSpeler.getStartrating() + ratingbij))));
 			logger.log(Level.INFO, "ratingbij + max(100 - newrating, 0) : " + (ratingbij + Math.max(0, (100 - (updateSpeler.getStartrating() + ratingbij)))));
@@ -385,6 +388,9 @@ import nl.detoren.ijsco.data.WedstrijdUitslag;
 			//
 			//u.setStartrating(speler.getRating());
 			//updateSpeler.setPunten(puntenbij);
+			logger.log(Level.INFO, "spelerWedstrijden aantal :" + spelerWedstrijden.size());
+			u.setWedstrijden(spelerWedstrijden);
+
 			u.setDeltarating(ratingbij);
 			return u;
 		}

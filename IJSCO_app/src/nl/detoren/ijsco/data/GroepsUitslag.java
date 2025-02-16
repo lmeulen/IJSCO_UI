@@ -9,35 +9,34 @@ import java.util.Map;
 public class GroepsUitslag {
 
 	private Map<Integer, UitslagSpeler> spelers = new HashMap<Integer, UitslagSpeler>();
-	private int aantal;
+	private int aantalspelers;
+	private int aantalspelersmetrating;
 	private List<WedstrijdUitslag> wedstrijden = new ArrayList<WedstrijdUitslag>();
 	private String groepsnaam;
 	
 	public GroepsUitslag(int aantal, String naam) {
 		if (aantal > 0) {
-			this.aantal = aantal;
+			this.aantalspelers = aantal;
 		} else {
-			this.aantal = 0;
+			this.aantalspelers = 0;
 		}
+		this.aantalspelersmetrating = 0;
 		this.groepsnaam = naam;
 	}
 
 	public GroepsUitslag() {
-		aantal = 0;
+		aantalspelers = 0;
 		groepsnaam = "";
+		aantalspelersmetrating = 0;
 	}
 
 	public void addSpeler(UitslagSpeler speler) {
-		this.setAantal(this.getAantal() + 1);
+		if (speler.getStartrating()>1) this.setAantalMetRatingPlus1();
 		spelers.put(speler.getId(),speler);	
 	}
 
-	public int getAantal() {
-		return aantal;
-	}
-
-	public void setAantal(int aantal) {
-		this.aantal = aantal;
+	public void setAantalMetRatingPlus1() {
+		this.setAantalspelersmetrating(this.getAantalspelersmetrating() + 1);
 	}
 
 	public Map<Integer, UitslagSpeler> getSpelers() {
@@ -48,7 +47,7 @@ public class GroepsUitslag {
 	}
 
 	public UitslagSpeler getSpelerById(int i) {
-		return (i <= aantal) ? spelers.get(i) : null;
+		return (i <= aantalspelers) ? spelers.get(i) : null;
 	}
 	
 	public String getGroepsnaam() {
@@ -78,6 +77,23 @@ public class GroepsUitslag {
 			
 		}
 		return result;
+	}
+
+	public int getAantalspelersmetrating() {
+		return aantalspelersmetrating;
+	}
+
+	public void setAantalspelersmetrating(int aantalspelersmetrating) {
+		this.aantalspelersmetrating = aantalspelersmetrating;
+	}
+
+	public int getAantal() {
+		// TODO Auto-generated method stub
+		return aantalspelers;
+	}
+
+	public void setAantal(int i) {
+		this.aantalspelers--;	
 	}
 	
 }

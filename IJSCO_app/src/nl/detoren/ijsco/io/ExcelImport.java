@@ -275,6 +275,15 @@ public class ExcelImport implements ImportInterface {
 			UitslagSpeler s = new UitslagSpeler();
 			// Rang
 			Integer rang;
+			// StartRang
+			Integer startRang;
+			try {
+				startRang = cellIntValue(sheet.getRow(2+i+1).getCell(1));
+			} catch (Exception ex) {
+				logger.log(Level.WARNING, "StartRang not found.");
+				startRang = -1;
+			}
+			//
 			try {
 				rang = cellIntValue(sheet.getRow(2+i+1).getCell(cTotaal+2));
 			} catch (Exception ex) {
@@ -339,6 +348,7 @@ public class ExcelImport implements ImportInterface {
 			}
 			s.setId(id);
 			s.setRang(rang);
+			s.setStartRang(startRang);
 			s.setNaam(naam);
 			s.setPunten(punten);
 			//s.setWP(wp);

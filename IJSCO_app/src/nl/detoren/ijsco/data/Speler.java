@@ -297,6 +297,19 @@ public class Speler {
 				&& this.getNaamKNSB() == speler.getNaamKNSB() && this.getKnsbnummer() == speler.getKnsbnummer());
 	}
 
+	/**
+	 * Wordt dezelfde speler gerepresenteerd door het andere object?
+	 * 
+	 * @param Uitslagspeler
+	 * @return
+	 */
+	public boolean gelijkAan(UitslagSpeler s) {
+			return (this.getNaam().equals(s.getNaam())
+//	                && this.getInitialen().equals(speler.getInitialen())
+//	                && this.getGroep() == speler.getGroep()
+					&& this.getKnsbnummer() == s.getKNSBnummer());
+		}
+	
 	public String toStringComplete() {
 		String result = "";
 		result += knsbnummer + " - ";
@@ -467,4 +480,5 @@ public class Speler {
 			}
 		}
 	}
+
 }

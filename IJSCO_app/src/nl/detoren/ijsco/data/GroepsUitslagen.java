@@ -13,12 +13,15 @@ import java.util.logging.Level;
 
 public class GroepsUitslagen implements Iterable<GroepsUitslag>{
 	private List<GroepsUitslag> groepsuitslagen;
-	private int aantal;
+	private int aantalgroepen;
+	private int aantalspelers;
+	private int aantalspelersmetrating;
+	private int grootstegroep = 0;
 
 	@SuppressWarnings("unused")
 	public GroepsUitslagen() {
 		groepsuitslagen = new ArrayList<GroepsUitslag>();
-		aantal = 0;
+		aantalgroepen = 0;
 	}
 
 	@Override
@@ -27,19 +30,28 @@ public class GroepsUitslagen implements Iterable<GroepsUitslag>{
 	}
 
 	public void Add(GroepsUitslag groepsuitslag) {
-		this.aantal++;
+		this.aantalgroepen++;
 		groepsuitslagen.add(groepsuitslag);
+		this.aantalspelers=this.aantalspelers+groepsuitslag.getAantal();
+		this.aantalspelersmetrating=this.aantalspelersmetrating+groepsuitslag.getAantalspelersmetrating();
+		if (groepsuitslag.getAantal() > grootstegroep) grootstegroep = groepsuitslag.getAantal();
 		
 	}
 
-	public int AantalGroepsuitslagen() {
-		return aantal;
+	public int getAantalSpelers() {
+		return aantalspelers;
+	}
+
+	public int getAantalGroepsuitslagen() {
+		return aantalgroepen;
 	}
 
 	public void addGroepsUitslag(GroepsUitslag uitslag) {
-		this.aantal++;
+		this.aantalgroepen++;
+		this.aantalspelers=this.aantalspelers+uitslag.getAantal();
+		this.aantalspelersmetrating=this.aantalspelersmetrating+uitslag.getAantalspelersmetrating();
 		groepsuitslagen.add(uitslag);
-		
+		if (uitslag.getAantal() > grootstegroep) grootstegroep = uitslag.getAantal();
 	}
 	
 	public String ToString() {
@@ -109,6 +121,14 @@ public class GroepsUitslagen implements Iterable<GroepsUitslag>{
 	public void export() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public int getAantalspelersmetrating() {
+		return aantalspelersmetrating;
+	}
+
+	public int getGrootsteGroep() {
+		return grootstegroep;
 	}
 
 }

@@ -2,13 +2,16 @@ package nl.detoren.ijsco.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class UitslagSpeler implements Comparable{
 
+	private int startRang;
 	private int rang;
 	private int uitslagspelerid;
 	private String naam;
 	private int geboortejaar;
+	private String geslacht;
 	private String categorie;
 	private String[] vereniging;
 	private int punten; // punten is wedstrijdpunten * 10 
@@ -17,6 +20,7 @@ public class UitslagSpeler implements Comparable{
 	private int knsbnummer;
 	private int startrating;
 	private int deltarating;
+	private List<WedstrijdUitslag> wedstrijden;
 	
 	
 	public UitslagSpeler(Speler speler) {
@@ -27,7 +31,8 @@ public class UitslagSpeler implements Comparable{
 		startrating = 0;
 		deltarating = 0;
 		naam = speler.getNaam();
-		geboortejaar = 0;
+		geslacht = speler.getGeslacht();
+		geboortejaar = speler.getGeboortejaar();
 		vereniging[0] = speler.getVereniging();
 	}
 
@@ -41,6 +46,14 @@ public class UitslagSpeler implements Comparable{
 	
 	public int getRang() {
 		return rang;
+	}
+
+	public void setStartRang(Integer startRang) {
+		this.startRang = startRang;
+	}
+	
+	public int getStartRang() {
+		return startRang;
 	}
 
 	public void setId (int id) {
@@ -130,12 +143,28 @@ public class UitslagSpeler implements Comparable{
 		geboortejaar = jaar;
 	}
 
+	public String getGeslacht() {
+		return geslacht;
+	}
+
+	public void setGeslacht(String geslacht) {
+		this.geslacht = geslacht;
+	}
+
 	public String getCategorie() {
 		return categorie;
 	}
 
 	public void setCategorie(String categorie) {
 		this.categorie = categorie;
+	}
+
+	public List<WedstrijdUitslag> getWedstrijden() {
+		return wedstrijden;
+	}
+
+	public void setWedstrijden(List<WedstrijdUitslag> spelerWedstrijden) {
+		this.wedstrijden = spelerWedstrijden;
 	}
 
 	public String toFormattedString() {
@@ -176,4 +205,5 @@ public class UitslagSpeler implements Comparable{
 		    }
 		    return 0;
 		   		  }
+
 }

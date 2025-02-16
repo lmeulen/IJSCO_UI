@@ -33,6 +33,7 @@ public class Wedstrijd {
 	int uitslag;
 	boolean nietReglementair = true;
 	boolean adjourned = false;
+	boolean bye = false;
 
 	public static int UNKNOWN = -1; // Unknown
 	public static int ZERO_FORF= 0; // Both players didn't show up
@@ -137,6 +138,8 @@ public class Wedstrijd {
 	 * 7 = 0-1 => 2 (reglementair)
 	 * 8 = 1-0 => 1 (reglementair)
 	 * 9 = remise => 3 (reglementair)
+	 * 10 = 0-1 => 2 (Bye)
+	 * 11 = 1-0 => 1 (Bye)
 	 * 
 	 * Deze variant is handig bij invoeren van veel resultaten doordat
 	 * het eerste getal van de uitslag ingevuld kan worden (met 2 voor half).
@@ -146,6 +149,7 @@ public class Wedstrijd {
 	public void setUitslag012(int uitslag) {
 		nietReglementair = true;
 		adjourned = false;
+		bye = false;
 		if (uitslag > 3 && uitslag <7 ) {
 			uitslag -= 3;
 			adjourned = true;
@@ -153,6 +157,10 @@ public class Wedstrijd {
 		if (uitslag > 6 ) {
 			uitslag -= 7;
 			nietReglementair = false;
+		}
+		if (uitslag > 9 ) {
+			uitslag -= 10;
+			bye = true;
 		}
 		this.uitslag = (uitslag == 0 ? 2 : (uitslag == 1 ? 1 : (uitslag == 2 ? 3 : 0)));
 	}

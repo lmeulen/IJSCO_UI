@@ -250,7 +250,15 @@ public class Mainscreen extends JFrame {
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				controller.saveState(false, null);
+				if (controller == null) {
+			    	logger.log(Level.INFO, "Controller is null");										
+				}
+				try {
+					controller.saveState(false, null);					
+				}
+				catch (Exception e) {
+			    	logger.log(Level.INFO, "Error in SaveState - " + e.getMessage());					
+				}
 				System.exit(EXIT_ON_CLOSE);
 			}
 		});
@@ -281,7 +289,7 @@ public class Mainscreen extends JFrame {
 		
 		JMenu spelermenu = new JMenu("Spelersdatabase");
 
-		item = new JMenuItem("KNSB CSV lijst ophalen (Online)");
+		item = new JMenuItem("KNSB CSV lijst (RAPID) ophalen (Online)");
 		item.setAccelerator(KeyStroke.getKeyStroke('K', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		item.addActionListener(new ActionListener() {
 			@Override
@@ -489,26 +497,34 @@ deelnemersmenu.add(item);
 				ou.exportJSON(status.groepenuitslagen);
 				GroepsUitslagen verwerkteUitslag = new Uitslagverwerker().verwerkUitslag(status.groepenuitslagen);
 				logger.log(Level.INFO, verwerkteUitslag.ToString());
-				new OutputUitslagen().exporteindresultaten(verwerkteUitslag);
+				//new OutputUitslagen().exporteindresultaten(verwerkteUitslag);
+				ou.exporteindresultaten(verwerkteUitslag);
+				logger.log(Level.INFO, "Export eindresultaten completed.");
+				ou.exportfide2006(verwerkteUitslag);
+				logger.log(Level.INFO, "Exportfide2006 completed.");
+				ou.exportfide2006pergroep(verwerkteUitslag);
+				logger.log(Level.INFO, "Exportfide2006pergroep completed.");
 				JOptionPane.showMessageDialog(null, "Uitslagen geimporteerd en bestanden aangemaakt.");
-				try {
-					SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
-					SAIM.setSubject("IJSCO Uitslag bestanden van Toernooi " + IJSCOController.t().getBeschrijving() + ".");
-					SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
-					SAIM.setBodyText("Hierbij de uitslagen van het toernooi " + IJSCOController.t().getBeschrijving() + " van " + IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() + ".\r\n\r\nAangemaakt met " + IJSCOController.getAppTitle() + " " + IJSCOController.getAppVersion());
-					SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " + IJSCOController.t().getBeschrijving());
-					SAIM.addAttachement("Uitslagen.json");
-					SAIM.addAttachement("Uitslagen.txt");
-					SAIM.addAttachement("Eindresultaten.txt");
-					SAIM.addAttachement("Indeling resultaat.xlsm");
-					SAIM.addAttachement("status.json");
-					SAIM.send();
-					JOptionPane.showMessageDialog(null, "Uitslagen succesvol verstuurd naar OSBO.");
-				}
-				catch (Exception ex) {
-					logger.log(Level.SEVERE, "An " + ex.getMessage() + " occured ");
-				}
-
+				/*
+				 * try { SendAttachmentInEmail SAIM = new SendAttachmentInEmail();
+				 * SAIM.setSubject("IJSCO Uitslag bestanden van Toernooi " +
+				 * IJSCOController.t().getBeschrijving() + ".");
+				 * SAIM.setBodyHeader("Beste IJSCO uitslagverwerker,");
+				 * SAIM.setBodyText("Hierbij de uitslagen van het toernooi " +
+				 * IJSCOController.t().getBeschrijving() + " van " +
+				 * IJSCOController.t().getDatum() + " te " + IJSCOController.t().getPlaats() +
+				 * ".\r\n\r\nAangemaakt met " + IJSCOController.getAppTitle() + " " +
+				 * IJSCOController.getAppVersion());
+				 * SAIM.setBodyFooter("Met vriendelijke groet,\r\n\r\nOrganisatie van " +
+				 * IJSCOController.t().getBeschrijving());
+				 * SAIM.addAttachement("Uitslagen.json"); SAIM.addAttachement("Uitslagen.txt");
+				 * SAIM.addAttachement("Eindresultaten.txt");
+				 * SAIM.addAttachement("Indeling resultaat.xlsm");
+				 * SAIM.addAttachement("status.json"); SAIM.send();
+				 * JOptionPane.showMessageDialog(null,
+				 * "Uitslagen succesvol verstuurd naar OSBO."); } catch (Exception ex) {
+				 * logger.log(Level.SEVERE, "An " + ex.getMessage() + " occured "); }
+				 */
 			}	
 			hoofdPanel.repaint();
 		}

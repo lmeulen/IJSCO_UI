@@ -38,6 +38,7 @@ public class WedstrijdUitslag {
 	int resultaat;
 	boolean nietReglementair = true;
 	boolean adjourned = false;
+	boolean bye = false;
 
 	public static int UNKNOWN = -1; // Unknown
 	public static int ZERO_FORF= 0; // Both players didn't show up
@@ -174,6 +175,7 @@ public class WedstrijdUitslag {
 	public void setUitslag012(int uitslag) {
 		nietReglementair = true;
 		adjourned = false;
+		bye = false;
 		if (uitslag > 3 && uitslag <7 ) {
 			uitslag -= 3;
 			adjourned = true;
@@ -181,6 +183,10 @@ public class WedstrijdUitslag {
 		if (uitslag > 6 ) {
 			uitslag -= 7;
 			nietReglementair = false;
+		}
+		if (uitslag > 9 ) {
+			uitslag -= 10;
+			bye = true;
 		}
 		this.resultaat = (uitslag == 0 ? 2 : (uitslag == 1 ? 1 : (uitslag == 2 ? 3 : 0)));
 	}
