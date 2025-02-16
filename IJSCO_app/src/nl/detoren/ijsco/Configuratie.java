@@ -31,11 +31,11 @@ public class Configuratie {
 		public int maxGroepen = 10;
 		public int minSpelers = 4;
 		public int maxSpelers = 10;
-		public int minDeltaSpelers = 2;
+		public int minDeltaSpelers = 0;
 		public int maxDeltaSpelers = 2;
-		public int minAfwijkendeGroepen = 1;
+		public int minAfwijkendeGroepen = 0;
 		public int maxAfwijkendeGroepen = 4;
-		public int minToegestaneByes = 1;
+		public int minToegestaneByes = 0;
 		public int maxToegestaneByes = 2;
 		public List<Integer> nobyes = Arrays.asList(1,2);
 
@@ -53,4 +53,10 @@ public class Configuratie {
 		 */
 		public String statusBestand = "status";
 
+		/**
+		 * Personal API key
+		 *
+		 */
+		
+		public String personalAPIKey = "";
 }
