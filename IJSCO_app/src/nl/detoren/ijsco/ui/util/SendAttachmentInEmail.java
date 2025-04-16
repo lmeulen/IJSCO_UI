@@ -62,7 +62,7 @@ public class SendAttachmentInEmail {
 	public SendAttachmentInEmail() {	
 
 	    // Recipient's email ID needs to be mentioned.
-	    _to = "ijsco@osbo.nl";
+	    _to = "l.p.dam@schaakrating.nl";
 	    // Sender's email ID needs to be mentioned
 	    //String from = "ijsco.osbo@gmail.com";
 	    _from = "osbojeugd@schaakrating.nl";
