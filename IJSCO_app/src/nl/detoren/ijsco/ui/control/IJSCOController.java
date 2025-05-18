@@ -29,7 +29,7 @@ import nl.detoren.ijsco.data.Toernooi;
 public class IJSCOController {
 
     private static volatile IJSCOController instance = null;
-
+ 
     private final static Logger logger = Logger.getLogger(IJSCOController.class.getName());
 
     private static final String defaultInputfile = "uitslag.txt";
@@ -38,7 +38,7 @@ public class IJSCOController {
 
 	private static String appVersion = "0.3.3.0";
 	
-	private static String apiKey = "DIw3nDOIuw3DIUtysiougw8v8fDrFe";
+	private static String apiKey = "DIw3nDOIuw3                                                                   DIUtysiougw8v8fDrFe";
 	
     private Status status;
 

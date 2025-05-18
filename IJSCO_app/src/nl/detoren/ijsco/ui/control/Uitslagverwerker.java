@@ -293,12 +293,26 @@ import nl.detoren.ijsco.data.WedstrijdUitslag;
 					UitslagSpeler u = m.getValue();
 					if (u.getNaam() != null) { 
 						logger.log(Level.INFO, "Verwerk uitslag voor speler " + u.getNaam());
-						if (!u.getNaam().equals("Bye")) { 
-							u = updateSpeler(u, groep);
+						logger.log(Level.INFO, "Verwerk uitslag voor speler met geboortejaar : " + u.getGeboortejaar());
+						if (!u.getNaam().equals("Bye")) {
+							try {
+								logger.log(Level.INFO, "UpdateSpeler voor u " + u.toFormattedString());
+								u = updateSpeler(u, groep);
+							} catch (Exception ex) {
+								logger.log(Level.INFO, "Uitzondering in updateSpeler", ex);
+							}
 							//uitslag.addSpeler(update);
 							//uitslag.setAantal(uitslag.getAantal() - 1);
+						} else {
+							try {
+								logger.log(Level.INFO, "UpdateSpeler voor Bye : " + u.toFormattedString());
+								u = updateSpeler(u, groep);
+							} catch (Exception ex) {
+								logger.log(Level.INFO, "Uitzondering in updateSpeler Bye : ", ex);
+							}
 						}
 					} else {
+						logger.log(Level.INFO, "u.getNaam() is null " + u.getNaam());						
 						//UitslagSpeler update = updateSpeler(speler, groep);
 						//uitslag.addSpeler(update);
 					}

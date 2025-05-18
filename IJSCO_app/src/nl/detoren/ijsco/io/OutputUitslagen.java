@@ -3,8 +3,10 @@ package nl.detoren.ijsco.io;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
@@ -162,6 +164,8 @@ public class OutputUitslagen implements GroepenExportInterface{
 			result += DIN.get("Number of teams") + " 0" + ls;
 			result += DIN.get("Type of tournament") + " Individual: Round-Robin" + ls;
 			result += DIN.get("Chief Arbiter") + " " + ls;
+			// TODO : Get this information from the tournament
+			result += DIN.get("Alotted times per moves/game") + " 15|0" +ls; // not sure if this is the correct format
 			result += DIN.get("dates of the rounds (YY/MM/DD)") + String.format("%1$86s", "");
 			//logger.log(Level.INFO, "Tournament section done. Result is " + ls + result);
 			for (int i=0; i < (groepenuitslagen.getGrootsteGroep()-1); i++) {
@@ -199,7 +203,14 @@ public class OutputUitslagen implements GroepenExportInterface{
 					}
 					result += " NED";
 					result += " " + String.format("%1$11s", s.getKNSBnummer());
-					result += " " + String.format("%1$9s", dateformatter.format(s.getGeboortejaar()));
+					logger.log(Level.INFO, "Speler " + s.getNaam() +  " met KNSBnummer " +s.getKNSBnummer() + " en met geboortejaar " + s.getGeboortejaar());
+//					result += " " + String.format("%1$9s", dateformatter.format(s.getGeboortejaar()));
+					Calendar geboortedate = Calendar.getInstance();
+					int gj = s.getGeboortejaar();
+					if (gj == -1) gj = 1970;
+					geboortedate.set(gj,0,1,0,0);
+					logger.log(Level.INFO, dateformatter.format(geboortedate.getTime()));
+					result += " " + String.format("%1$9s", dateformatter.format(geboortedate.getTime()));
 					//logger.log(Level.INFO, "Aantal punten is " + s.getPunten()/10.0);
 					String punt = String.format(Locale.US, "%.1f", s.getPunten()/10.0);
 					result += " " + String.format("%1$4s", punt);
@@ -208,27 +219,40 @@ public class OutputUitslagen implements GroepenExportInterface{
 					zwart = false;
 					startRangTegenstander = 0;
 					//logger.log(Level.INFO, "Player section done. Result is " + ls + result);
-					logger.log(Level.INFO, "Now getting into matches. Number of matches is " + s.getWedstrijden().size());
-					for (WedstrijdUitslag w : s.getWedstrijden()) {
-						wit= false;
-						zwart = false;
-						if (w.getWit().gelijkAan(s)) {
-							wit=true;
-						}
-						if (w.getZwart().gelijkAan(s)) {
-							zwart = true;
-						}
-						if (wit && zwart) logger.log(Level.WARNING, "Speler is zowel wit als zwart?!");
-						if (wit) {
-							// vind speler in groep
-							for (UitslagSpeler s2 : gu.getSpelers().values()) {
-								if (w.getZwart().gelijkAan(s2)) {
-									startRangTegenstander = s2.getStartRang();
-								}
+					List<WedstrijdUitslag> wedstrijden = new ArrayList<>();
+					try {
+					wedstrijden = s.getWedstrijden();
+					} catch (Exception ex) {
+						logger.log(Level.INFO, "Could not retreive wedstrijden", ex);
+					}
+					int ws = 0;
+					try {
+						ws = wedstrijden.size(); 
+					} catch (Exception ex) {
+						logger.log(Level.INFO, "Could not retreive wedstrijden.size() for speler " + s.getNaam());						
+					}
+					if (wedstrijden!=null) {
+						logger.log(Level.INFO, "Now getting into matches. Number of matches is " + wedstrijden.size());
+						for (WedstrijdUitslag w : s.getWedstrijden()) {
+							wit= false;
+							zwart = false;
+							if (w.getWit().gelijkAan(s)) {
+								wit=true;
 							}
-							//logger.log(Level.INFO, "Tegenstander is zwart en met startrang " + startRangTegenstander);
-						}
-						if (zwart) {
+							if (w.getZwart().gelijkAan(s)) {
+								zwart = true;
+							}
+							if (wit && zwart) logger.log(Level.WARNING, "Speler is zowel wit als zwart?!");
+							if (wit) {
+								// vind speler in groep
+								for (UitslagSpeler s2 : gu.getSpelers().values()) {
+									if (w.getZwart().gelijkAan(s2)) {
+										startRangTegenstander = s2.getStartRang();
+									}
+								}
+								//logger.log(Level.INFO, "Tegenstander is zwart en met startrang " + startRangTegenstander);
+							}
+							if (zwart) {
 								// vind speler in groep
 								for (UitslagSpeler s2 : gu.getSpelers().values()) {
 									if (w.getWit().gelijkAan(s2)) {
@@ -236,22 +260,23 @@ public class OutputUitslagen implements GroepenExportInterface{
 									}
 								}
 								//logger.log(Level.INFO, "Tegenstander is wit en met startrang (" + totaaleerderegroepen + " + " + startRangTegenstander + ")" + totaaleerderegroepen + startRangTegenstander);
+							}
+							result += "  " + String.format("%1$4s", (totaaleerderegroepen + startRangTegenstander));
+							if (wit && !zwart) {
+								// Speler is wit
+								result += " w";
+								result += " " + String.format("%1$1s", getFIDEUitslag2006(0,w.getUitslag()));
+							}
+							if (!wit && zwart) {
+								// Speler is zwart
+								result += " b";
+								result += " " + String.format("%1$1s", getFIDEUitslag2006(1,w.getUitslag()));
+							}
 						}
-						result += "  " + String.format("%1$4s", (totaaleerderegroepen + startRangTegenstander));
-						if (wit && !zwart) {
-							// Speler is wit
-							result += " w";
-							result += " " + String.format("%1$1s", getFIDEUitslag2006(0,w.getUitslag()));
-						}
-						if (!wit && zwart) {
-							// Speler is zwart
-							result += " b";
-							result += " " + String.format("%1$1s", getFIDEUitslag2006(1,w.getUitslag()));
-						}
+						result += ls;
+						//logger.log(Level.INFO, "Matches finished. Result is " + ls + result);
+						logger.log(Level.INFO, "Matches finished.");
 					}
-					result += ls;
-					//logger.log(Level.INFO, "Matches finished. Result is " + ls + result);
-					logger.log(Level.INFO, "Matches finished.");
 				};
 				totaaleerderegroepen += gu.getAantal();
 			}
@@ -290,6 +315,8 @@ public class OutputUitslagen implements GroepenExportInterface{
 					result += DIN.get("Number of teams") + " 0" + ls;
 					result += DIN.get("Type of tournament") + " Individual: Round-Robin" + ls;
 					result += DIN.get("Chief Arbiter") + " " + ls;  // Mandatory
+					// TODO : Get this information from the tournament
+					result += DIN.get("Alotted times per moves/game") + " 15|0" +ls; // not sure if this is the correct format
 					result += DIN.get("dates of the rounds (YY/MM/DD)") + String.format("%1$86s", "");
 					//logger.log(Level.INFO, "Tournament section done. Result is " + ls + result);
 					logger.log(Level.INFO, "Tournament section done.");
@@ -326,7 +353,12 @@ public class OutputUitslagen implements GroepenExportInterface{
 						{
 						result += " NED";
 						result += " " + String.format("%1$11s", s.getKNSBnummer()); // Mandatory
-						result += " " + String.format("%1$9s", dateformatter.format(s.getGeboortejaar()));
+						Calendar geboortedate = Calendar.getInstance();
+						int gj = s.getGeboortejaar();
+						if (gj == -1) gj = 1970;
+						geboortedate.set(gj,0,1,0,0);
+						logger.log(Level.INFO, dateformatter.format(geboortedate.getTime()));
+						result += " " + String.format("%1$9s", dateformatter.format(geboortedate.getTime()));
 						//logger.log(Level.INFO, "Aantal punten is " + s.getPunten()/10.0);
 						String punt = String.format(Locale.US, "%.1f", s.getPunten()/10.0);
 						result += " " + String.format("%1$4s", punt);
@@ -336,27 +368,40 @@ public class OutputUitslagen implements GroepenExportInterface{
 						startRangTegenstander = 0;
 						//logger.log(Level.INFO, "Player section done. Result is " + ls + result);
 						logger.log(Level.INFO, "Player section done.");
-						logger.log(Level.INFO, "Now getting into matches. Number of matches is " + s.getWedstrijden().size());
-						for (WedstrijdUitslag w : s.getWedstrijden()) {
-							wit= false;
-							zwart = false;
-							if (w.getWit().gelijkAan(s)) {
-								wit=true;
-							}
-							if (w.getZwart().gelijkAan(s)) {
-								zwart = true;
-							}
-							if (wit && zwart) logger.log(Level.WARNING, "Speler is zowel wit als zwart?!");
-							if (wit) {
-								// vind speler in groep
-								for (UitslagSpeler s2 : gu.getSpelers().values()) {
-									if (w.getZwart().gelijkAan(s2)) {
-										startRangTegenstander = s2.getStartRang();
-									}
+						List<WedstrijdUitslag> wedstrijden = new ArrayList<>();
+						try {
+							wedstrijden = s.getWedstrijden();
+						} catch (Exception ex) {
+							logger.log(Level.INFO, "Could not retreive wedstrijden");
+						}
+						int ws = 0;
+						try {
+							ws = wedstrijden.size(); 
+						} catch (Exception ex) {
+							logger.log(Level.INFO, "Could not retreive wedstrijden.size() for speler " + s.getNaam());						
+						}
+						if (wedstrijden!=null) {
+							logger.log(Level.INFO, "Now getting into matches. Number of matches is " + s.getWedstrijden().size());
+							for (WedstrijdUitslag w : s.getWedstrijden()) {
+								wit= false;
+								zwart = false;
+								if (w.getWit().gelijkAan(s)) {
+									wit=true;
 								}
-								//logger.log(Level.INFO, "Tegenstander is zwart en met startrang " + startRangTegenstander);
-							}
-							if (zwart) {
+								if (w.getZwart().gelijkAan(s)) {
+									zwart = true;
+								}
+								if (wit && zwart) logger.log(Level.WARNING, "Speler is zowel wit als zwart?!");
+								if (wit) {
+									// vind speler in groep
+									for (UitslagSpeler s2 : gu.getSpelers().values()) {
+										if (w.getZwart().gelijkAan(s2)) {
+											startRangTegenstander = s2.getStartRang();
+										}
+									}
+									//logger.log(Level.INFO, "Tegenstander is zwart en met startrang " + startRangTegenstander);
+								}
+								if (zwart) {
 									// vind speler in groep
 									for (UitslagSpeler s2 : gu.getSpelers().values()) {
 										if (w.getWit().gelijkAan(s2)) {
@@ -364,22 +409,23 @@ public class OutputUitslagen implements GroepenExportInterface{
 										}
 									}
 									//logger.log(Level.INFO, "Tegenstander is wit en met startrang " + startRangTegenstander);
+								}
+								result += "  " + String.format("%1$4s", (startRangTegenstander));  // Mandatory
+								if (wit && !zwart) {
+									// Speler is wit
+									result += " w";  // Mandatory
+									result += " " + String.format("%1$1s", getFIDEUitslag2006(0,w.getUitslag())); // Mandatory
+								}
+								if (!wit && zwart) {
+									// Speler is zwart
+									result += " b";  // Mandatory
+									result += " " + String.format("%1$1s", getFIDEUitslag2006(1,w.getUitslag())); // Mandatory
+								}
 							}
-							result += "  " + String.format("%1$4s", (startRangTegenstander));  // Mandatory
-							if (wit && !zwart) {
-								// Speler is wit
-								result += " w";  // Mandatory
-								result += " " + String.format("%1$1s", getFIDEUitslag2006(0,w.getUitslag())); // Mandatory
-							}
-							if (!wit && zwart) {
-								// Speler is zwart
-								result += " b";  // Mandatory
-								result += " " + String.format("%1$1s", getFIDEUitslag2006(1,w.getUitslag())); // Mandatory
-							}
+							result += ls;
+							//logger.log(Level.INFO, "Matches finished. Result is " + ls + result);
+							logger.log(Level.INFO, "Matches finished.");
 						}
-						result += ls;
-						//logger.log(Level.INFO, "Matches finished. Result is " + ls + result);
-						logger.log(Level.INFO, "Matches finished.");
 					};
 				}
 				logger.log(Level.INFO, "Now writing file.");

@@ -1,5 +1,5 @@
 /**
-;< * Copyright (C) 2018 Lars Dam
+ * Copyright (C) 2018-2025 Lars Dam
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation version 3.0
@@ -269,10 +269,66 @@ public class ExcelImport implements ImportInterface {
 
 	private GroepsUitslag importeergroep(int groepsgrootte, Sheet sheet, int rIdxbase, int cUitslag, int cTotaal, int cWedstrijdIDWit, int cWedstrijdIDZwart) {
 		Row row;
-		HashMap<Integer, Speler> OSBOSpelers = IJSCOController.getI().getStatus().OSBOSpelers;
+		//HashMap<Integer, Speler> OSBOSpelers = IJSCOController.getI().getStatus().OSBOSpelers;
+		Spelers deelnemers = IJSCOController.getI().getStatus().deelnemers;
 		GroepsUitslag groep = new GroepsUitslag(groepsgrootte, cellStringValue(sheet.getRow(0).getCell(6)));
+		logger.log(Level.INFO, "Importeren van groep : " + groep.getGroepsnaam());
 		for(int i=0;i <= groepsgrootte-1;i++){
-			UitslagSpeler s = new UitslagSpeler();
+			UitslagSpeler s;
+			s = new UitslagSpeler();
+			// Knsbnummer
+			Integer knsbnummer;
+			try {
+				knsbnummer = cellIntValue(sheet.getRow(2+i+1).getCell(3));
+			} catch (Exception ex) {
+				logger.log(Level.WARNING, "KNSBnummer not found in Excel.");
+				knsbnummer = -1;
+			}
+			if (knsbnummer>0) {
+				s = new UitslagSpeler(deelnemers.getByKNSB(knsbnummer));
+				logger.log(Level.INFO, "deelnemer gevonden op knsbnummer: " + knsbnummer);				
+			} else {
+				String naam;
+				try {
+					naam = cellStringValue(sheet.getRow(2+i+1).getCell(2));
+				} catch (Exception ex) {
+					logger.log(Level.WARNING, "Naam not found in Excel.");
+					naam = "Onbekend";
+				}
+				Speler d = deelnemers.getByNaam(naam);
+				if (d!=null) {
+					logger.log(Level.INFO, "Geen KNSBnummer, deelnemer met naam " + naam +  " found in deelnemers. d = " + d.getNaam());
+					s = new UitslagSpeler(d);
+				} else {
+					logger.log(Level.INFO, "Geen KNSBnummer, deelnemer met naam " + naam +  " not found in deelnemers.");					
+					if (naam.equals("Bye")) {
+						try {
+							Speler b = new Speler();
+							b.setBye();
+							s = new UitslagSpeler(b);
+							logger.log(Level.INFO, "Bye voor " + naam);
+						} catch (Exception ex) {
+							logger.log(Level.WARNING, "Fout met bye : " + naam);
+						}
+					} else {
+						logger.log(Level.SEVERE, "!!Geen knsbnummer gevonden en de naam niet gevonden en geen bye voor " + naam);						
+					}
+				}
+//				finally {
+//					logger.log(Level.WARNING, "Finally called" + naam);					
+//				}
+				
+			}
+
+			// Id
+			Integer id;
+			try {
+				id = cellIntValue(sheet.getRow(2+i+1).getCell(1));
+			} catch (Exception ex) {
+				logger.log(Level.WARNING, "ID not found.");
+				id = -1;
+			}
+			
 			// Rang
 			Integer rang;
 			// StartRang
@@ -290,22 +346,7 @@ public class ExcelImport implements ImportInterface {
 				logger.log(Level.WARNING, "Rang not found.");
 				rang = -1;
 			}
-			// Id
-			Integer id;
-			try {
-				id = cellIntValue(sheet.getRow(2+i+1).getCell(1));
-			} catch (Exception ex) {
-				logger.log(Level.WARNING, "Rang not found.");
-				id = -1;
-			}
 			// Naam
-			String naam;
-			try {
-				naam = cellStringValue(sheet.getRow(2+i+1).getCell(2));
-			} catch (Exception ex) {
-				logger.log(Level.WARNING, "Naam not found.");
-				naam = "Onbekend";
-			}
 			// Punten
 			Integer punten;
 			try {
@@ -330,14 +371,6 @@ public class ExcelImport implements ImportInterface {
 				logger.log(Level.WARNING, "SB not found.");
 				sb = -1;
 			}
-			// Knsbnummer
-			Integer knsbnummer;
-			try {
-				knsbnummer = cellIntValue(sheet.getRow(2+i+1).getCell(3));
-			} catch (Exception ex) {
-				logger.log(Level.WARNING, "KNSBnummer not found.");
-				knsbnummer = -1;
-			}
 			// Startrating
 			Integer startrating;
 			try {
@@ -349,32 +382,30 @@ public class ExcelImport implements ImportInterface {
 			s.setId(id);
 			s.setRang(rang);
 			s.setStartRang(startRang);
-			s.setNaam(naam);
+			// not necessary anymore? s.setNaam(naam);
 			s.setPunten(punten);
 			//s.setWP(wp);
 			s.setSB(sb);
-			s.setKNSBnummer(knsbnummer);
 			s.setStartrating(startrating);
 			//logger.log(Level.INFO, s.toFormattedString());
-			for (Speler osbo :OSBOSpelers.values()) {
-				int osboknsbnummer = 0;
-				try {
-					osboknsbnummer = osbo.getKnsbnummer();
-				} catch (Exception ex) {
-					logger.log(Level.WARNING, "Exception in finding knsbnummer " + knsbnummer + " in OSBO list");
-				}
-				int geboortejaar = 0;
-				try {
-					geboortejaar = osbo.getGeboortejaar();
-				} catch (Exception ex) {
-					logger.log(Level.WARNING, "Exception in finding geboortejaar " + geboortejaar + " in OSBO list");
-				}
-				if (knsbnummer == osboknsbnummer) {
-					s.setVereniging(osbo.getVereniging());
-					s.setGeboortejaar(osbo.getGeboortejaar());
-					s.setCategorie(osbo.getCategorie());
-				}
-			}
+
+			/*
+			 * for (Speler osbo :OSBOSpelers.values()) { int osboknsbnummer = 0; try {
+			 * osboknsbnummer = osbo.getKnsbnummer(); } catch (Exception ex) {
+			 * logger.log(Level.WARNING, "Exception in finding knsbnummer " + knsbnummer +
+			 * " in OSBO list"); } int geboortejaar = 0; try { geboortejaar =
+			 * osbo.getGeboortejaar(); } catch (Exception ex) { logger.log(Level.WARNING,
+			 * "Exception in finding geboortejaar " + geboortejaar + " in OSBO list"); } if
+			 * (knsbnummer == osboknsbnummer) { logger.log(Level.INFO, "ksnbnummer " +
+			 * knsbnummer + " is gelijk aan osboknsbnummer " + osboknsbnummer);
+			 * logger.log(Level.INFO, "Vereniging vanuit osbo is " + osbo.getVereniging());
+			 * logger.log(Level.INFO, "Vereniging vanuit speler is " + s.getVereniging());
+			 * if (osbo.getVereniging() != null) { s.setVereniging(osbo.getVereniging()); }
+			 * if (osbo.getGeboortejaar() != 0) { s.setGeboortejaar(osbo.getGeboortejaar());
+			 * } if (osbo.getCategorie() != null) { s.setCategorie(osbo.getCategorie()); } }
+			 * }
+			 */
+			//logger.log(Level.INFO, "Speler " + s.getNaam() + " heeft id " + s.getId());
 			groep.addSpeler(s);
 		}
 		
@@ -452,11 +483,13 @@ public class ExcelImport implements ImportInterface {
 //						}
 						UitslagSpeler wit = null;
 						try {
+							logger.log(Level.INFO, "GetSpelerID voor witid : " + speleridwit + "");							
 							wit = groep.getSpelerById(speleridwit);
 						}
 						catch (Exception e) {
 							logger.log(Level.WARNING, "Exception in getSpelerbyId wit : " + speleridwit + "");							
 						}
+						//logger.log(Level.INFO, "Speler wit is : " + wit.getNaam() + "");							
 						UitslagSpeler zwart = null;
 						try {
 							zwart = groep.getSpelerById(speleridzwart);
@@ -464,6 +497,7 @@ public class ExcelImport implements ImportInterface {
 						catch (Exception e) {
 							logger.log(Level.WARNING, "Exception in getSpelerbyId zwart : " + speleridzwart + "");
 						}
+						//logger.log(Level.INFO, "Speler zwart is : " + zwart.getNaam() + "");							
 //						for (Speler s :OSBOSpelers.values()) {
 //							int knsbnummer = 0;
 //							try {
@@ -501,7 +535,7 @@ public class ExcelImport implements ImportInterface {
 							if (wit.getNaam().equals("Bye")) bye = true;
 						if (zwart.getNaam()!= null)
 							if (zwart.getNaam().equals("Bye")) bye = true;
-						if (!bye) {
+//						if (!bye) {
 							wedstrijd.setPoule(sheet.getSheetName());
 							wedstrijd.setRonde(i+1);
 							wedstrijd.setWit(wit);
@@ -529,9 +563,9 @@ public class ExcelImport implements ImportInterface {
 								logger.log(Level.WARNING, "Wedstrijd.tostring failed");
 							}
 							groep.addWedstrijd(wedstrijd);
-						} else {
-							logger.log(Level.WARNING, "Match is a bye");
-						}
+//						} else {
+//							logger.log(Level.INFO, "Match is a bye");
+//						}
 					}
     			}
     		}	

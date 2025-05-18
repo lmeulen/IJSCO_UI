@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class GroepsUitslag {
 
@@ -47,6 +48,10 @@ public class GroepsUitslag {
 	}
 
 	public UitslagSpeler getSpelerById(int i) {
+//		System.out.println("Aantal spelers is " + aantalspelers);
+//		for (Map.Entry<Integer,UitslagSpeler> us : spelers.entrySet()) 
+//           System.out.println("Key = " + us.getKey() +
+//                           ", Value = " + us.getValue());
 		return (i <= aantalspelers) ? spelers.get(i) : null;
 	}
 	

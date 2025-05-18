@@ -28,25 +28,23 @@ public class Status {
 	/**
 	 * Spelers zoals bekend bij de OSBO
 	 */
+	public HashMap<Integer, Speler> OSBOSpelers;
 
-	public Toernooi toernooi;
 	/**
 	 * Toernooi informatie
 	 */
+	public Toernooi toernooi;
 
-	public HashMap<Integer, Speler> OSBOSpelers;
 	/**
 	 * Deelnemers aan het toernooi
 	 */
-
 	public Spelers deelnemers;
+
 	/**
 	 * Mogelijke speelschemas
 	 * Schema is aantal groepen, spelers per groep (variabel)
 	 * en aantal byes
 	 */
-	
-	
 	public Schemas schemas;
 
 	/**

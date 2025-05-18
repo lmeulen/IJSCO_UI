@@ -18,6 +18,6 @@
 	<classpathentry kind="lib" path="lib/jdatepicker-1.3.4.jar"/>
 	<classpathentry kind="lib" path="lib/angus-activation-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jakarta.mail-2.0.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/lpdam.AMITY.000/Downloads/jakarta.activation-api-2.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta.activation-api_2.1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

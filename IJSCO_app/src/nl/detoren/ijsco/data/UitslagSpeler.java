@@ -33,11 +33,37 @@ public class UitslagSpeler implements Comparable{
 		naam = speler.getNaam();
 		geslacht = speler.getGeslacht();
 		geboortejaar = speler.getGeboortejaar();
-		vereniging[0] = speler.getVereniging();
+		knsbnummer = speler.getKnsbnummer();
+		ArrayList<String> aL;
+		if (vereniging!=null) {
+			 aL = new ArrayList<String>(Arrays.asList(vereniging));
+		} else {
+			 aL = new ArrayList<String>();
+		}
+		String ver = speler.getVereniging();
+		aL.add(ver);
+//		System.out.println("Speler vereniging = " + ver);
+//		System.out.println("AL vereniging = " + aL.toString());
+		Object[] ao = aL.toArray();
+		String[] vstr = Arrays.copyOf(ao, ao.length, String[].class);
+		vereniging = vstr;
 	}
 
 	public UitslagSpeler() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public UitslagSpeler(String string) {
+		// Create Uitslagspeler Bye
+		rang=0;
+		punten = 0;
+		wp = 0;
+		sb = 0 ;
+		startrating = 0;
+		deltarating = 0;
+		naam = "Bye";
+		geslacht = "";
+		geboortejaar = 0;
 	}
 
 	public void setRang (int rang) {
@@ -130,6 +156,7 @@ public class UitslagSpeler implements Comparable{
 		if (naamvereniging == null) {
 			return;
 		}
+
 		ArrayList<String> aL = new ArrayList<String>(Arrays.asList(vereniging));
 		aL.add(naamvereniging);
 		vereniging = (String[]) aL.toArray();

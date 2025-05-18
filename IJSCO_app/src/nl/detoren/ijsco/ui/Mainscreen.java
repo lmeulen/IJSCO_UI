@@ -495,6 +495,7 @@ deelnemersmenu.add(item);
 				ou.exportuitslagen(status.groepenuitslagen);
 				IJSCOController.t().wisUitslagen();
 				ou.exportJSON(status.groepenuitslagen);
+				logger.log(Level.INFO, "Verwerkte uitslag aanmaken.");
 				GroepsUitslagen verwerkteUitslag = new Uitslagverwerker().verwerkUitslag(status.groepenuitslagen);
 				logger.log(Level.INFO, verwerkteUitslag.ToString());
 				//new OutputUitslagen().exporteindresultaten(verwerkteUitslag);

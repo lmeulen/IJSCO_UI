@@ -166,6 +166,25 @@ public class Spelers implements Collection<Speler> {
 		return null;
 	}
 
+	public Speler getByNaam(String naam) {
+		System.out.println("Aantal deelnemers is " + deelnemers.size());
+		if (deelnemers != null) {
+			for (Speler s : deelnemers) {
+				if (s.getNaam().equals("Quinte Heijboer")) {
+					System.out.println("s.naam = " + s.getNaam() + "is gelijk aan " + naam + "?");
+					System.out.println("s.naam lengte = " + s.getNaam().length());
+					System.out.println("naam lengte  = " + naam.length());
+				}
+//				if (s.getNaam() == naam) {
+				if (s.getNaam().equals(naam)) {
+					return s;
+				}
+			}
+		}
+		System.out.println("GetByNaam returns null");
+		return null;
+	}
+
 	public int aantalAanwezig() {
 		if (deelnemers != null) {
 			int aanwezig = 0;
