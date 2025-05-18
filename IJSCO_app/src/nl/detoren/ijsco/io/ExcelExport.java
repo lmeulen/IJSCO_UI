@@ -99,8 +99,9 @@ public class ExcelExport implements ExportInterface {
 			updateCell(sheet7, sheet6row, 0, "Standen-K");
 			updateCell(sheet3, sheet3row, 0, "Naam", style1);
 			updateCell(sheet3, sheet3row, 1, "KNSB nr", style1);
-			updateCell(sheet3, sheet3row, 2, "rating", style1);
-			updateCell(sheet3, sheet3row, 3, "groep", style1);
+			updateCell(sheet3, sheet3row, 2, "Vereniging", style1);
+			updateCell(sheet3, sheet3row, 3, "rating", style1);
+			updateCell(sheet3, sheet3row, 4, "groep", style1);
 			sheet3row++;
 			for (Groep groep : groepen) {
 				logger.log(Level.INFO, "Exporteer groep : " + groep.getNaam());
@@ -111,7 +112,9 @@ public class ExcelExport implements ExportInterface {
 				updateCell(sheet2, sheet2row, 0, "nr", style1);
 				updateCell(sheet2, sheet2row, 1, "Naam", style1);
 				updateCell(sheet2, sheet2row, 2, "KNSB nr", style1);
-				updateCell(sheet2, sheet2row, 3, "rating", style1);
+				updateCell(sheet2, sheet2row, 3, "Vereniging", style1);
+				updateCell(sheet2, sheet2row, 4, "rating", style1);
+				updateCell(sheet2, sheet2row, 5, "Geboortejaar", style1);
 				sheet2row++;
 				sheet6row++;
 				sheet7row++;
@@ -164,9 +167,12 @@ public class ExcelExport implements ExportInterface {
 					updateCell(sheet2, sheet2row, 1, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(2) + (4+i), true);
 					// KNSBNummer
 					updateCell(sheet2, sheet2row, 2, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(3) + (4+i), true);
+					// Vereniging
+					updateCell(sheet2, sheet2row, 3, groep.getSpeler(i).getVereniging(), false);
 					// Rating
-					updateCell(sheet2, sheet2row, 3, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(5) + (4+i), true);
-					//
+					updateCell(sheet2, sheet2row, 4, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(5) + (4+i), true);
+					// Geboortejaar
+					updateCell(sheet2, sheet2row, 5, groep.getSpeler(i).getGeboortejaar());										//
 					// Vul Standensheet voor iedere speler 
 					// Eerst de Naam van de speler
 					updateCell(sheet6, sheet6row, 0, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(2) + (4+i), true);					
@@ -209,8 +215,10 @@ public class ExcelExport implements ExportInterface {
 					if (groep.getSpeler(i).getNaam() != "Bye") {
 						updateCell(sheet3, sheet3row, 0, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(2) + (4+i), true);
 						updateCell(sheet3, sheet3row, 1, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(3) + (4+i), true);
-						updateCell(sheet3, sheet3row, 2, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(5) + (4+i), true);
-						updateCell(sheet3, sheet3row, 3, groep.getNaam());
+						logger.log(Level.INFO, "Vereniging voor speler " + groep.getSpeler(i).getNaam() + " is " +  groep.getSpeler(i).getVereniging());
+						updateCell(sheet3, sheet3row, 2, groep.getSpeler(i).getVereniging());
+						updateCell(sheet3, sheet3row, 3, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(5) + (4+i), true);
+						updateCell(sheet3, sheet3row, 4, groep.getNaam());
 					}
 					sheet2row++;
 					sheet3row++;
@@ -251,6 +259,7 @@ public class ExcelExport implements ExportInterface {
 		    Collections.sort(spelers, SpelerIndeling.RatingComparator);
 			int sheet5row = 2;
 			updateCell(sheet5, sheet5row, 0, "Naam", style1);
+			//updateCell(sheet5, sheet5row, 1, "Vereniging", style1);
 			updateCell(sheet5, sheet5row, 1, "KNSB nr", style1);
 			updateCell(sheet5, sheet5row, 2, "rating", style1);
 			updateCell(sheet5, sheet5row, 3, "groep", style1);
@@ -258,6 +267,7 @@ public class ExcelExport implements ExportInterface {
 			for (SpelerIndeling si : spelers) {
 				if (si.getSpeler().getNaam() != "Bye") {
 					updateCell(sheet5, sheet5row, 0, si.getcr1(), true);
+//					updateCell(sheet5, sheet5row, 1, si.getVereniging(), false);
 					updateCell(sheet5, sheet5row, 1, si.getcr2(), true);
 					updateCell(sheet5, sheet5row, 2, si.getcr3(), true);
 					updateCell(sheet5, sheet5row, 3, si.getGroep());
@@ -307,6 +317,7 @@ public class ExcelExport implements ExportInterface {
 	 *            THe value to store in the cell
 	 */
 	private void updateCell(XSSFSheet sheet, int row, int col, String value) {
+		if (value == null) value = "";
 		Cell cell = getCell(sheet, row, col);
 		cell.setCellValue(value.trim());
 	}
@@ -317,13 +328,18 @@ public class ExcelExport implements ExportInterface {
 	}
 
 	private void updateCell(XSSFSheet sheet, int row, int col, String value, boolean formula) {
+		if (value == null) value = "";
 		Cell cell = getCell(sheet, row, col);
-		cell.setCellFormula(value);
+		if (formula) cell.setCellFormula(value);
+		else cell.setCellValue(value.trim());
+
 	}
 
 	private void updateCell(XSSFSheet sheet, int row, int col, String value, XSSFCellStyle style, boolean formula) {
+		if (value == null) value = "";
 		Cell cell = getCell(sheet, row, col);
-		cell.setCellFormula(value);
+		if (formula) cell.setCellFormula(value);
+		else cell.setCellValue(value.trim());
 		cell.setCellStyle(style);
 	}
 

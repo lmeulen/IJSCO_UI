@@ -542,15 +542,18 @@ public class ExcelImport implements ImportInterface {
 	public Spelers controleerSpelers(Spelers spelers, HashMap<Integer, Speler> osbolijst) {
 		Spelers update = new Spelers();
 		for (Speler s : spelers) {
+			logger.log(Level.INFO, "Controleerspelers - Vereniging voor speler " + s.getNaam() + " is " + s.getVereniging());
 			Speler osbogegevens = osbolijst.get(s.getKnsbnummer());
 			if (osbogegevens != null) {
 				s.setNaamKNSB(osbogegevens.getNaam());
 				s.setRatingIJSCO(osbogegevens.getRatingIJSCO());
 				s.setRatingKNSB(osbogegevens.getRatingKNSB());
+				logger.log(Level.INFO, "Bond gegevens Geboortejaar :" + osbogegevens.getGeboortejaar());
 				s.setGeboortejaar(osbogegevens.getGeboortejaar());
 				s.setGeslacht(osbogegevens.getGeslacht());
 				s.setCategorie(osbogegevens.getCategorie());
-				s.setVereniging(osbogegevens.getVereniging());
+				// Unavailable at the moment
+				// s.setVereniging(osbogegevens.getVereniging());
 			}
 			update.add(s);
 		}

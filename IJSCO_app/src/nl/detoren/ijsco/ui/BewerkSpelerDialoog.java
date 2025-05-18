@@ -52,13 +52,13 @@ public class BewerkSpelerDialoog extends JDialog {
         setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().add(createPanel());
-        setSize(300, 11 * 24);
+        setSize(300, 12 * 24);
         setLocationRelativeTo(frame);
     }
 
     private JPanel createPanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(11, 2));
+        panel.setLayout(new GridLayout(12, 2));
         //KNSB nummer
         panel.add(new JLabel("KNSB nummer"));
         final JTextField tfKNSBnr = new JTextField((new Integer(speler.getKnsbnummer())).toString());
@@ -72,7 +72,11 @@ public class BewerkSpelerDialoog extends JDialog {
         final JTextField tfNaam2 = new JTextField(speler.getNaamKNSB());
         tfNaam2.setEditable(false);
         panel.add(tfNaam2);
-
+        // Vereniging
+        panel.add(new JLabel("Vereniging"));
+        final JTextField tfVereniging = new JTextField(speler.getVereniging());
+        panel.add(tfVereniging);
+ 
         // Geboortejaar
         panel.add(new JLabel("Geboortejaar"));
         final JTextField tfGeboortejaar = new JTextField((new Integer(speler.getGeboortejaar()).toString()));
@@ -112,6 +116,7 @@ public class BewerkSpelerDialoog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent event) {
                 speler.setNaamHandmatig(tfNaam.getText());
+                speler.setVereniging(tfVereniging.getText());
                 int rating = Integer.parseInt(tfRating.getText());
                 speler.setRatingHandmatig(rating);
                 int knsb = Integer.parseInt(tfKNSBnr.getText());
@@ -122,7 +127,7 @@ public class BewerkSpelerDialoog extends JDialog {
                 speler.setOverruleNaam(tfOverruleNaam.isSelected());
                 speler.setOverruleRating(tfOverruleRating.isSelected());
                 setVisible(false);
-                // TODO Opslaan
+                // TODO Opslaan ipv alleen toevoegen
                 model.add(speler);
                 dispose();
                 model.fireTableDataChanged();
