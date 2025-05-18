@@ -12,6 +12,7 @@ public class SpelerIndeling {
 		celreferentie1 = cr1;
 		celreferentie2 = cr2;
 		celreferentie3 = cr3;
+		vereniging = s.getVereniging();
 	}
 		// region Static
 		private final static Logger logger = Logger.getLogger(IJSCOController.class.getName());
@@ -25,6 +26,7 @@ public class SpelerIndeling {
 		private String celreferentie2;
 		private String celreferentie3;
 		private String celreferentie4;
+		private String vereniging;
 		// endregion Properties
 
 		/**
@@ -73,6 +75,16 @@ public class SpelerIndeling {
 		 */
 		public String getcr3() {
 			return celreferentie3;
+		}
+
+		/**
+		 * Geef vereniging van spelerindeling
+		 * @return
+		 */
+		public String getVereniging() {
+			if(vereniging!= null && !vereniging.isEmpty()) return vereniging;
+			else return "";
+			
 		}
 
 		/*Comparator for sorting the list by Speler Name*/

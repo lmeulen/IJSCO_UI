@@ -955,6 +955,7 @@ deelnemersmenu.add(item);
 		Spelers tmp = new DeelnemersLader().importeerSpelers(file);
 		if (status.OSBOSpelers != null) {
 			//int reply = JOptionPane.showConfirmDialog(null, "Weet u zeker dat u wilt doorgaan?", "Weet u het zeker?", JOptionPane.YES_NO_OPTION);
+			logger.log(Level.INFO, "Check OSBOSpelers");
 			int reply = JOptionPane.YES_OPTION;
 			if (reply == JOptionPane.YES_OPTION) {
 				indeler.controleerSpelers(tmp, status.OSBOSpelers);
@@ -1546,10 +1547,13 @@ deelnemersmenu.add(item);
 		int ndeelnemers = status.deelnemers.aantalAanwezig();
 		logger.log(Level.INFO, "Bepaal mogelijkheden voor n=" + ndeelnemers);
 		status.schemas = indeler.mogelijkeSchemas(status);
+		status.schemas.sort();
+		logger.log(Level.INFO, "Aantal mogelijkheden is " + status.schemas.size());
 		if (status.schemas.size()<1) {
 			JOptionPane.showMessageDialog(null, "Geen schema's mogelijk!");
 		}
 		status.schema = null;
+	
 		schemaModel.setSchemas(status.schemas);
 	}
 

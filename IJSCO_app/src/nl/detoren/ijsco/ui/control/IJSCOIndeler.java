@@ -14,6 +14,7 @@
 package nl.detoren.ijsco.ui.control;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -53,10 +54,12 @@ public class IJSCOIndeler {
 						s.setNaamKNSB(osbogegevens.getNaam());
 						s.setRatingIJSCO(osbogegevens.getRatingIJSCO());
 						s.setRatingKNSB(osbogegevens.getRatingKNSB());
+						logger.log(Level.INFO, "Bond gegevens Geboortejaar :" + osbogegevens.getGeboortejaar());
 						s.setGeboortejaar(osbogegevens.getGeboortejaar());
 						s.setGeslacht(osbogegevens.getGeslacht());
 						s.setCategorie(osbogegevens.getCategorie());
-						s.setVereniging(osbogegevens.getVereniging());
+						// not available at the moment
+						// s.setVereniging(osbogegevens.getVereniging());
 					}
 					update.add(s);
 				}
@@ -79,7 +82,7 @@ public class IJSCOIndeler {
 	}
 
 	/**
-	 * Van alle mogelijke groepen, bepaal de variant mdie het beste voldoet aan
+	 * Van alle mogelijke groepen, bepaal de variant die het beste voldoet aan
 	 * de voorwaarden:
 	 * 1. kleinste spreiding in de groepen,
 	 * 2. grootste verschil tussen de groepsovergangen
@@ -189,8 +192,8 @@ public class IJSCOIndeler {
 		for (int n_m = c.minSpelers; n_m <= c.maxSpelers; n_m += 2) { // itereer of standaard groepsgrootte
 			for (int d_h = c.minDeltaSpelers; d_h <= c.maxDeltaSpelers; d_h += 2) { // itereer of delta (-) groepsgrootte bovenste groepen
 				for (int d_l = c.minDeltaSpelers; d_l <= c.maxDeltaSpelers; d_l += 2) { // itereer of delta (+) groepsgrootte onderste groepen
-					//int n_hoog = n_m - d_h; // aantal spelers in bovenste groepen
-					int n_hoog = n_m; // aantal spelers in bovenste groepen
+					int n_hoog = n_m - d_h; // aantal spelers in bovenste groepen
+					// int n_hoog = n_m; // aantal spelers in bovenste groepen (VERKEERD)
 					int n_laag = n_m + d_l; // aantal spelers in onderste groepen
 					for (int i = c.minAfwijkendeGroepen; i <= c.maxAfwijkendeGroepen; i++) { // itereer over aantal (1..2) aan te passen hoogste groepen
 						for (int j = c.minAfwijkendeGroepen; j <= c.maxAfwijkendeGroepen; j++) { // itereer over aantal (1..3) aan te passen onderste groepen
@@ -199,11 +202,28 @@ public class IJSCOIndeler {
 								int gr_midden = (size_midden / n_m) + (((size_midden % n_m) == 0) ? 0 : 1);
 								int[] groepen = creeerGroottes(i, n_hoog, gr_midden, n_m, j, n_laag);
 								int byes = bepaalByes(groepen, nSpelers);
+								logger.log(Level.INFO, "Er zijn " + i + " top groepen met grootte " + n_hoog);
+								logger.log(Level.INFO, "Er zijn " + size_midden + " spelers in de middelste " +  gr_midden + " groepen met grootte " + n_m);
+								logger.log(Level.INFO, "Er zijn " + j + " onderste groepen met grootte " + n_laag);
+								if (n_hoog==6) {
+									logger.log(Level.INFO, "Size midden is " + size_midden);
+									logger.log(Level.INFO, "i is " + i);
+									logger.log(Level.INFO, "n_hoog is " + n_hoog);
+									logger.log(Level.INFO, "gr_midden is " + gr_midden);
+									logger.log(Level.INFO, "n_m is " + n_m);
+									logger.log(Level.INFO, "j is " + j);
+									logger.log(Level.INFO, "n_laag is " + n_laag);
+									logger.log(Level.INFO, "groepen :" + Arrays.toString(groepen));
+									logger.log(Level.INFO, "Mogelijk schema : " + new Schema(groepen.length, byes, groepen).toString());
+								}
 								if ((n_hoog >= c.minSpelers) && (n_laag <= c.maxSpelers)
 										&& (groepen.length >= c.minGroepen) && (groepen.length <= c.maxGroepen)
 										&& (byes >= c.minToegestaneByes) && (byes <= c.maxToegestaneByes)) {
 									if (byes <= groepen.length) {
+										logger.log(Level.INFO, "Nieuwe mogelijkheid");
 										mogelijkheden.add(new Schema(groepen.length, byes, groepen));
+										logger.log(Level.INFO, "Nieuw schema : " + new Schema(groepen.length, byes, groepen).toString());
+										logger.log(Level.INFO, "Aantal mogelijkheden tot nu toe : " + mogelijkheden.size());
 									}
 								}
 							}

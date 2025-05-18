@@ -50,11 +50,13 @@ public class DeelnemersLader {
 //				List<String> items = Arrays.asList(regel.split(";"));
 				String[] items = regel.split(";");    // use comma as separator 
 				Speler s = new Speler();
+				// Relatienummer
 				if (items.length >0) {
 					item = items[0];
 					s.setKnsbnummer(item);
 					item = "";
 				}
+				// Naam
 				if (items.length > 1) {
 					item = items[1];
 					s.setNaamHandmatig(item);
@@ -62,6 +64,7 @@ public class DeelnemersLader {
 					s.setNaamHandmatig("-");
 				}
 				item = "";
+				// Handmatige Rating
 				if (items.length > 2) {
 					item = items[2];
 					s.setRatingHandmatig(item);
@@ -69,6 +72,19 @@ public class DeelnemersLader {
 					s.setOverruleRating(true);
 				} else {
 					s.setRatingHandmatig(-1);
+				}
+				System.out.println("Items = " + items.length);
+				// Vereniging
+				if (items.length > 3) {
+					item = items[3];
+					s.setVereniging(item);
+					System.out.println("Vereniging opgegeven in CSV voor speler :" + s.getVereniging());					
+				}
+				// Geboortejaar
+				if (items.length > 4) {
+					item = items[4];
+					s.setGeboortejaar(item);
+					System.out.println("Geboortejaar opgegeven in CSV voor speler :" + s.getGeboortejaar());					
 				}
 				deelnemers.add(s);
 				aantal++;
