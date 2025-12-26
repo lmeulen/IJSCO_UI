@@ -301,7 +301,7 @@ public class OutputUitslagen implements GroepenExportInterface{
 				//logger.log(Level.INFO, "Aantal groepsuitslagen = " + groepenuitslagen.getAantalGroepsuitslagen());
 				ArrayList<Date> roundDates = new ArrayList<Date>();
 				for (GroepsUitslag gu : groepenuitslagen) {
-					String bestandsnaam = "Fide2006-Data-Exchange-Groep-" + gu.getGroepsnaam() + ".txt";
+					String bestandsnaam = "Fide2006-Data-Exchange-" + gu.getGroepsnaam() + ".txt";
 					logger.log(Level.INFO, "Aanmaken van Fide2006 DataExchange bestand " + bestandsnaam);
 					String result = "";
 					// Tournament section
@@ -310,8 +310,8 @@ public class OutputUitslagen implements GroepenExportInterface{
 					result += DIN.get("Federation") + " NED" + ls; // Mandatory
 					result += DIN.get("Date of start") + " " + dateformatter.format(toernooi.getDatum()) + ls;
 					result += DIN.get("Date of end") + " " + dateformatter.format(toernooi.getDatum()) + ls;
-					result += DIN.get("Number of players") + " " + groepenuitslagen.getAantalSpelers() + ls;
-					result += DIN.get("Number of rated players") + " " + groepenuitslagen.getAantalspelersmetrating() + ls;
+					result += DIN.get("Number of players") + " " + gu.getAantal() +ls;
+					result += DIN.get("Number of rated players") + " " + gu.getAantalspelersmetrating() + ls;
 					result += DIN.get("Number of teams") + " 0" + ls;
 					result += DIN.get("Type of tournament") + " Individual: Round-Robin" + ls;
 					result += DIN.get("Chief Arbiter") + " " + ls;  // Mandatory
