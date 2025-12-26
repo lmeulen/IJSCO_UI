@@ -67,7 +67,7 @@ import nl.detoren.ijsco.ui.util.Utils;
  */
 public class OSBOLoader {
 
-	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
+	private final static Logger logger = Logger.getLogger(OSBOLoader.class.getName());
 	
 	public Spelers laadBestand(String bestandsnaam) {
 		try {

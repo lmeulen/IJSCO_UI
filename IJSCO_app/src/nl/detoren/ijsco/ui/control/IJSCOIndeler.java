@@ -32,7 +32,7 @@ import nl.detoren.ijsco.ui.Mainscreen;
 
 public class IJSCOIndeler {
 
-	private final static Logger logger = Logger.getLogger(Mainscreen.class.getName());
+	private final static Logger logger = Logger.getLogger(IJSCOIndeler.class.getName());
 
 	/**
 	 * Controleer deelnemers tegen de OSBO lijst. Obv KNSB nummer is de OSBO

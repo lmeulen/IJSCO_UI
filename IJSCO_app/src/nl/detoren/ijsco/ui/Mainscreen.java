@@ -28,6 +28,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
@@ -78,6 +79,7 @@ import nl.detoren.ijsco.data.GroepsUitslagen;
 import nl.detoren.ijsco.data.Speler;
 import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.data.Status;
+import nl.detoren.ijsco.data.Toernooi;
 import nl.detoren.ijsco.data.WedstrijdUitslag;
 import nl.detoren.ijsco.io.DeelnemersLader;
 import nl.detoren.ijsco.io.ExcelExport;
@@ -157,6 +159,9 @@ public class Mainscreen extends JFrame {
 			status = new Status();
 		}
 */
+		if (status.toernooi==null) {
+			status.toernooi = new Toernooi();
+		}
 		if (status.deelnemers==null) {
 			status.deelnemers = new Spelers();
 		}
@@ -429,7 +434,7 @@ item.addActionListener(new ActionListener() {
 });
 deelnemersmenu.add(item);
 
-item = new JMenuItem("Importeren Deelnemerslijst");
+item = new JMenuItem("Importeren Deelnemerslijst CSV");
 item.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 item.addActionListener(new ActionListener() {
 	@Override
@@ -442,7 +447,27 @@ item.addActionListener(new ActionListener() {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
-			leesDeelnemers(file.getAbsolutePath());
+			leesDeelnemers(file.getAbsolutePath(), "csv");
+		}
+		hoofdPanel.repaint();
+	}
+});
+deelnemersmenu.add(item);
+
+item = new JMenuItem("Importeren Deelnemerslijst JSON");
+item.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+item.addActionListener(new ActionListener() {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// Create a file chooser
+		final JFileChooser fc = new JFileChooser();
+		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		// In response to a button click:
+		int returnVal = fc.showOpenDialog(ms);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
+			leesDeelnemers(file.getAbsolutePath(), "json");
 		}
 		hoofdPanel.repaint();
 	}
@@ -952,8 +977,26 @@ deelnemersmenu.add(item);
 		}
 	}
 		
-	public void leesDeelnemers(String file) {
-		Spelers tmp = new DeelnemersLader().importeerSpelers(file);
+	public void leesDeelnemers(String file, String type) {
+		Spelers tmp = null;
+		switch (type) {
+			case "csv":
+				try {
+				 tmp = new DeelnemersLader().importeerSpelers(file);
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null, "Fout met inlezen");
+					logger.log(Level.WARNING, "Fout met bestand");
+				}
+				break;
+			case "json":
+			try {
+				tmp = new DeelnemersLader().importeerSpelersJSON(file);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, "Fout met inlezen");
+				logger.log(Level.WARNING, "Fout met bestand");
+			}
+			break;
+		}
 		if (status.OSBOSpelers != null) {
 			//int reply = JOptionPane.showConfirmDialog(null, "Weet u zeker dat u wilt doorgaan?", "Weet u het zeker?", JOptionPane.YES_NO_OPTION);
 			logger.log(Level.INFO, "Check OSBOSpelers");

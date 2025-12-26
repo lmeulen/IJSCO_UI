@@ -21,6 +21,27 @@ import nl.detoren.ijsco.Configuratie;
 public class Status {
 
 	/**
+	 * Versie
+	 */
+	static String versie = "1.0.0";
+
+	/**
+	 * Versie
+	 */
+	public String versie_bestand;
+
+	/**
+	 * Check Latest Version
+	 */
+	public boolean latestVersion() {
+		if (!versie.equals(versie_bestand)) {
+			//ToDo Update routine voor updaten statusbestand
+			return false;
+		} else {
+			return true;
+		}
+	}
+	/**
 	 * Configuratie
 	 */
 	public Configuratie config;
@@ -64,6 +85,37 @@ public class Status {
 	public ArrayList<Groepen> mogelijkheden;
 
 	public GroepsUitslagen groepenuitslagen;
+
+	public Status updateFromVersion(String vb) {
+		Status s = new Status();
+		if (vb==null) {
+			//Update to version 1.0.0 (first version)
+			s.config = this.config;
+			s.deelnemers = this.deelnemers;
+			s.groepen = this.groepen;
+			s.groepenuitslagen = this.groepenuitslagen;
+			s.mogelijkheden = this.mogelijkheden;
+			s.OSBOSpelers = this.OSBOSpelers;
+			s.schema = this.schema;
+			s.toernooi = this.toernooi;
+			s.versie_bestand = versie;
+			return s;
+		} else {
+			switch (vb) {
+			case "1.0.1":
+				s.config = this.config;
+				s.deelnemers = this.deelnemers;
+				s.groepen = this.groepen;
+				s.groepenuitslagen = this.groepenuitslagen;
+				s.mogelijkheden = this.mogelijkheden;
+				s.OSBOSpelers = this.OSBOSpelers;
+				s.schema = this.schema;
+				s.toernooi = this.toernooi;
+				s.versie_bestand = versie;
+			}
+		}
+		return s;
+	}
 
 	//public int minGroepen = 1;
 	//public int maxGroepen = 24;

@@ -12,9 +12,10 @@
  * Known issues in this code:
  * - ...
  */
+
 package nl.detoren.ijsco.data;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 

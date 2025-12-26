@@ -129,7 +129,7 @@ public class DeelnemersModel extends AbstractTableModel {
 				tt += "</TD></TR>";
 				tt += "<TR><TD>KNSB</TD><TD>" + speler.getKnsbnummer() + "</TD></TR>";
 				tt += "<TR><TD>Naam handmatig</TD><TD>" + speler.getNaamHandmatig() + "</TD></TR>";
-				tt += "<TR><TD>Naam OSBK</TD><TD>" + speler.getNaamKNSB() + "</TD></TR>";
+				tt += "<TR><TD>Naam OSBO</TD><TD>" + speler.getNaamKNSB() + "</TD></TR>";
 				tt += "<TR><TD>Rating handmatig</TD><TD>" + speler.getRatingHandmatig() + "</TD></TR>";
 				tt += "<TR><TD>Rating OSBO</TD><TD>" + speler.getRatingIJSCO() + "</TD></TR>";
 				tt += "<TR><TD>Rating KNSB</TD><TD>" + speler.getRatingKNSB() + "</TD></TR>";

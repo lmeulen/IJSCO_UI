@@ -17,9 +17,13 @@ import java.io.BufferedReader;
 import java.io.Console;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONValue;
 
 import nl.detoren.ijsco.data.Spelers;
 import nl.detoren.ijsco.data.Speler;
@@ -40,7 +44,7 @@ public class DeelnemersLader {
 	 *            Naam van het bestand dat ingelezen moet worden
 	 * @return De ingelezen spelers verdeeld over de groepen
 	 */
-	public Spelers importeerSpelers(String bestandsnaam) {
+	public Spelers importeerSpelers(String bestandsnaam) throws IOException {
 		String item = "";
 		int aantal = 0;
 		Spelers deelnemers = new Spelers();
@@ -93,6 +97,46 @@ public class DeelnemersLader {
 			System.out.println("Aantal spelers is " + aantal + ".");	
 		
 		return deelnemers;
+	}
+
+	/**
+	 * Importeer spelers uit een CSV bestand. De volgende items staan in dit
+	 * bestand: - KNSBnummer - naam speler - rating
+	 * Naam en Rating zijn optioneel. Alleen KNSB nummer is voldoende
+	 *
+	 * @author Leo.vanderMeulen
+	 *
+	 */
+	/**
+	 * Lees groepen uit het gespecificeerde textbestand
+	 *
+	 * @param bestandsnaam
+	 *            Naam van het bestand dat ingelezen moet worden
+	 * @return De ingelezen spelers verdeeld over de groepen
+	 */
+	public Spelers importeerSpelersJSON(String bestandsnaam) throws IOException {
+		Spelers spelers = new Spelers();
+		try {
+			FileReader reader = new FileReader(bestandsnaam);
+			BufferedReader rd = new BufferedReader(reader);
+			String jsonText = readAll(rd);
+			Object o = JSONValue.parse(jsonText);
+			JSONArray json = (JSONArray) o;
+			spelers.addJSON(json);
+		} catch (Exception e) {
+			return spelers;
+		}
+		return spelers;
+	}
+		
+		
+	private static String readAll(Reader rd) throws IOException {
+		StringBuilder sb = new StringBuilder();
+		int cp;
+		while ((cp = rd.read()) != -1) {
+			sb.append((char) cp);
+		}
+		return sb.toString();
 	}
 
 	/**

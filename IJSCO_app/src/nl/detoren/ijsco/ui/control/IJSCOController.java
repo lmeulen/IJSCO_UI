@@ -17,8 +17,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
 
 import com.google.gson.Gson;
 
@@ -36,7 +45,7 @@ public class IJSCOController {
 
 	private static String appTitle = "Indeling Interregionale Jeugd Schaak COmpetitie (IJSCO)";
 
-	private static String appVersion = "0.3.3.0";
+	private static String appVersion = "0.3.4.0";
 	
 	private static String apiKey = "DIw3nDOIuw3                                                                   DIUtysiougw8v8fDrFe";
 	
@@ -130,7 +139,9 @@ public class IJSCOController {
 	}
 
     public void start() {
-        leesStatusBestand();
+    	if (!leesStatusBestand()) {
+			status = new Status();
+    	};
     }
 
 	public boolean leesStatus() {
@@ -159,18 +170,47 @@ public class IJSCOController {
 	 */
 	public boolean leesStatusBestand() {
 		synchronized (this) {
-        	logger.log(Level.INFO, "Lees status");
-        	leesStatus("status.json");
-        	//leesConfiguratie();
+        	logger.log(Level.INFO, "Controleer aanwezigheid statusbestand.");
+    		Path source = Paths.get("status.json");
+    		String ds = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+    		String statusCopy = "status-backup_" + ds + ".json";
+    		Path destination = Paths.get(statusCopy);
+        	if (!Files.exists(source)) {
+            	logger.log(Level.INFO, "Geen statusbestand gevonden!");        		
+            	logger.log(Level.INFO, "Nieuw statusbestand aangemaakt!");
+            	return false;
+        	}
+        	if (!leesStatus("status.json")) {
+	        	logger.log(Level.INFO, "Status bestand kon niet verwerkt worden. Moglijk is dit bestand beschadigd.");
+				JOptionPane.showMessageDialog(null, "Status bestand kon niet verwerkt worden. Als dit niet is wat u verwacht. Controleer uw bestand, herstel het of laadt dit handmatig in.");
+        	};
 			if ((status == null)) {
 				status = new Status();
-	        	logger.log(Level.INFO, "Status bestand niet ingelezen");
-				return false;
+	        	logger.log(Level.INFO, "Status bestand is NULL!");
+				JOptionPane.showMessageDialog(null, "Status is NULL. Nieuwe status aangemaakt.");
+			}
+			if (!status.latestVersion()) {
+	        	logger.log(Level.INFO, "Status bestand niet de laatste versie. Will be updated now!!!");
+				// Kopie maken oude status document (extensie met oude versienummer). En dan aanpassen naar versie.
+				try {
+		        	logger.log(Level.INFO, "Original status.json copied to " + statusCopy);
+					Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException ioe) {
+		        	logger.log(Level.WARNING, "Aanmaken kopie van status.json met naam " + statusCopy + " mislukt!");					
+				}
+				try {
+					status = status.updateFromVersion(status.versie_bestand);
+					this.saveState(false, null);
+				} catch (Exception e) {
+		        	logger.log(Level.SEVERE, "Updating of status.json failed");					
+				}
 			}
 			if ((status.config == null)) {
+	        	logger.log(Level.SEVERE, "Status.config is null! Fixing...");					
 				status.config = new Configuratie();
 			}
 			if ((status.toernooi == null)) {
+	        	logger.log(Level.SEVERE, "Status.toernooi is null! Fixing...");					
 				status.toernooi = new Toernooi();
 			}
 		}
