@@ -62,13 +62,15 @@ public class ExcelExport implements ExportInterface {
 		try {
 			if (groepen == null) return;
 			// sheetindx geeft index in Excel template op basis van groepsgrootte. -1: geen sheet voor groepsgrootte 
-			int[] sheetindx = new int[] { -1, -1, -1, -1,  5, -1,  4, -1,  3, -1,  2, -1, 1, -1, 0, -1, -1, -1 };
+			int[] sheetindx = new int[] { -1, -1, -1, -1,  5, -1,  4, -1,  3, -1,  2, -1, 1, -1, 0, -1, -1, -1};
 			// columnsize geeft lengte in Excel template op basis van groepsgrootte. -1: geen sheet voor groepsgrootte
-			int[] columnsize = new int[] { -1, -1, -1, -1, 20, -1, 35, -1, 54, -1, 77, -1, 100, -1, 127, -1, -1, -1 };
+			int[] columnsize = new int[] { -1, -1, -1, -1, 20, -1, 35, -1, 54, -1, 77, -1, 100, -1, 127, -1, -1, -1};
 			// pagelngth geeft lengte in Excel template op basis van groepsgrootte. -1: geen sheet voor groepsgrootte
-			int[] pagelngth = new int[] { -1, -1, -1, -1, 20, -1, 35, -1, 54, -1, 77, -1, 100, -1, 127, -1, -1, -1 };
+			int[] pagelngth = new int[] { -1, -1, -1, -1, 20, -1, 35, -1, 54, -1, 77, -1, 100, -1, 127, -1, -1, -1};
 			// score per groep 
-			int[] score = new int[] { -1, -1, -1, -1, 16, -1, 17, -1, 17, -1, 17, -1, 19, -1, 21, -1, -23, -1 , 25};
+			int[] score = new int[] { -1, -1, -1, -1, 16, -1, 17, -1, 17, -1, 17, -1, 19, -1, 21, -1, -23, -1, 25};
+			// ranking per groep. groepsgrootte: kolom; groepsgrootte+: rij
+			int[] ranking = new int[] { -1, -1, -1, -1, 3, 26, 3, 42, 4, 60, 5, 83, 2, 109, 3, 140, -1, -1, -1};
 			// kruis per groep 
 			int[] kruis = new int[] { -1, -1, -1, -1, 12, -1, 7, -1, 7, -1, 7, -1, 7, -1, 7, -1, 7, -1 , 7};
 			int sheet2row = 2;
@@ -86,17 +88,26 @@ public class ExcelExport implements ExportInterface {
             my_style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
             my_style.setFillForegroundColor(my_foreground);
             my_style.setFillBackgroundColor(my_background);
+            XSSFCellStyle styleGold = workbook.createCellStyle();
+            styleGold.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            styleGold.setFillForegroundColor(new XSSFColor(new java.awt.Color(206, 189, 66)));
+            XSSFCellStyle styleSilver = workbook.createCellStyle();
+            styleSilver.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            styleSilver.setFillForegroundColor(new XSSFColor(new java.awt.Color(166, 166, 166)));
+            XSSFCellStyle styleBronze = workbook.createCellStyle();
+            styleBronze.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            styleBronze.setFillForegroundColor(new XSSFColor(new java.awt.Color(121, 115, 67)));
 			XSSFSheet sheet2 = workbook.getSheet("Groepsindeling");
 			XSSFSheet sheet3 = workbook.getSheet("Deelnemerslijst");
 			XSSFSheet sheet4 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Deelnemerslijst (naam)");
 			XSSFSheet sheet5 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Deelnemerslijst (rating)");
 			XSSFSheet sheet6 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Standen");
-			XSSFSheet sheet7 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Standen-K");
+			XSSFSheet sheet7 = workbook.cloneSheet(workbook.getSheetIndex(sheet3), "Standen-Eind");
 			updateCell(sheet4, 0, 0, "(Voorlopige) deelnemerslijst op Naam");
 			XSSFCellStyle kop = getCellStyle(sheet4, 0, 0);
 			updateCell(sheet5, 0, 0, "(Voorlopige) deelnemerslijst op Rating");
 			updateCell(sheet6, sheet6row, 0, "Standen");
-			updateCell(sheet7, sheet6row, 0, "Standen-K");
+			updateCell(sheet7, sheet7row, 0, "Standen-Einduitslag");
 			updateCell(sheet3, sheet3row, 0, "Naam", style1);
 			updateCell(sheet3, sheet3row, 1, "KNSB nr", style1);
 			updateCell(sheet3, sheet3row, 2, "Vereniging", style1);
@@ -137,7 +148,7 @@ public class ExcelExport implements ExportInterface {
 				}
 				sheet6row++;
 				
-				// Vul Standensheet met juiste volgorde kolommen
+				// Vul Standensheet met juiste volgorde kolommen voor volgende groep
 				updateCell(sheet7, sheet7row, 0, groep.getNaam(), kop);
 				sheet7row++;
 				// print kop voor stand
@@ -150,6 +161,7 @@ public class ExcelExport implements ExportInterface {
 				// Kolom voor SB
 				updateCell(sheet7, sheet7row, 3, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(score[groep.getGrootte()]+1) + (3), style1, true);
 
+				// Kruistabel kolommen
 				for (int j = 0; j < groep.getGrootte(); j++) { 
 					updateCell(sheet7, sheet7row, 4+j, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(kruis[groep.getGrootte()]+j) + (3), style1, true);
 				}
@@ -193,25 +205,36 @@ public class ExcelExport implements ExportInterface {
 						//updateCell(sheet6, sheet6row, j+groep.getGrootte(), "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(score[groep.getGrootte()]+j) + (4+i), true);
 						//updateCell(sheet6, sheet6row, j+groep.getGrootte(), "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(score[groep.getGrootte()]+j) + (4+i), true);
 					}
-					// Sheet Stand op volgorde kolommen
-					// Rank
-					updateCell(sheet7, sheet7row, 0, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(score[groep.getGrootte()]+2) + (4+i), true);
+					// Sheet Stand op volgorde kolommen per groep voor volgende speler in groep
+					// Rank				
+					switch (i) {
+						case 0:
+							updateCell(sheet7, sheet7row, 0, i+1, styleGold);
+							break;
+						case 1:
+							updateCell(sheet7, sheet7row, 0, i+1, styleSilver);
+							break;
+						case 2:
+							updateCell(sheet7, sheet7row, 0, i+1, styleBronze);
+							break;
+						default:
+							updateCell(sheet7, sheet7row, 0, i+1);
+					}
 					// Naam speler
-					updateCell(sheet7, sheet7row, 1, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(2) + (4+i), true);
+					updateCell(sheet7, sheet7row, 1, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(ranking[groep.getGrootte()]) + (ranking[groep.getGrootte()+1]+i), true);
 					// Punten
-					updateCell(sheet7, sheet7row, 2, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(score[groep.getGrootte()]+0) + (4+i), true);
+					updateCell(sheet7, sheet7row, 2, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(ranking[groep.getGrootte()]+1) + (ranking[groep.getGrootte()+1]+i), true);
 					// SB
-					updateCell(sheet7, sheet7row, 3, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(score[groep.getGrootte()]+1) + (4+i), true);
-					// Kruistabel
-					for (int j = 0; j < groep.getGrootte(); j++) { 
-						if (j==i) {
-							updateCell(sheet7, sheet7row, 4+j, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(7+j) + (4+i), style1, true);
-						}
-						else {
-							updateCell(sheet7, sheet7row, 4+j, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(7+j) + (4+i), true);
-						}
-					}					
-					//
+					updateCell(sheet7, sheet7row, 3, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(ranking[groep.getGrootte()]+3) + (ranking[groep.getGrootte()+1]+i), true);
+					/*
+					 * // Kruistabel for (int j = 0; j < groep.getGrootte(); j++) { if (j==i) {
+					 * updateCell(sheet7, sheet7row, 4+j, "'" + sheet.getSheetName() + "'!" +
+					 * org.apache.poi.ss.util.CellReference.convertNumToColString(7+j) + (4+i),
+					 * style1, true); } else { updateCell(sheet7, sheet7row, 4+j, "'" +
+					 * sheet.getSheetName() + "'!" +
+					 * org.apache.poi.ss.util.CellReference.convertNumToColString(7+j) + (4+i),
+					 * true); } }
+					 */					//
 					if (groep.getSpeler(i).getNaam() != "Bye") {
 						updateCell(sheet3, sheet3row, 0, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(2) + (4+i), true);
 						updateCell(sheet3, sheet3row, 1, "'" + sheet.getSheetName() + "'!" + org.apache.poi.ss.util.CellReference.convertNumToColString(3) + (4+i), true);
