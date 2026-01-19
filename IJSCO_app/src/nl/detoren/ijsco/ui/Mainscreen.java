@@ -482,15 +482,15 @@ item.addActionListener(new ActionListener() {
 		// Create a file chooser
 		final JFileChooser fc = new JFileChooser();
 	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-	            "JSON", "json");
+	            "json", "JSON");
 	    fc.setFileFilter(filter);
 		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 		// In response to a button click:
 		int returnVal = fc.showSaveDialog(ms);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
-			logger.log(Level.INFO, "Opening: " + file.getAbsolutePath() + ".");
-			schrijfDeelnemers(file.getAbsolutePath());
+			logger.log(Level.INFO, "Exporting: " + file.getAbsolutePath() + ".");
+			schrijfDeelnemers(file.getName() + "." + ((FileNameExtensionFilter) fc.getFileFilter()).getExtensions()[0].toLowerCase());
 		}
 		hoofdPanel.repaint();
 	}
@@ -962,7 +962,8 @@ deelnemersmenu.add(item);
 	
 	public void schrijfDeelnemers(String file) {
 		try {
-			String bestandsnaam = "Deelnemers.json";
+			//String bestandsnaam = "Deelnemers.json";
+			String bestandsnaam = file;
 			logger.log(Level.INFO, "Sla deelnemers op in bestand " + bestandsnaam);
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(status.deelnemers);
@@ -973,6 +974,7 @@ deelnemersmenu.add(item);
 		}
 		catch (Exception e)
 		{
+			JOptionPane.showMessageDialog(null, "Fout met exporteren.");
 			logger.log(Level.SEVERE, "An " + e.getMessage() + " occured ");
 		}
 	}
@@ -984,7 +986,7 @@ deelnemersmenu.add(item);
 				try {
 				 tmp = new DeelnemersLader().importeerSpelers(file);
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, "Fout met inlezen");
+					JOptionPane.showMessageDialog(null, "Fout met inlezen.");
 					logger.log(Level.WARNING, "Fout met bestand");
 				}
 				break;
